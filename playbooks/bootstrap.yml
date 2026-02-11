@@ -1,0 +1,8 @@
+---
+
+- name: "Server initialisation"
+  hosts: all
+  become: true
+
+  roles: 
+    - role: ../roles/common

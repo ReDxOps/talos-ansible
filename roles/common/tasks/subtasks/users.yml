@@ -1,0 +1,36 @@
+---
+
+- name: Create target user group
+  ansible.builtin.group:
+    name: "{{ target_user }}"
+    state: present
+
+- name: Create docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: Create target user
+  ansible.builtin.user:
+    name: "{{ target_user }}"
+    state: present
+    password: "{{ target_password_hash }}"
+    group: "{{ target_user }}"
+    groups: docker
+    shell: /bin/bash
+
+- name: Set authorized ssh key for target user
+  ansible.builtin.authorized_key:
+    key: "{{ target_ssh_pubkey }}"
+    user: "{{ target_user }}"
+    state: present
+    exclusive: true
+
+- name: Nopasswd sudo with user
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/{{ target_user }}
+    state: present
+    line: '"{{ target_user }}" ALL=(ALL) NOPASSWD: ALL'
+    mode: '0440'
+    create: true
+    validate: /usr/sbin/visudo -cf %s
