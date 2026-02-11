@@ -1,0 +1,11 @@
+---
+
+all:
+  children:
+    dev:
+      hosts:
+        talos-dev:
+        
+    prod: 
+      hosts:
+        talos-srv:

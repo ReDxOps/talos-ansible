@@ -1,0 +1,9 @@
+---
+
+- name: "Setup users & groups"
+  ansible.builtin.include_tasks: subtasks/users.yml
+  tags: setup_users
+
+- name: "Configure sshd service"
+  ansible.builtin.include_tasks: subtasks/sshd.yml
+  tags: setup_sshd

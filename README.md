@@ -54,11 +54,52 @@ La documentation est la source de vérité absolue.
 
 ---
 
-## ⚡ DÉMARRAGE RAPIDE (DEV)
+## 🛠️ PRÉ-REQUIS & INSTALLATION (CONTROL NODE)
 
-### Pré-requis
-*   Vagrant + VMware (ou VirtualBox).
-*   Ansible Core.
+Ce projet nécessite une machine de contrôle ("Control Node") pour piloter le déploiement.
+
+### 1. La Stack Logicielle
+| Outil | Rôle | Version Min |
+| :--- | :--- | :--- |
+| **Git** | Versioning du dépôt. | `2.x` |
+| **Ansible** | Moteur d'automatisation (Le Pilote). | `2.10+` |
+| **Vagrant** | Gestionnaire de machines virtuelles (Labo). | `2.3+` |
+| **VMware Fusion/Workstation** | Hyperviseur (Moteur de VM). | `13+` |
+| **VS Code** | Éditeur de code recommandé. | `Latest` |
+
+### 2. Guide d'Installation
+
+#### 🍏 macOS (Via Homebrew)
+Le standard "Gold" pour ce projet.
+```bash
+# 1. Install Homebrew (si absent)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Install Tools
+brew install git ansible vagrant
+brew install --cask visual-studio-code vmware-fusion
+```
+
+#### 🐧 Linux (Debian/Ubuntu)
+```bash
+sudo apt update && sudo apt install -y git ansible vagrant software-properties-common wget
+# Pour VMware & VS Code : Télécharger les .deb officiels sur leurs sites respectifs.
+```
+
+#### 🪟 Windows (WSL2 OBLIGATOIRE)
+Ansible ne tourne **PAS** nativement sur Windows.
+1.  Activer **WSL2** et installer **Debian** ou **Ubuntu** via le Microsoft Store.
+2.  Dans le terminal WSL (pas PowerShell !) : suivre les instructions **Linux** ci-dessus.
+3.  Installer **Vagrant** sur Windows (pas WSL).
+4.  Lier Vagrant Windows à WSL :
+    ```bash
+    # Dans WSL
+    export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
+    ```
+
+---
+
+## ⚡ DÉMARRAGE RAPIDE (DEV)
 
 ### 1. Initialiser l'environnement
 ```bash
