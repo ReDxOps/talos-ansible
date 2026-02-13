@@ -60,10 +60,25 @@ docker exec crowdsec cscli decisions delete --ip 1.2.3.4
 > *   Dev : `--limit dev`
 > *   Prod : `--limit prod`
 
-### 1. Déploiement du Socle
-Mise à jour système, users, sécurité, docker.
+### 1. 🐣 Bootstrap (Premier Run / Day 0)
+Configuration initiale (User, SSH Hardening). Nécessite surcharge car l'inventaire vise la cible finale.
 ```bash
-ansible-playbook -i inventory.ini site.yml --tags "base" --limit prod
+# Dev (Vagrant)
+ansible-playbook playbooks/bootstrap.yml --limit dev \
+  -e "ansible_port=22" \
+  -e "ansible_user=vagrant" \
+  -e "ansible_ssh_private_key_file=.vagrant/machines/default/vmware_desktop/private_key"
+
+# Prod (Première connexion root)
+ansible-playbook playbooks/bootstrap.yml --limit prod \
+  -e "ansible_port=22" \
+  -e "ansible_user=root"
+```
+
+### 2. 🐳 Installation Docker (Day 1)
+Une fois le bootstrap fait, tout est standard.
+```bash
+ansible-playbook playbooks/install_docker.yml --limit dev
 ```
 
 ### 2. Déploiement Applicatif (Chirurgical)

@@ -1,0 +1,7 @@
+---
+- name: Install Docker Engine
+  hosts: all
+  become: true
+
+  roles:
+    - role: geerlingguy.docker
