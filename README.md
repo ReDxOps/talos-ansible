@@ -78,24 +78,16 @@ Le standard "Gold" pour ce projet.
 # 2. Install Tools
 brew install git ansible vagrant
 brew install --cask visual-studio-code vmware-fusion
+
+# 3. Install Ansible Galaxy Roles
+ansible-galaxy install -r requirements.yml
 ```
 
 #### 🐧 Linux (Debian/Ubuntu)
 ```bash
 sudo apt update && sudo apt install -y git ansible vagrant software-properties-common wget
-# Pour VMware & VS Code : Télécharger les .deb officiels sur leurs sites respectifs.
+ansible-galaxy install -r requirements.yml
 ```
-
-#### 🪟 Windows (WSL2 OBLIGATOIRE)
-Ansible ne tourne **PAS** nativement sur Windows.
-1.  Activer **WSL2** et installer **Debian** ou **Ubuntu** via le Microsoft Store.
-2.  Dans le terminal WSL (pas PowerShell !) : suivre les instructions **Linux** ci-dessus.
-3.  Installer **Vagrant** sur Windows (pas WSL).
-4.  Lier Vagrant Windows à WSL :
-    ```bash
-    # Dans WSL
-    export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
-    ```
 
 ---
 
@@ -108,10 +100,24 @@ cd talos
 vagrant up
 ```
 
-### 2. Déployer le Socle (Dev)
+### 2. 🐣 Bootstrap (Day 0)
+C'est le **seul** moment où l'on surcharge l'inventaire. Le serveur est en port 22/vagrant, mais l'inventaire vise déjà 8888/sentinel.
+On force les paramètres de connexion pour ce premier run :
+
 ```bash
-# Le mot de passe Vault vous sera demandé (ou via .vault_pass)
-ansible-playbook -i inventory.ini site.yml --tags "base" --limit dev
+# Surcharge pour le premier lancement uniquement
+ansible-playbook playbooks/bootstrap.yml --limit dev \
+  -e "ansible_port=22" \
+  -e "ansible_user=vagrant" \
+  -e "ansible_ssh_private_key_file=.vagrant/machines/default/vmware_desktop/private_key"
+```
+
+### 3. 🚀 Déployer le Socle (Day 1+)
+Une fois le bootstrap terminé, l'inventaire devient **vrai**. On peut lancer les playbooks normalement.
+
+```bash
+# Installer Docker
+ansible-playbook playbooks/install_docker.yml --limit dev
 ```
 
 ### 3. Accès SSH (Post-Provisioning)
@@ -126,14 +132,14 @@ ssh -p 8888 sentinel@192.168.x.x
 
 ```text
 talos/
+├── bootstrap/          # 🐣 Init (Inventory Day 0)
 ├── docs/               # 📘 Le Codex (Source de Vérité)
-├── group_vars/         # 🔐 Variables globales (Secrets chiffrés)
-├── inventory.ini       # 🌍 Inventaire (Dev/Prod)
-├── roles/
-│   ├── common/         # 🧱 Socle système (Docker, UFW, CrowdSec, Users)
-│   ├── monitoring/     # 👁️ Stack LGT (Loki, Grafana, Promtail)
-│   └── [apps]/         # 📦 1 App = 1 Rôle (Nextcloud, Traefik, etc.)
-├── site.yml            # 🚀 Playbook Maître
+├── group_vars/         # 🔐 Variables globales (Secrets chiffrés) (A venir)
+├── inventory.yml       # 🌍 Inventaire (Prod/Dev - Day 1+)
+├── playbooks/          # 🚀 Playbooks (Bootstrap, Docker, Apps)
+├── roles/              # 🧱 Rôles Ansible (Profils)
+├── requirements.yml    # 📦 Dépendances Galaxy
+├── ansible.cfg         # ⚙️ Config Ansible
 └── Vagrantfile         # 🛠️ Lab local
 ```
 
