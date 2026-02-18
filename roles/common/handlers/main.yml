@@ -4,3 +4,8 @@
   ansible.builtin.service:
     name: ssh
     state: restarted
+
+- name: Restart Network
+  ansible.builtin.service:
+    name: networking
+    state: restarted
