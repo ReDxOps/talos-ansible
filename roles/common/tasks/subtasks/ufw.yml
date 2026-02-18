@@ -1,0 +1,33 @@
+---
+
+- name: Install ufw package 
+  ansible.builtin.package:
+    name: ufw
+    state: present
+
+- name: Configure default policy
+  community.general.ufw:
+    default: deny
+    direction: incoming
+
+- name: Allow everything on Loopback
+  community.general.ufw:
+    rule: allow
+    interface: lo
+    direction: in
+
+- name: Open SSH + WEB ports
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - "{{ target_ssh_port }}"
+    - "{{ http_port }}"
+    - "{{ https_port }}"
+
+- name: Set enable UFW
+  community.general.ufw:
+    state: enabled
+
+

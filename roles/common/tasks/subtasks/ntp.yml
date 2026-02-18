@@ -1,0 +1,18 @@
+---
+
+- name: Install Chrony package
+  ansible.builtin.package:
+    name: chrony
+    state: present
+
+- name: Set timezone to Europe/Paris
+  ansible.builtin.file:
+    src: /usr/share/zoneinfo/Europe/Paris
+    dest: /etc/localtime
+    state: link
+
+- name: Start and enable Chrony service
+  ansible.builtin.service:
+    name: chrony 
+    state: started
+    enabled: true

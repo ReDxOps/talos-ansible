@@ -1,9 +1,21 @@
 ---
 
+- name: "Configure NTP (Time Sync)"
+  ansible.builtin.import_tasks: subtasks/ntp.yml
+  tags: setup_ntp 
+
 - name: "Setup users & groups"
-  ansible.builtin.include_tasks: subtasks/users.yml
+  ansible.builtin.import_tasks: subtasks/users.yml
   tags: setup_users
 
 - name: "Configure sshd service"
-  ansible.builtin.include_tasks: subtasks/sshd.yml
+  ansible.builtin.import_tasks: subtasks/sshd.yml
   tags: setup_sshd
+
+- name: "Configure UFW firewall"
+  ansible.builtin.import_tasks: subtasks/ufw.yml
+  tags: setup_ufw
+
+- name: "Configure CrowdSec IPS"
+  ansible.builtin.import_tasks: subtasks/crowdsec.yml
+  tags: setup_crowdsec

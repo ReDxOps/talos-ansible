@@ -1,0 +1,50 @@
+---
+
+- name: Disable UFW temporarily for install
+  community.general.ufw:
+    state: disabled
+
+- name: Force DNS in DHCP client (Persistent)
+  ansible.builtin.lineinfile:
+    path: /etc/dhcp/dhclient.conf
+    regexp: '^supersede domain-name-servers'
+    line: 'supersede domain-name-servers 8.8.8.8, 1.1.1.1;'
+    state: present
+  notify: Restart Network
+
+- name: Apply network changes immediately
+  ansible.builtin.meta: flush_handlers
+
+- name: Add GPG apt key for Crowdsec
+  ansible.builtin.apt_key:
+    url: https://packagecloud.io/crowdsec/crowdsec/gpgkey
+    state: present
+
+- name: Add repository for Crowdsec
+  ansible.builtin.apt_repository:
+    repo: "deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} main"
+    state: present
+
+- name: Install Crowdsec package + APT update
+  ansible.builtin.package:
+    update_cache: true
+    name: 
+      - crowdsec
+      - crowdsec-firewall-bouncer-iptables
+    state: present
+
+- name: Enroll to crowdsec console
+  ansible.builtin.shell: "cscli console enroll {{ crowdsec_web_console_id }} --name {{ inventory_hostname }}"
+  args:
+    creates: /etc/crowdsec/console-enrolled
+  register: enrollment_result
+
+- name: Create enrollment marker
+  ansible.builtin.file:
+    path: /etc/crowdsec/console-enrolled
+    state: touch
+  when: enrollment_result.changed
+
+- name: Re-enable UFW
+  community.general.ufw:
+    state: enabled
