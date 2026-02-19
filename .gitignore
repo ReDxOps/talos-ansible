@@ -4,3 +4,4 @@
 .vault_pass
 .env
 .ansible
+geerlingguy.docker/
