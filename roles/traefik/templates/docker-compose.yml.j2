@@ -1,0 +1,22 @@
+services:
+  traefik:
+    image: "traefik:{{ traefik_image_tag }}"
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "80:80"  
+      - "443:443"
+      # - "8080:8080"  (insecure for the moment)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic.yml:/etc/traefik/dynamic.yml:ro
+      - ./data/acme.json:/acme.json
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true

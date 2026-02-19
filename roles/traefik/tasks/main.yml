@@ -1,0 +1,44 @@
+---
+
+- name: Create traefik data directory
+  ansible.builtin.file:
+    path: /opt/talos/traefik/data
+    state: directory
+    mode: '0755'
+
+- name: Create traefik acme file
+  ansible.builtin.file:
+    path: /opt/talos/traefik/data/acme.json
+    state: touch
+    mode: '0600'
+    modification_time: preserve
+    access_time: preserve
+
+- name: Copy traefik static conf template
+  ansible.builtin.template:
+    src: traefik.yml.j2
+    dest: /opt/talos/traefik/traefik.yml
+    mode: '0644'
+
+- name: Copy traefik dynamic conf template
+  ansible.builtin.template:
+    src: dynamic.yml.j2
+    dest: /opt/talos/traefik/dynamic.yml
+    mode: '0644'
+
+- name: Copy traefik docker compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /opt/talos/traefik/docker-compose.yml
+    mode: '0644'
+
+- name: Create docker network
+  community.docker.docker_network:
+    name: proxy
+    state: present
+
+- name: Start traefik compose stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/talos/traefik
+    pull: always
+    state: present

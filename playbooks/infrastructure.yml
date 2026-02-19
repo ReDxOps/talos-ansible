@@ -1,0 +1,8 @@
+---
+
+- name: Infrastructure installation
+  hosts: all
+  become: true
+
+  roles:
+    - role: traefik
