@@ -22,3 +22,15 @@ http:
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsPreload: true
+    dashboardAuth:
+      basicAuth:
+        users:
+          - "{{ traefik_dashboard_auth }}"
+  routers:
+    dashboard:
+      rule: "Host(`traefik.{{ traefik_domain }}`)"
+      service: "api@internal"
+      middlewares:
+        - "secHeaders"
+        - "dashboardAuth"
+      tls: {}

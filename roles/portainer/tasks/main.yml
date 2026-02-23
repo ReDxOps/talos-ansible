@@ -1,0 +1,18 @@
+---
+- name: Create portainer data directory
+  ansible.builtin.file:
+    path: /opt/talos/portainer/data
+    state: directory
+    mode: '0755'
+
+- name: Copy portainer docker compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: /opt/talos/portainer/docker-compose.yml
+    mode: '0644'
+
+- name: Start portainer compose stack
+  community.docker.docker_compose_v2:
+    project_src: /opt/talos/portainer
+    pull: always
+    state: present
