@@ -2,6 +2,9 @@ global:
   checkNewVersion: true
   sendAnonymousUsage: false
 
+log:
+  level: INFO
+
 entryPoints:
   web:
     address: ":80"
@@ -27,7 +30,13 @@ providers:
 
 api:
   dashboard: true
-  insecure: true 
+  insecure: false 
+
+metrics:
+  prometheus:
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
 
 certificatesResolvers:
   letsencrypt:

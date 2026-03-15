@@ -1,0 +1,137 @@
+{% raw %}
+groups:
+- name: infrastructure-alerts
+  rules:
+  
+  # --- Host Level Alerts ---
+  - alert: InstanceDown
+    expr: up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Instance {{ $labels.instance }} down"
+      description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute."
+
+  - alert: HostOutOfMemory
+    expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host out of memory (instance {{ $labels.instance }})"
+      description: "Node memory is filling up (< 10% left). Current: {{ $value | printf \"%.2f\" }}%"
+
+  - alert: HostOutOfDiskSpace
+    expr: (node_filesystem_avail_bytes{mountpoint="/"}  * 100) / node_filesystem_size_bytes{mountpoint="/"} < 15
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host out of disk space (instance {{ $labels.instance }})"
+      description: "Disk is almost full (< 15% left). Current usage: {{ $value | printf \"%.2f\" }}%"
+
+  - alert: HostHighCpuLoad
+    expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host high CPU load (instance {{ $labels.instance }})"
+      description: "CPU load is > 80%. Current Load: {{ $value | printf \"%.2f\" }}%"
+
+  - alert: HostHighIOWait
+    expr: avg by (instance) (rate(node_cpu_seconds_total{mode="iowait"}[5m])) * 100 > 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host high IO wait (instance {{ $labels.instance }})"
+      description: "CPU is spending > 10% time waiting for I/O. Potential disk bottleneck."
+
+  - alert: HostNetworkSaturation
+    expr: (rate(node_network_receive_bytes_total{device!~"lo"}[5m]) + rate(node_network_transmit_bytes_total{device!~"lo"}[5m])) > 100 * 1024 * 1024
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host network saturation (instance {{ $labels.instance }})"
+      description: "Network traffic is > 100MB/s. Current: {{ $value | humanize1024 }}B/s"
+
+  - alert: HostClockDrift
+    expr: abs(node_time_seconds - time()) > 0.1
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Host clock drift (instance {{ $labels.instance }})"
+      description: "System clock drift is > 0.1s. This can affect log ordering and ingestion."
+
+  # --- Container Level Alerts ---
+  - alert: ContainerKilled
+    expr: time() - container_last_seen{id!~"/(user|system).slice/.*"} > 60
+    for: 0m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Container killed ({{ $labels.instance }})"
+      description: "A container (ID: {{ $labels.id }}) has disappeared from {{ $labels.instance }}."
+
+  - alert: ContainerHighCpuUsage
+    expr: (sum by (name) (rate(container_cpu_usage_seconds_total[3m])) * 100) > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Container High CPU usage ({{ $labels.name }})"
+      description: "Container {{ $labels.name }} is using {{ $value | printf \"%.2f\" }}% CPU for more than 5 minutes."
+
+  - alert: ContainerMemoryUsageApproachingLimit
+    expr: (container_memory_usage_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""}) * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Container memory approaching limit ({{ $labels.name }})"
+      description: "Container {{ $labels.name }} is using > 80% of its memory limit."
+
+  - alert: ContainerRestartLoop
+    expr: count by (name, instance) (changes(container_start_time_seconds{name!=""}[15m]) > 2)
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Container restart loop ({{ $labels.name }})"
+      description: "Container {{ $labels.name }} on {{ $labels.instance }} has restarted more than 2 times in 15 minutes."
+
+- name: traefik-alerts
+  rules:
+  - alert: TraefikHighHttp5xxErrorRate
+    expr: sum(rate(traefik_entrypoint_requests_total{code=~"5.."}[2m])) / sum(rate(traefik_entrypoint_requests_total[2m])) * 100 > 5
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Traefik high HTTP 5xx error rate"
+      description: "Traefik is returning 5xx errors for > 5% of requests on entrypoint. Current rate: {{ $value | printf \"%.2f\" }}%"
+
+- name: stack-alerts
+  rules:
+  - alert: LokiLogVolumeSpike
+    expr: sum(rate(promtail_sent_bytes_total[5m])) > 10 * 1024 * 1024
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Loki/Promtail log volume spike"
+      description: "Log ingestion volume is > 10MB/s. Current: {{ $value | humanize1024 }}B/s"
+
+  - alert: PrometheusTargetMissing
+    expr: up == 0
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Prometheus target missing"
+      description: "A monitoring target {{ $labels.job }} ({{ $labels.instance }}) is unreachable."
+{% endraw %}

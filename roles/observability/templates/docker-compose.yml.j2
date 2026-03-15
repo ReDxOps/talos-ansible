@@ -1,0 +1,122 @@
+services:
+  prometheus:
+    image: prom/prometheus:{{ prometheus_image_tag }}
+    container_name: prometheus
+    security_opt:
+      - no-new-privileges:true
+    restart: always
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./config/prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./data/prometheus:/prometheus
+    networks:
+      - proxy
+
+  alertmanager:
+    image: prom/alertmanager:{{ alertmanager_image_tag }}
+    container_name: alertmanager
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./config/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./data/alertmanager:/alertmanager
+    networks:
+      - proxy
+
+  grafana:
+    image: grafana/grafana:{{ grafana_image_tag }}
+    container_name: grafana
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - GF_SECURITY_ADMIN_USER={{ grafana_admin_user }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ grafana_admin_password }}
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./config/grafana/provisioning/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./config/grafana/provisioning/dashboards/json:/etc/grafana/provisioning/dashboards/json:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`{{ grafana_domain }}`)"
+      - "traefik.http.routers.grafana.entrypoints=websecure"
+      - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    networks:
+      - proxy
+  
+  node-exporter:
+    image: prom/node-exporter:{{ node_exporter_image_tag }}
+    container_name: node-exporter
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - proxy
+
+  cadvisor:
+    image: ghcr.io/google/cadvisor:{{ cadvisor_image_tag }}
+    container_name: cadvisor
+    restart: always
+    privileged: true
+    security_opt:
+      - no-new-privileges:true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    networks:
+      - proxy
+
+  loki:
+    image: grafana/loki:{{ loki_image_tag }}
+    container_name: loki
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./config/loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - ./data/loki:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - proxy
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+
+  promtail:
+    image: grafana/promtail:{{ promtail_image_tag }}
+    container_name: promtail
+    user: root 
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./config/promtail/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log:/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - proxy
+
+
+networks:
+  proxy:
+    external: true
