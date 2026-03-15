@@ -1,0 +1,25 @@
+---
+
+- name: Create application directory
+  ansible.builtin.file:
+    path: "/opt/talos/{{ role_name }}"
+    state: directory
+    mode: '0755'
+
+- name: Create data directory
+  ansible.builtin.file:
+    path: "/opt/talos/{{ role_name }}/data"
+    state: directory
+    mode: '0755'
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "/opt/talos/{{ role_name }}"
+    state: present
+    pull: always
