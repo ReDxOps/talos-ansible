@@ -1,0 +1,27 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: [alertname, instance]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'discord-notifications'
+
+receivers:
+- name: 'discord-notifications'
+  slack_configs:
+  - api_url: '{{ alertmanager_webhook_url }}'
+    send_resolved: true
+    {% raw %}
+    title_link: ''
+    title: '[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .GroupLabels.alertname }}'
+    text: |
+      {{ range .Alerts }}
+      > **Alert:** {{ .Labels.alertname }}
+      > **Description:** {{ .Annotations.description }}
+      > **Instance:** `{{ .Labels.instance }}`
+      ---
+      {{ end }}
+    color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
+    {% endraw %}

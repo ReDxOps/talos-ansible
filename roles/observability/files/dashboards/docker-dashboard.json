@@ -1,0 +1,1326 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "title": "Global Infrastructure Health",
+      "type": "row"
+    },
+    {
+      "title": "Total Containers",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "targets": [
+        {
+          "expr": "count(container_last_seen{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"})",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto"
+      }
+    },
+    {
+      "title": "Running Containers",
+      "type": "stat",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 3,
+      "targets": [
+        {
+          "expr": "count(time() - container_last_seen{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"} < 60)",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Global CPU Usage (Cores)",
+      "type": "gauge",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 4,
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "max": 16,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 8
+              },
+              {
+                "color": "red",
+                "value": 12
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Global RAM Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 5,
+      "targets": [
+        {
+          "expr": "sum(container_memory_working_set_bytes{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"})",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes",
+          "color": {
+            "mode": "thresholds"
+          },
+          "max": 34359738368,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 17179869184
+              },
+              {
+                "color": "red",
+                "value": 25769803776
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Host FS Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 6,
+      "targets": [
+        {
+          "expr": "max(container_fs_usage_bytes{id=\"/\"}) / max(container_fs_limit_bytes{id=\"/\"})",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": {
+            "mode": "thresholds"
+          },
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 0.95
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Host Inodes Usage",
+      "type": "gauge",
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 7,
+      "targets": [
+        {
+          "expr": "1 - (max(container_fs_inodes_free{id=\"/\"}) / max(container_fs_inodes_total{id=\"/\"}))",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        }
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "color": {
+            "mode": "thresholds"
+          },
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.8
+              },
+              {
+                "color": "red",
+                "value": 0.95
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 8,
+      "title": "Critical Services Overview",
+      "type": "row"
+    },
+    {
+      "title": "Traefik Status",
+      "type": "stat",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 6
+      },
+      "id": 9,
+      "targets": [
+        {
+          "expr": "sum(time() - container_last_seen{name=~\"(.*)?traefik(.*)?\"} < 60) or vector(0)",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Prometheus Status",
+      "type": "stat",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 6
+      },
+      "id": 10,
+      "targets": [
+        {
+          "expr": "sum(time() - container_last_seen{name=~\"(.*)?prometheus(.*)?\"} < 60) or vector(0)",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Loki Status",
+      "type": "stat",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 6
+      },
+      "id": 11,
+      "targets": [
+        {
+          "expr": "sum(time() - container_last_seen{name=~\"(.*)?loki(.*)?\"} < 60) or vector(0)",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Portainer Status",
+      "type": "stat",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 6
+      },
+      "id": 12,
+      "targets": [
+        {
+          "expr": "sum(time() - container_last_seen{name=~\"(.*)?portainer(.*)?\"} < 60) or vector(0)",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "colorMode": "background",
+        "graphMode": "none"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 13,
+      "title": "Stack Overview (Filtered by $project)",
+      "type": "row"
+    },
+    {
+      "title": "Stacks Consommation",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 10
+      },
+      "id": 14,
+      "targets": [
+        {
+          "expr": "sum by (container_label_com_docker_compose_project) (rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m]))",
+          "format": "table",
+          "instant": true,
+          "refId": "A",
+          "legendFormat": "{{container_label_com_docker_compose_project}}"
+        },
+        {
+          "expr": "sum by (container_label_com_docker_compose_project) (container_memory_working_set_bytes{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"})",
+          "format": "table",
+          "instant": true,
+          "refId": "B",
+          "legendFormat": "{{container_label_com_docker_compose_project}}"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "color-background"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RAM Usg"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CPU Usg (Cores)"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "container_label_com_docker_compose_project": "Stack",
+              "Value #A": "CPU Usg (Cores)",
+              "Value #B": "RAM Usg"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 15,
+      "title": "Top 10 Hogs (Filtered by $project)",
+      "type": "row"
+    },
+    {
+      "title": "Top 10 CPU Consumers",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 16,
+      "targets": [
+        {
+          "expr": "topk(10, sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m])) by (name))",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "unit": "none"
+        }
+      }
+    },
+    {
+      "title": "Top 10 RAM Consumers",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 17,
+      "targets": [
+        {
+          "expr": "topk(10, sum(container_memory_working_set_bytes{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}) by (name))",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "unit": "bytes"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 18,
+      "title": "Container Detailed Metrics: $container",
+      "type": "row",
+      "panels": []
+    },
+    {
+      "title": "CPU Usage",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 28
+      },
+      "id": 19,
+      "targets": [
+        {
+          "expr": "sum(rate(container_cpu_usage_seconds_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m])) by (name)",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "percentunit"
+        }
+      }
+    },
+    {
+      "title": "Memory Usage vs Limit",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 28
+      },
+      "id": 20,
+      "targets": [
+        {
+          "expr": "container_memory_working_set_bytes{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}",
+          "legendFormat": "{{name}} (Used)",
+          "refId": "A"
+        },
+        {
+          "expr": "container_spec_memory_limit_bytes{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"} != 0",
+          "legendFormat": "{{name}} (Limit)",
+          "refId": "B"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "bytes"
+        }
+      }
+    },
+    {
+      "title": "Network I/O",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 28
+      },
+      "id": 21,
+      "targets": [
+        {
+          "expr": "sum(rate(container_network_receive_bytes_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m])) by (name)",
+          "legendFormat": "RX {{name}}",
+          "refId": "A"
+        },
+        {
+          "expr": "-sum(rate(container_network_transmit_bytes_total{container_label_com_docker_compose_project=~\"$project\", name=~\"^$container$\"}[5m])) by (name)",
+          "legendFormat": "TX {{name}}",
+          "refId": "B"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "Bps"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 36
+      },
+      "id": 22,
+      "title": "SRE: CPU Pressure & Stalls",
+      "type": "row"
+    },
+    {
+      "title": "Containers CPU Stalled Rate (Top 10)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "id": 23,
+      "targets": [
+        {
+          "expr": "topk(10, sum by (name) (rate(container_pressure_cpu_stalled_seconds_total{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m])))",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "none"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      },
+      "id": 24,
+      "title": "SRE: Storage & Disk I/O",
+      "type": "row"
+    },
+    {
+      "title": "Disk I/O R/W Rates (Top 10 Writers)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 0,
+        "y": 46
+      },
+      "id": 25,
+      "targets": [
+        {
+          "expr": "topk(10, sum by(name) (rate(container_fs_writes_bytes_total{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m])))",
+          "legendFormat": "Write {{name}}",
+          "refId": "A"
+        },
+        {
+          "expr": "-topk(10, sum by(name) (rate(container_fs_reads_bytes_total{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m])))",
+          "legendFormat": "Read {{name}}",
+          "refId": "B"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "unit": "Bps"
+        }
+      }
+    },
+    {
+      "title": "Container Network Errors (Top 5)",
+      "type": "bargauge",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 46
+      },
+      "id": 26,
+      "targets": [
+        {
+          "expr": "topk(5, sum by (name) (rate(container_network_receive_errors_total{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m])))",
+          "legendFormat": "RX {{name}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "expr": "topk(5, sum by (name) (rate(container_network_transmit_errors_total{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m])))",
+          "legendFormat": "TX {{name}}",
+          "refId": "B",
+          "instant": true
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "showUnfilled": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "unit": "none"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 54
+      },
+      "id": 27,
+      "title": "SRE: Reliability & Stability",
+      "type": "row"
+    },
+    {
+      "title": "Container Restarts / Crashloop Rate (Top 10)",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 55
+      },
+      "id": 28,
+      "targets": [
+        {
+          "expr": "topk(10, sum by(name) (changes(container_start_time_seconds{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[1h])) or vector(0))",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
+          "unit": "none"
+        }
+      }
+    },
+    {
+      "title": "Out Of Memory (OOM) Kill Trends",
+      "type": "timeseries",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 55
+      },
+      "id": 29,
+      "targets": [
+        {
+          "expr": "sum by (name) (rate(container_memory_failures_total{scope=\"container\", failure_type=\"pgmajfault\", container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}[5m]))",
+          "legendFormat": "{{name}} (Page Faults)",
+          "refId": "A"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "lineWidth": 1
+          },
+          "unit": "none"
+        }
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 63
+      },
+      "id": 30,
+      "title": "SRE: Container Lifecycle",
+      "type": "row"
+    },
+    {
+      "title": "Container Uptime & Health (Filtered)",
+      "type": "table",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 64
+      },
+      "id": 31,
+      "targets": [
+        {
+          "expr": "time() - container_start_time_seconds{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A",
+          "legendFormat": "{{name}}"
+        },
+        {
+          "expr": "container_health_state{container_label_com_docker_compose_project=~\"$project\", name!=\"\", name=~\"^$container$\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "B",
+          "legendFormat": "{{name}}"
+        }
+      ],
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource_prometheus}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Uptime"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "s"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Healthcheck"
+            },
+            "properties": [
+              {
+                "id": "custom.displayMode",
+                "value": "color-background"
+              },
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "1": {
+                        "text": "Healthy",
+                        "color": "green",
+                        "index": 0
+                      },
+                      "0": {
+                        "text": "Unhealthy",
+                        "color": "red",
+                        "index": 1
+                      },
+                      "-1": {
+                        "text": "Unconfigured / Up",
+                        "color": "purple",
+                        "index": 2
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "id": true,
+              "__name__": true,
+              "container_label_maintainer": true,
+              "container_label_org_opencontainers_image_authors": true,
+              "container_label_org_opencontainers_image_description": true,
+              "container_label_org_opencontainers_image_documentation": true,
+              "container_label_org_opencontainers_image_licenses": true,
+              "container_label_org_opencontainers_image_source": true,
+              "container_label_org_opencontainers_image_title": true,
+              "container_label_org_opencontainers_image_url": true,
+              "container_label_org_opencontainers_image_vendor": true,
+              "container_label_org_opencontainers_image_version": true,
+              "container_label_traefik_enable": true,
+              "container_label_traefik_http_routers_grafana_entrypoints": true,
+              "container_label_traefik_http_routers_grafana_rule": true,
+              "container_label_traefik_http_routers_grafana_tls": true,
+              "container_label_traefik_http_routers_portainer_entrypoints": true,
+              "container_label_traefik_http_routers_portainer_rule": true,
+              "container_label_traefik_http_routers_portainer_tls": true,
+              "container_label_traefik_http_services_grafana_loadbalancer_server_port": true,
+              "container_label_traefik_http_services_portainer_loadbalancer_server_port": true,
+              "container_label_com_docker_compose_config_hash": true,
+              "container_label_com_docker_compose_container_number": true,
+              "container_label_com_docker_compose_oneoff": true,
+              "container_label_com_docker_compose_project_config_files": true,
+              "container_label_com_docker_compose_project_working_dir": true,
+              "container_label_com_docker_compose_replace": true,
+              "container_label_com_docker_compose_image": true,
+              "container_label_com_docker_desktop_extension_api_version": true,
+              "container_label_com_docker_desktop_extension_icon": true,
+              "container_label_com_docker_extension_additional_urls": true,
+              "container_label_com_docker_extension_detailed_description": true,
+              "container_label_com_docker_extension_publisher_url": true,
+              "container_label_com_docker_extension_screenshots": true,
+              "container_label_io_portainer_server": true,
+              "container_label_com_docker_compose_version": true,
+              "container_label_desktop_docker_io_wsl_distro": true,
+              "container_label_git_commit": true,
+              "container_label_org_opencontainers_image_created": true,
+              "container_label_org_opencontainers_image_ref_name": true,
+              "container_label_org_opencontainers_image_revision": true,
+              "host": true,
+              "instance": true,
+              "job": true
+            },
+            "renameByName": {
+              "name": "Container",
+              "container_label_com_docker_compose_project": "Project",
+              "container_label_com_docker_compose_service": "Service",
+              "Value #A": "Uptime",
+              "Value #B": "Healthcheck"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 39,
+  "tags": [
+    "docker",
+    "observability",
+    "high-density",
+    "sre"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "Prometheus",
+          "value": "Prometheus"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "datasource_prometheus",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource_prometheus}"
+        },
+        "definition": "label_values(container_last_seen, container_label_com_docker_compose_project)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Stack (Docker Compose Project)",
+        "multi": false,
+        "name": "project",
+        "options": [],
+        "query": "label_values(container_last_seen, container_label_com_docker_compose_project)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${datasource_prometheus}"
+        },
+        "definition": "label_values(container_last_seen{container_label_com_docker_compose_project=~\"$project\"}, name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Container",
+        "multi": false,
+        "name": "container",
+        "options": [],
+        "query": "label_values(container_last_seen{container_label_com_docker_compose_project=~\"$project\"}, name)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Docker Global & SRE Infrastructure",
+  "uid": "docker-sentinel-v11",
+  "version": 1
+}
