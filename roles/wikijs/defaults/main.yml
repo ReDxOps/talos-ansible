@@ -1,0 +1,4 @@
+---
+role_name: "wikijs"
+wikijs_image_tag: "2.5"
+postgres_image_tag: "13-alpine"

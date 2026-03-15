@@ -1,0 +1,24 @@
+---
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "/opt/talos/{{ role_name }}"
+    - "/opt/talos/{{ role_name }}/data"
+    - "/opt/talos/{{ role_name }}/wiki-uploads"
+    - "/opt/talos/{{ role_name }}/db_data"
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "/opt/talos/{{ role_name }}"
+    state: present
+    pull: always
