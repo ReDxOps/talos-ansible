@@ -1,0 +1,5 @@
+---
+role_name: "linkwarden"
+linkwarden_image_tag: "v2.13.5"
+postgres_image_tag: "17-alpine"
+meilisearch_image_tag: "v1.38.2"

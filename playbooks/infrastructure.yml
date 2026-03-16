@@ -9,3 +9,4 @@
     - role: portainer
     - role: observability
     - role: wikijs
+    - role: linkwarden
