@@ -1,2 +1,3 @@
 ---
-app_image_tag: "latest"
+role_name: "appname"
+app_image_tag: "1.0"

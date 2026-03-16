@@ -8,12 +8,9 @@
   loop:
     - "/opt/talos/{{ role_name }}"
     - "/opt/talos/{{ role_name }}/data"
+    - "/opt/talos/{{ role_name }}/db_data"
+    - "/opt/talos/{{ role_name }}/meili_data"
 
-- name: Create data directory
-  ansible.builtin.file:
-    path: "/opt/talos/{{ role_name }}/data"
-    state: directory
-    mode: '0755'
 
 - name: Copy docker-compose template
   ansible.builtin.template:
