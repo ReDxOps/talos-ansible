@@ -1,0 +1,8 @@
+---
+role_name: "wp-flageulcouverture"
+wordpress_image_tag: "php8.4-apache"
+mysql_image_tag: "8.0"
+
+#wp_flageulcouverture_db_user: <VAULTED>
+#wp_flageulcouverture_db_password: <VAULTED>
+#wp_flageulcouverture_db_root_password: <VAULTED>

@@ -7,7 +7,8 @@
     mode: '0755'
   loop:
     - "/opt/talos/{{ role_name }}"
-    - "/opt/talos/{{ role_name }}/data"
+    - "/opt/talos/{{ role_name }}/src"
+    - "/opt/talos/{{ role_name }}/db_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:

@@ -1,0 +1,46 @@
+services:
+  app:
+    image: "wordpress:{{ wordpress_image_tag }}"
+    container_name: "{{ role_name }}"
+    restart: unless-stopped
+    depends_on:
+      - db
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - proxy
+      - "{{ role_name }}_internal"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
+      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ role_name }}.tls=true"
+      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_PASSWORD: "{{ wp_flageulcouverture_db_password }}"
+      WORDPRESS_DB_USER: "{{ wp_flageulcouverture_db_user }}"
+
+  db:
+    image: "mysql:{{ mysql_image_tag }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - "{{ role_name }}_internal"
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: "{{ wp_flageulcouverture_db_user }}"
+      MYSQL_PASSWORD: "{{ wp_flageulcouverture_db_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ wp_flageulcouverture_db_root_password }}"
+
+networks:
+  proxy:
+    external: true
+  "{{ role_name }}_internal":
+    internal: true
