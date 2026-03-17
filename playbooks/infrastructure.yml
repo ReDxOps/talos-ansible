@@ -10,3 +10,4 @@
     - role: observability
     - role: wikijs
     - role: linkwarden
+    - role: wp-flageulcouverture
