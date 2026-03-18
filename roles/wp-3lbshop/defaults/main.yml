@@ -1,0 +1,13 @@
+---
+role_name: "wp-3lbshop"
+wordpress_image_tag: "php8.4-apache"
+mysql_image_tag: "8.0"
+
+php_upload_max_filesize: "128M"
+php_post_max_size: "128M"
+php_memory_limit: "512M"
+php_max_execution_time: "300"
+
+#wp_3lbshop_db_user: <VAULTED>
+#wp_3lbshop_db_password: <VAULTED>
+#wp_3lbshop_db_root_password: <VAULTED>

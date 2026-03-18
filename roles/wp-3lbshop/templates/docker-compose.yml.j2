@@ -9,6 +9,7 @@ services:
       - no-new-privileges:true
     volumes:
       - ./src:/var/www/html
+      - ./config/php.ini:/usr/local/etc/php/conf.d/php.ini
     networks:
       - proxy
       - "{{ role_name }}_internal"
@@ -21,8 +22,8 @@ services:
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_PASSWORD: "{{ wp_flageulcouverture_db_password }}"
-      WORDPRESS_DB_USER: "{{ wp_flageulcouverture_db_user }}"
+      WORDPRESS_DB_PASSWORD: "{{ wp_3lbshop_db_password }}"
+      WORDPRESS_DB_USER: "{{ wp_3lbshop_db_user }}"
 
   db:
     image: "mysql:{{ mysql_image_tag }}"
@@ -35,9 +36,17 @@ services:
       - "{{ role_name }}_internal"
     environment:
       MYSQL_DATABASE: wordpress
-      MYSQL_USER: "{{ wp_flageulcouverture_db_user }}"
-      MYSQL_PASSWORD: "{{ wp_flageulcouverture_db_password }}"
-      MYSQL_ROOT_PASSWORD: "{{ wp_flageulcouverture_db_root_password }}"
+      MYSQL_USER: "{{ wp_3lbshop_db_user }}"
+      MYSQL_PASSWORD: "{{ wp_3lbshop_db_password }}"
+      MYSQL_ROOT_PASSWORD: "{{ wp_3lbshop_db_root_password }}"
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - "{{ role_name }}_internal"
 
 networks:
   proxy:

@@ -6,8 +6,23 @@
 
   roles:
     - role: traefik
+      tags: traefik
+
     - role: portainer
+      tags: portainer
+
     - role: observability
+      tags: observability
+
     - role: wikijs
+      tags: wikijs
+
     - role: linkwarden
+      tags: linkwarden
+
     - role: wp-flageulcouverture
+      tags: wp-flageulcouverture, wordpress
+      
+    - role: wp-3lbshop
+      tags: wp-3lbshop, wordpress
+      
