@@ -1,0 +1,62 @@
+services:
+  app:
+    image: "vikunja/vikunja:{{ vikunja_image_tag }}"
+    container_name: "{{ role_name }}"
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./data:/app/vikunja/files
+    networks:
+      - proxy
+      - "{{ role_name }}_internal"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
+      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ role_name }}.tls=true"
+      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=3456"
+    environment:
+      VIKUNJA_SERVICE_PUBLICURL: "{{ role_name }}.{{ traefik_domain }}"
+      HOME: /app/vikunja/files
+      VIKUNJA_DATABASE_HOST: db
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_DATABASE_USER: "{{ vikunja_db_user }}"
+      VIKUNJA_DATABASE_PASSWORD: "{{ vikunja_db_password }}"
+      VIKUNJA_REDIS_ENABLED: "true"
+      VIKUNJA_REDIS_HOST: "vikunja_redis:6379"
+      VIKUNJA_SERVICE_TIMEZONE: Europe/Paris
+
+
+  db:
+    image: "postgres:{{ postgres_image_tag }}"
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - vikunja_internal
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: "{{ vikunja_db_user }}"
+      POSTGRES_PASSWORD: "{{ vikunja_db_password }}"
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - "{{ role_name }}_internal"
+
+networks:
+  proxy:
+    external: true
+  "{{ role_name }}_internal":
+    name: "{{ role_name }}_internal"
+    internal: true
