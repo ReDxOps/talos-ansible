@@ -25,4 +25,7 @@
       
     - role: wp-3lbshop
       tags: wp-3lbshop, wordpress
+
+    - role: vikunja
+      tags: vikunja
       
