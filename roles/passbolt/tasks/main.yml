@@ -1,0 +1,63 @@
+---
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: '0755'
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+  loop:
+    - { path: "/opt/talos/{{ role_name }}" }
+    - { path: "/opt/talos/{{ role_name }}/db_data" }
+    - { path: "/opt/talos/{{ role_name }}/gpg_volume", owner: 33, group: 33 }
+    - { path: "/opt/talos/{{ role_name }}/jwt_volume", owner: 33, group: 33 }
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "/opt/talos/{{ role_name }}"
+    state: present
+    pull: always
+
+- name: Wait for Passbolt to be fully initialized (DB migrations)
+  ansible.builtin.command:
+    cmd: "docker exec {{ role_name }} ./bin/cake passbolt healthcheck --json"
+  register: healthcheck_result
+  until: >
+    'true' in healthcheck_result.stdout and
+    'databaseConnect' in healthcheck_result.stdout and
+    '"databaseConnect":true' in healthcheck_result.stdout
+  retries: 30
+  delay: 10
+  changed_when: false
+  failed_when: false
+
+- name: Check if admin user exists
+  ansible.builtin.command:
+    cmd: "docker exec {{ role_name }} ./bin/cake passbolt users_index"
+  register: users_list
+  changed_when: false
+  failed_when: false
+
+- name: Auto-bootstrap first admin
+  ansible.builtin.command:
+    cmd: >
+      docker exec {{ role_name }} 
+      ./bin/cake passbolt register_user 
+      -u {{ passbolt_admin_email }} 
+      -f {{ passbolt_admin_first_name }} 
+      -l {{ passbolt_admin_last_name }} 
+      -r admin
+  when: passbolt_admin_email not in users_list.stdout
+  register: bootstrap_output
+
+- name: Display Registration Link
+  ansible.builtin.debug:
+    msg: "Clique ici pour finir l'install : {{ bootstrap_output.stdout | regex_search('https://.*') }}"
+  when: bootstrap_output is changed

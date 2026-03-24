@@ -1,0 +1,15 @@
+---
+role_name: "passbolt"
+passbolt_image_tag: "5.10.0-1-ce-non-root"
+mariadb_image_tag: "11.8"
+
+# passbolt_db_user: <VAULTED>
+# passbolt_db_password: <VAULTED>
+# smtp_user: <VAULTED>
+# smtp_password: <VAULTED>
+
+passbolt_admin_email: "remydubois411@gmail.com"
+passbolt_admin_first_name: "Remy"
+passbolt_admin_last_name: "Dubois"
+
+

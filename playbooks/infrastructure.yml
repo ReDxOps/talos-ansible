@@ -28,4 +28,7 @@
 
     - role: vikunja
       tags: vikunja
+
+    - role: passbolt
+      tags: passbolt
       
