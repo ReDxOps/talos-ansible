@@ -34,3 +34,6 @@
   
     - role: affine
       tags: affine
+
+    - role: satisfactory
+      tags: satisfactory

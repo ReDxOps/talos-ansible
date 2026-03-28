@@ -1,0 +1,11 @@
+---
+role_name: "satisfactory"
+satisfactory_image_tag: "v1.9"
+
+satisfactory_memory_limit: "2G"
+satisfactory_memory_reservation: "1G"
+
+satisfactory_server_maxplayers: "32"
+
+satisfactory_game_port: 7777
+satisfactory_messaging_port: 8888
