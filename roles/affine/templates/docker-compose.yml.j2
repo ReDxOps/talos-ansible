@@ -1,0 +1,70 @@
+services:
+  app:
+    image: "ghcr.io/toeverything/affine:{{ affine_image_tag }}"
+    container_name: "{{ role_name }}"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./data:/root/.affine/storage
+      - ./config:/root/.affine/config
+    networks:
+      - proxy
+      - "{{ role_name }}_internal"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
+      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ role_name }}.tls=true"
+      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=3010"
+    environment:
+      DATABASE_URL: "{{ affine_database_url }}"
+      REDIS_SERVER_HOST: redis
+      AFFINE_INDEXER_ENABLED: false
+
+  db:
+    image: "pgvector/pgvector:{{ postgres_image_tag }}"
+    container_name: "{{ role_name }}-db"
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - "{{ role_name }}_internal"
+    environment:
+      POSTGRES_DB: affine
+      POSTGRES_USER: "{{ affine_db_user }}"
+      POSTGRES_PASSWORD: "{{ affine_db_password }}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "{{ affine_db_user }}", "-d", "affine"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:alpine
+    container_name: "{{ role_name }}-redis"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - "{{ role_name }}_internal"
+
+networks:
+  proxy:
+    external: true
+  "{{ role_name }}_internal":
+    name: "{{ role_name }}_internal"
+    internal: true

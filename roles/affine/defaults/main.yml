@@ -1,0 +1,8 @@
+---
+role_name: "affine"
+affine_image_tag: "0.26.4"
+postgres_image_tag: "pg16"
+
+#affine_database_url: <VAULTED>
+#affine_db_user: <VAULTED>
+#affine_db_password: <VAULTED>
