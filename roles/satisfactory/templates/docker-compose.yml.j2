@@ -1,0 +1,23 @@
+services:
+  app:
+    image: "wolveix/satisfactory-server:{{ satisfactory_image_tag }}"
+    container_name: "{{ role_name }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./data:/config
+    ports:
+      - "{{ satisfactory_game_port }}:{{ satisfactory_game_port }}/udp"
+      - "{{ satisfactory_game_port }}:{{ satisfactory_game_port }}/tcp"
+      - "{{ satisfactory_messaging_port }}:{{ satisfactory_messaging_port }}/tcp"
+    deploy:
+      resources:
+        limits:
+          memory: "{{ satisfactory_memory_limit }}"
+        reservations:
+          memory: "{{ satisfactory_memory_reservation }}"
+    environment:
+      MAXPLAYERS: "{{ satisfactory_server_maxplayers }}"
+      SERVERGAMEPORT: "{{ satisfactory_game_port }}"
+      SERVERMESSAGINGPORT: "{{ satisfactory_messaging_port }}"
