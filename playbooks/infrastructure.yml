@@ -31,4 +31,6 @@
 
     - role: passbolt
       tags: passbolt
-      
+  
+    - role: affine
+      tags: affine

@@ -1,0 +1,33 @@
+---
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "/opt/talos/{{ role_name }}"
+    - "/opt/talos/{{ role_name }}/data"
+    - "/opt/talos/{{ role_name }}/config"
+    - "/opt/talos/{{ role_name }}/db_data"
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "/opt/talos/{{ role_name }}"
+    state: present
+    pull: always
+
+- name: Database initialisation
+  ansible.builtin.command:
+    cmd: "docker exec {{ role_name }} node ./scripts/self-host-predeploy.js"
+  register: migration_output
+  until: migration_output.rc == 0
+  retries: 10
+  delay: 15
+  changed_when: "'Successfully' in migration_output.stdout"
