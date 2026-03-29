@@ -1,0 +1,84 @@
+services:
+  app:
+    image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_image_tag }}"
+    container_name: "{{ role_name }}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./app_public:/var/www/html/public
+      - ./app_storage:/var/www/html/storage
+      - ./files/Account.php:/var/www/html/app/Models/Account.php
+      - ./files/Ninja.php:/var/www/html/app/Utils/Ninja.php
+    networks:
+      - "{{ role_name }}_internal"
+  nginx:
+    image: nginx:alpine
+    container_name: "{{ role_name }}-nginx"
+    restart: unless-stopped
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./app_public:/var/www/html/public:ro
+      - ./app_storage:/var/www/html/storage:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - proxy
+      - "{{ role_name }}_internal"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
+      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ role_name }}.tls=true"
+      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=80"
+
+  redis:
+    image: redis:alpine
+    container_name: "{{ role_name }}-redis"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - "{{ role_name }}_internal"
+
+  db:
+    image: "mariadb:{{ mariadb_image_tag }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - "{{ role_name }}_internal"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_DATABASE: "{{ invoiceninja_db_name }}"
+      MYSQL_USER: "{{ invoiceninja_db_user }}"
+      MYSQL_PASSWORD: "{{ invoiceninja_db_password }}"
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u\"$${MYSQL_USER}\" -p\"$${MYSQL_PASSWORD}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+networks:
+  proxy:
+    external: true
+  "{{ role_name }}_internal":
+    name: "{{ role_name }}_internal"
+    internal: true
