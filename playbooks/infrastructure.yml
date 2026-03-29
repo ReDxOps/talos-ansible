@@ -37,3 +37,6 @@
 
     - role: satisfactory
       tags: satisfactory
+    
+    - role: invoiceninja
+      tags: invoiceninja

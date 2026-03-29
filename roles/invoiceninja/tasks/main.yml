@@ -1,0 +1,49 @@
+---
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "/opt/talos/{{ role_name }}"
+    - "/opt/talos/{{ role_name }}/app_public"
+    - "/opt/talos/{{ role_name }}/app_storage"
+    - "/opt/talos/{{ role_name }}/db_data"
+    - "/opt/talos/{{ role_name }}/files"
+    - "/opt/talos/{{ role_name }}/nginx"
+
+- name: Copy modified php application files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  loop:
+    - {src: Account.php, dest: "/opt/talos/{{ role_name }}/files/Account.php"}
+    - {src: Ninja.php, dest: "/opt/talos/{{ role_name }}/files/Ninja.php"}
+
+- name: Copy Nginx configuration files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/opt/talos/{{ role_name }}/nginx/{{ item }}"
+    mode: '0644'
+  loop:
+    - invoiceninja.conf
+    - laravel.conf
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Copy .env template
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "/opt/talos/{{ role_name }}/.env"
+    mode: '0600'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "/opt/talos/{{ role_name }}"
+    state: present
+    pull: always

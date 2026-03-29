@@ -1,0 +1,25 @@
+---
+role_name: "invoiceninja"
+invoiceninja_image_tag: "5.13"
+mariadb_image_tag: "11.8"
+
+invoiceninja_app_url: "https://{{ role_name }}.{{ traefik_domain }}"
+#invoiceninja_app_key: <VAULTED>
+invoiceninja_app_env: "production"
+invoiceninja_app_debug: false
+
+invoiceninja_db_port: 3306
+invoiceninja_db_name: "invoiceninja"
+#invoiceninja_db_user: <VAULTED>
+#invoiceninja_db_password: <VAULTED>
+
+#invoiceninja_initial_user: <VAULTED>
+#invoiceninja_initial_user_password: <VAULTED>
+
+invoiceninja_smtp_host: "smtp.eu.mailgun.org"
+invoiceninja_smtp_port: 587
+#invoiceninja_smtp_username: <VAULTED>
+#invoiceninja_smtp_password: <VAULTED>
+invoiceninja_smtp_encryption: "null"
+invoiceninja_smtp_send_from_address: "factures@remydubois.fr"
+invoiceninja_smtp_send_from_name: "acturation SysGrid Solutions"
