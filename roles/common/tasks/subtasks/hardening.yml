@@ -1,0 +1,32 @@
+---
+- name: Defaults hardening sudo
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/99-hardening
+    content: |
+      # Hardening file generate by Ansible
+      Defaults use_pty,umask=0027
+      Defaults ignore_dot,env_reset
+    mode: "0440"
+    owner: root
+    group: root
+    validate: "/usr/sbin/visudo -cf %s"
+
+- name: Hardening /tmp mount (fstab)
+  ansible.posix.mount:
+    path: /tmp
+    src: tmpfs
+    fstype: tmpfs
+    opts: defaults,nosuid,nodev,noexec,mode=1777
+    state: present
+
+- name: Mount /tmp if not already mounted
+  ansible.builtin.raw: mount /tmp
+  changed_when: false
+
+- name: Remove GCC and make compiler
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: absent
+  loop:
+    - gcc
+    - make

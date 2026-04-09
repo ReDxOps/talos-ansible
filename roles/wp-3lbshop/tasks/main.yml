@@ -6,10 +6,10 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/{{ role_name }}"
-    - "/opt/talos/{{ role_name }}/src"
-    - "/opt/talos/{{ role_name }}/config"
-    - "/opt/talos/{{ role_name }}/db_data"
+    - "/opt/talos/wp-3lbshop"
+    - "/opt/talos/wp-3lbshop/src"
+    - "/opt/talos/wp-3lbshop/config"
+    - "/opt/talos/wp-3lbshop/db_data"
 
 - name: Copy docker-compose and php.ini template
   ansible.builtin.template:
@@ -17,12 +17,11 @@
     dest: "{{ item.dest }}"
     mode: '0644'
   loop:
-    - { src: docker-compose.yml.j2, dest: "/opt/talos/{{ role_name }}/docker-compose.yml" }
-    - { src: php.ini.j2, dest: "/opt/talos/{{ role_name }}/config/php.ini" }
-
+    - { src: docker-compose.yml.j2, dest: "/opt/talos/wp-3lbshop/docker-compose.yml" }
+    - { src: php.ini.j2, dest: "/opt/talos/wp-3lbshop/config/php.ini" }
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/{{ role_name }}"
+    project_src: "/opt/talos/wp-3lbshop"
     state: present
     pull: always

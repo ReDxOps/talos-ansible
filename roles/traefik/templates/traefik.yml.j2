@@ -41,7 +41,7 @@ metrics:
 certificatesResolvers:
   letsencrypt:
     acme:
-      email: "{{ acme_email }}"
+      email: "{{ traefik_acme_email }}"
       storage: "acme.json"
       httpChallenge:
         entryPoint: web

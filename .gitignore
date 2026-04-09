@@ -1,7 +1,12 @@
 .vagrant/
 *.log
 .DS_Store
-.vault_pass
+.vault_pass_*
 .env
 .ansible
-geerlingguy.docker/
+geerlingguy.docker
+.vscode
+redxops.kopia
+collections
+tmp
+.github/

@@ -61,7 +61,7 @@
   loop:
     - dashboard-1860.json
     - traefik-dashboard.json
-  ignore_errors: true
+  failed_when: false
 
 - name: Copy local dashboard files
   ansible.builtin.copy:

@@ -1,13 +1,12 @@
 ---
-role_name: "wp-3lbshop"
-wordpress_image_tag: "php8.4-apache"
-mysql_image_tag: "8.0"
+wp_3lbshop_wordpress_image_tag: "php8.4-apache"
+wp_3lbshop_mysql_image_tag: "8.0"
 
-php_upload_max_filesize: "128M"
-php_post_max_size: "128M"
-php_memory_limit: "512M"
-php_max_execution_time: "300"
+wp_3lbshop_php_upload_max_filesize: "128M"
+wp_3lbshop_php_post_max_size: "128M"
+wp_3lbshop_php_memory_limit: "512M"
+wp_3lbshop_php_max_execution_time: "300"
 
-#wp_3lbshop_db_user: <VAULTED>
-#wp_3lbshop_db_password: <VAULTED>
-#wp_3lbshop_db_root_password: <VAULTED>
+wp_3lbshop_db_user: "{{ vault_wp_3lbshop_db_user }}"
+wp_3lbshop_db_password: "{{ vault_wp_3lbshop_db_password }}"
+wp_3lbshop_db_root_password: "{{ vault_wp_3lbshop_db_root_password }}"

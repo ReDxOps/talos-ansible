@@ -76,22 +76,18 @@
 ---
 
 ## 👁️ PHASE 4 : OBSERVABILITÉ AVANCÉE
-**Objectif** : Voir ce qui se passe sans se connecter.
-
-*   [ ] **Stack LGT** : Loki (Logs), Promtail (Agent), Grafana.
-*   [ ] **Sécurité** : Socket Proxy (Limit access) + RAM Limits.
-*   [ ] **Métriques** : Node Exporter + cAdvisor.
+*   [x] **Stack LGT** : Loki, Promtail, Grafana.
+*   [ ] **Sécurité (Audit)** : ⏳ *Reporté à une phase ultérieure (Auditd, Lynis) pour focus sur le durcissement initial.*
 
 ---
 
-## 🤖 PHASE 5 : MAINTENANCE AUTOMATISÉE (DAY-2)
-**Objectif** : Dormir tranquille.
-
-| Tâche | Fréquence | Outil |
-| :--- | :--- | :--- |
-| **Docker Prune** | Hebdo | Cron / Ansible |
-| **Backup Verify** | Hebdo | Kopia Verify |
-| **DRILL RESTORE** | **Mensuel** | **Script CI/CD (Auto-VM + Checksum)** |
+## 🤖 PHASE 5 : MAINTENANCE AUTOMATISÉE
+**Objectif** : Pilotage centralisé par GitHub Actions pour éviter la dérive manuelle.
+| Tâche | Fréquence | Outil | Pilote |
+| :--- | :--- | :--- | :--- |
+| **Docker Prune** | Hebdo | Ansible | GitHub Pipeline |
+| **Security Patches**| Quotidien | Unattended-Upgrades | Local OS Daemon |
+| **Backup Verify**  | Hebdo | Ansible (Kopia) | GitHub Pipeline |
 | **Updates Code** | Continue | Renovate Bot |
 
 ### 🧠 Stratégie Renovate (Smart Updates)

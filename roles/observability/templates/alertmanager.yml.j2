@@ -11,7 +11,7 @@ route:
 receivers:
 - name: 'discord-notifications'
   slack_configs:
-  - api_url: '{{ alertmanager_webhook_url }}'
+  - api_url: '{{ observability_alertmanager_webhook_url }}'
     send_resolved: true
     {% raw %}
     title_link: ''

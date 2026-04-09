@@ -1,8 +1,15 @@
 ---
-role_name: "affine"
 affine_image_tag: "0.26.4"
-postgres_image_tag: "pg16"
+affine_postgres_image_tag: "pg16"
+affine_redis_image_tag: "8.6.2-alpine"
 
-#affine_database_url: <VAULTED>
-#affine_db_user: <VAULTED>
-#affine_db_password: <VAULTED>
+affine_role_name: "affine"
+affine_root_dir: "{{ project_root_dir }}/{{ affine_role_name }}"
+
+affine_db_name: "affine_db"
+affine_database_url: "postgresql://{{ affine_db_user }}:{{ affine_db_password }}@db:5432/{{ affine_db_name }}"
+affine_db_user: "{{ vault_affine_db_user }}"
+affine_db_password: "{{ vault_affine_db_password }}"
+
+affine_reverse_proxy_network: "{{ traefik_network }}"
+affine_web_url: "{{ affine_role_name }}.{{ traefik_domain }}"

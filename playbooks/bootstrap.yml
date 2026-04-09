@@ -1,8 +1,13 @@
 ---
-
-- name: "Server initialisation"
+- name: Server initialisation
   hosts: all
   become: true
-
-  roles: 
-    - role: common
+  gather_facts: false
+  pre_tasks:
+    - name: Bootstrap Ansible remote directory
+      ansible.builtin.raw: mkdir -p ~/.ansible/tmp && chmod 700 ~/.ansible/tmp
+      changed_when: false
+    - name: Now gather facts safely
+      ansible.builtin.setup:
+  roles:
+    - common

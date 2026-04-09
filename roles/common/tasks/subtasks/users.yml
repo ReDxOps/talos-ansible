@@ -1,8 +1,7 @@
 ---
-
 - name: Create target user group
   ansible.builtin.group:
-    name: "{{ target_user }}"
+    name: "{{ common_target_user }}"
     state: present
 
 - name: Create docker group
@@ -12,25 +11,30 @@
 
 - name: Create target user
   ansible.builtin.user:
-    name: "{{ target_user }}"
+    name: "{{ common_target_user }}"
     state: present
-    password: "{{ target_password_hash }}"
-    group: "{{ target_user }}"
+    password: "{{ common_target_password_hash }}"
+    group: "{{ common_target_user }}"
     groups: docker
     shell: /bin/bash
 
 - name: Set authorized ssh key for target user
-  ansible.builtin.authorized_key:
-    key: "{{ target_ssh_pubkey }}"
-    user: "{{ target_user }}"
+  ansible.posix.authorized_key:
+    key: "{{ common_target_ssh_pubkey }}"
+    user: "{{ common_target_user }}"
     state: present
     exclusive: true
 
 - name: Nopasswd sudo with user
   ansible.builtin.lineinfile:
-    path: /etc/sudoers.d/{{ target_user }}
+    path: "/etc/sudoers.d/{{ common_target_user }}"
     state: present
-    line: '"{{ target_user }}" ALL=(ALL) NOPASSWD: ALL'
-    mode: '0440'
+    line: "{{ common_target_user }} ALL=(ALL) NOPASSWD: ALL"
+    mode: "0440"
     create: true
     validate: /usr/sbin/visudo -cf %s
+
+- name: Lock root account
+  ansible.builtin.user:
+    name: root
+    password_lock: true

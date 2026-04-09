@@ -124,3 +124,17 @@ Stack "Watchdog" isolée pour debugger sans SSH.
 *   **Self-Hosted Runners** : Déploiement d'un agent GitHub Actions dans conteneur isolé.
 *   **Flux** : Le Runner exécute Ansible en `localhost` après validation PR.
 *   **Gain** : Aucune clé SSH ne sort du serveur.
+
+---
+
+## 8. GOUVERNANCE DE MAINTENANCE (CI-DRIVEN)
+
+> [!IMPORTANT]
+> Pour garantir l'immuabilité et la traçabilité, la maintenance "Day-2" est déportée sur GitHub Actions.
+
+*   **Vecteur** : Workflow Ansible planifié (`schedule: cron`).
+*   **Périomètre** :
+    *   Nettoyage Docker (`system prune`).
+    *   Mises à jour applicatives (via Tags Ansible).
+    *   Vérification d'intégrité des backups Kopia.
+*   **Exception Sécurité** : Les patchs de sécurité OS restent locaux (`unattended-upgrades`) pour une réactivité maximale hors-ligne.

@@ -1,5 +1,4 @@
 ---
-
 - name: Infrastructure installation
   hosts: all
   become: true
@@ -22,7 +21,7 @@
 
     - role: wp-flageulcouverture
       tags: wp-flageulcouverture, wordpress
-      
+
     - role: wp-3lbshop
       tags: wp-3lbshop, wordpress
 
@@ -31,12 +30,15 @@
 
     - role: passbolt
       tags: passbolt
-  
+
     - role: affine
       tags: affine
 
     - role: satisfactory
       tags: satisfactory
-    
+
     - role: invoiceninja
       tags: invoiceninja
+
+    - role: redxops.kopia
+      tags: kopia

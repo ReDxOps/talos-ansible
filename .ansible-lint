@@ -1,0 +1,9 @@
+---
+profile: production
+exclude_paths:
+  - collections/
+  - scripts/
+  - docs/
+  - .vagrant/
+  - roles/geerlingguy.docker/
+  - roles/redxops.kopia/

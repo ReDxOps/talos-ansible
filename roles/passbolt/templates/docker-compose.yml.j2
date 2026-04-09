@@ -2,7 +2,7 @@ services:
   app:
     image: "passbolt/passbolt:{{ passbolt_image_tag }}"
     restart: unless-stopped
-    container_name: "{{ role_name }}"
+    container_name: "passbolt"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -10,27 +10,27 @@ services:
       - ./jwt_volume:/etc/passbolt/jwt
     networks:
       - proxy
-      - "{{ role_name }}_internal"
+      - "passbolt_internal"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
-      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
-      - "traefik.http.routers.{{ role_name }}.tls=true"
-      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=8080"
+      - "traefik.http.routers.passbolt.rule=Host(`passbolt.{{ traefik_domain }}`)"
+      - "traefik.http.routers.passbolt.entrypoints=websecure"
+      - "traefik.http.routers.passbolt.tls=true"
+      - "traefik.http.services.passbolt.loadbalancer.server.port=8080"
     environment:
-      APP_FULL_BASE_URL: "https://{{ role_name }}.{{ traefik_domain }}"
+      APP_FULL_BASE_URL: "https://passbolt.{{ traefik_domain }}"
 
       DATASOURCES_DEFAULT_HOST: "db"
       DATASOURCES_DEFAULT_DATABASE: "passbolt"
       DATASOURCES_DEFAULT_USERNAME: "{{ passbolt_db_user }}"
       DATASOURCES_DEFAULT_PASSWORD: "{{ passbolt_db_password }}"
 
-      EMAIL_TRANSPORT_DEFAULT_HOST: "smtp.eu.mailgun.org"
-      EMAIL_TRANSPORT_DEFAULT_PORT: 587
-      EMAIL_DEFAULT_FROM: "passbolt@{{ traefik_domain }}"
-      EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ smtp_user }}"
-      EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ smtp_password }}"
+      EMAIL_TRANSPORT_DEFAULT_HOST: "{{ passbolt_smtp_host }}"
+      EMAIL_TRANSPORT_DEFAULT_PORT: "{{ passbolt_smtp_port }}"
+      EMAIL_DEFAULT_FROM: "{{ passbolt_email_sender }}"
+      EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ passbolt_smtp_user }}"
+      EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ passbolt_smtp_password }}"
 
       PASSBOLT_KEY_NAME: "TALOS Passbolt Server"
       PASSBOLT_KEY_EMAIL: "passbolt@{{ traefik_domain }}"
@@ -41,14 +41,14 @@ services:
     command: [ "/usr/bin/wait-for.sh", "-t", "0", "db:3306", "--", "/docker-entrypoint.sh" ]
 
   db:
-    image: "mariadb:{{ mariadb_image_tag }}"
+    image: "mariadb:{{ passbolt_mariadb_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/mysql
     networks:
-      - "{{ role_name }}_internal"
+      - "passbolt_internal"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
       MYSQL_DATABASE: "passbolt"
@@ -58,6 +58,6 @@ services:
 networks:
   proxy:
     external: true
-  "{{ role_name }}_internal":
-    name: "{{ role_name }}_internal"
+  "passbolt_internal":
+    name: "passbolt_internal"
     internal: true

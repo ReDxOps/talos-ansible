@@ -1,6 +1,6 @@
 ---
 
-- name: Install ufw package 
+- name: Install ufw package
   ansible.builtin.package:
     name: ufw
     state: present
@@ -22,12 +22,10 @@
     port: "{{ item }}"
     proto: tcp
   loop:
-    - "{{ target_ssh_port }}"
-    - "{{ http_port }}"
-    - "{{ https_port }}"
+    - "{{ common_target_ssh_port }}"
+    - "{{ common_http_port }}"
+    - "{{ common_https_port }}"
 
 - name: Set enable UFW
   community.general.ufw:
     state: enabled
-
-

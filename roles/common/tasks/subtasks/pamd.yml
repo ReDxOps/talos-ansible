@@ -1,0 +1,9 @@
+---
+- name: Restrict su to members of the sudo group only
+  community.general.pamd:
+    name: su
+    type: auth
+    control: required
+    module_path: pam_wheel.so
+    module_arguments: "use_uid group=sudo"
+    state: updated

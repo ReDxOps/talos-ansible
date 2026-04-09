@@ -22,28 +22,24 @@
 
 - name: Add repository for Crowdsec
   ansible.builtin.apt_repository:
-    repo: "deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_distribution | lower }} {{ ansible_distribution_release | lower }} main"
+    repo: "deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] | lower }} main"
     state: present
 
 - name: Install Crowdsec package + APT update
   ansible.builtin.package:
     update_cache: true
-    name: 
+    name:
       - crowdsec
       - crowdsec-firewall-bouncer-iptables
     state: present
 
 - name: Enroll to crowdsec console
-  ansible.builtin.shell: "cscli console enroll {{ crowdsec_web_console_id }} --name {{ inventory_hostname }}"
+  ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
   args:
     creates: /etc/crowdsec/console-enrolled
-  register: enrollment_result
-
-- name: Create enrollment marker
-  ansible.builtin.file:
-    path: /etc/crowdsec/console-enrolled
-    state: touch
-  when: enrollment_result.changed
+  register: common_enrollment_result
+  changed_when: true
+  notify: Create Crowdsec enrollment marker
 
 - name: Re-enable UFW
   community.general.ufw:
