@@ -1,7 +1,8 @@
 # Config TALOS - Hardening SSH
 # Managed by Ansible
 
-Port {{ target_ssh_port }}
+Port {{ common_target_ssh_port }}
 PermitRootLogin no
 PasswordAuthentication no
 ChallengeResponseAuthentication no
+AllowUsers {{ common_target_user }}{% if 'dev' in group_names %} vagrant{% endif %}

@@ -1,5 +1,4 @@
 ---
-role_name: "satisfactory"
 satisfactory_image_tag: "v1.9"
 
 satisfactory_memory_limit: "2G"

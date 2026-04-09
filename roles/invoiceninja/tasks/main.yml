@@ -1,31 +1,31 @@
 ---
-
 - name: Create application directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
   loop:
-    - "/opt/talos/{{ role_name }}"
-    - "/opt/talos/{{ role_name }}/app_public"
-    - "/opt/talos/{{ role_name }}/app_storage"
-    - "/opt/talos/{{ role_name }}/db_data"
-    - "/opt/talos/{{ role_name }}/files"
-    - "/opt/talos/{{ role_name }}/nginx"
+    - "{{ invoiceninja_root_dir }}"
+    - "{{ invoiceninja_root_dir }}/app_public"
+    - "{{ invoiceninja_root_dir }}/app_storage"
+    - "{{ invoiceninja_root_dir }}/db_data"
+    - "{{ invoiceninja_root_dir }}/files"
+    - "{{ invoiceninja_root_dir }}/nginx"
 
 - name: Copy modified php application files
   ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
+    mode: "0644"
   loop:
-    - {src: Account.php, dest: "/opt/talos/{{ role_name }}/files/Account.php"}
-    - {src: Ninja.php, dest: "/opt/talos/{{ role_name }}/files/Ninja.php"}
+    - { src: Account.php, dest: "{{ invoiceninja_root_dir }}/files/Account.php" }
+    - { src: Ninja.php, dest: "{{ invoiceninja_root_dir }}/files/Ninja.php" }
 
 - name: Copy Nginx configuration files
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: "/opt/talos/{{ role_name }}/nginx/{{ item }}"
-    mode: '0644'
+    dest: "{{ invoiceninja_root_dir }}/nginx/{{ item }}"
+    mode: "0644"
   loop:
     - invoiceninja.conf
     - laravel.conf
@@ -33,17 +33,17 @@
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
-    mode: '0644'
+    dest: "{{ invoiceninja_root_dir }}/docker-compose.yml"
+    mode: "0644"
 
 - name: Copy .env template
   ansible.builtin.template:
     src: .env.j2
-    dest: "/opt/talos/{{ role_name }}/.env"
-    mode: '0600'
+    dest: "{{ invoiceninja_root_dir }}/.env"
+    mode: "0600"
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/{{ role_name }}"
+    project_src: "{{ invoiceninja_root_dir }}"
     state: present
     pull: always

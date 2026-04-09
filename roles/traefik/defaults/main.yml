@@ -1,2 +1,4 @@
-acme_email: "remydubois411@gmail.com"
+---
+traefik_acme_email: "remydubois411@gmail.com"
 traefik_image_tag: "v3.6"
+traefik_dashboard_auth: "{{ vault_traefik_dashboard_auth }}"

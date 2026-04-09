@@ -1,15 +1,16 @@
 ---
-role_name: "passbolt"
 passbolt_image_tag: "5.10.0-1-ce-non-root"
-mariadb_image_tag: "11.8"
+passbolt_mariadb_image_tag: "11.8"
 
-# passbolt_db_user: <VAULTED>
-# passbolt_db_password: <VAULTED>
-# smtp_user: <VAULTED>
-# smtp_password: <VAULTED>
+passbolt_db_user: "{{ vault_passbolt_db_user }}"
+passbolt_db_password: "{{ vault_passbolt_db_password }}"
+
+passbolt_smtp_host: "{{ smtp_host }}"
+passbolt_smtp_port: "{{ smtp_port }}"
+passbolt_smtp_user: "{{ smtp_user }}"
+passbolt_smtp_password: "{{ smtp_password }}"
+passbolt_email_sender: "passbolt@{{ traefik_domain }}"
 
 passbolt_admin_email: "remydubois411@gmail.com"
 passbolt_admin_first_name: "Remy"
 passbolt_admin_last_name: "Dubois"
-
-

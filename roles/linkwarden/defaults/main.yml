@@ -1,5 +1,9 @@
 ---
-role_name: "linkwarden"
 linkwarden_image_tag: "v2.13.5"
-postgres_image_tag: "17-alpine"
-meilisearch_image_tag: "v1.38.2"
+linkwarden_postgres_image_tag: "17-alpine"
+linkwarden_meilisearch_image_tag: "v1.38.2"
+linkwarden_db_user: "{{ vault_linkwarden_db_user }}"
+linkwarden_db_password: "{{ vault_linkwarden_db_password }}"
+linkwarden_nextauth_secret: "{{ vault_linkwarden_nextauth_secret }}"
+linkwarden_meilisearch_master_key: "{{ vault_linkwarden_meilisearch_master_key }}"
+linkwarden_database_url: "{{ vault_linkwarden_database_url }}"

@@ -6,20 +6,19 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/{{ role_name }}"
-    - "/opt/talos/{{ role_name }}/data"
-    - "/opt/talos/{{ role_name }}/db_data"
-    - "/opt/talos/{{ role_name }}/meili_data"
-
+    - "/opt/talos/linkwarden"
+    - "/opt/talos/linkwarden/data"
+    - "/opt/talos/linkwarden/db_data"
+    - "/opt/talos/linkwarden/meili_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
+    dest: "/opt/talos/linkwarden/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/{{ role_name }}"
+    project_src: "/opt/talos/linkwarden"
     state: present
     pull: always

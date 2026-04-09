@@ -1,0 +1,61 @@
+---
+common_target_user: "{{ target_user }}"
+common_target_ssh_port: "{{ target_ssh_port }}"
+common_target_ssh_pubkey: "{{ target_ssh_pubkey }}"
+common_target_password_hash: "{{ target_password_hash }}"
+
+common_crowdsec_web_console_id: "{{ vault_crowdsec_web_console_id }}"
+
+common_target_packages:
+  - htop
+  - curl
+  - git
+  - ufw
+  - crowdsec
+
+common_sysctl_params:
+  # KERNEL hardening
+  - { key: kernel.dmesg_restrict, value: 1 }
+  - { key: kernel.kptr_restrict, value: 2 }
+  - { key: kernel.perf_cpu_time_max_percent, value: 1 }
+  - { key: kernel.perf_event_max_sample_rate, value: 1 }
+  - { key: kernel.perf_event_paranoid, value: 2 }
+  - { key: kernel.randomize_va_space, value: 2 }
+  - { key: kernel.sysrq, value: 0 }
+  - { key: kernel.unprivileged_bpf_disabled, value: 1 }
+  - { key: kernel.panic_on_oops, value: 1 }
+  # NETWORK hardening
+  - { key: net.core.bpf_jit_harden, value: 2 }
+  - { key: net.ipv4.ip_forward, value: 1 }
+  - { key: net.ipv4.conf.all.accept_local, value: 0 }
+  - { key: net.ipv4.conf.all.accept_redirects, value: 0 }
+  - { key: net.ipv4.conf.default.accept_redirects, value: 0 }
+  - { key: net.ipv4.conf.all.secure_redirects, value: 0 }
+  - { key: net.ipv4.conf.default.secure_redirects, value: 0 }
+  - { key: net.ipv4.conf.all.shared_media, value: 0 }
+  - { key: net.ipv4.conf.default.shared_media, value: 0 }
+  - { key: net.ipv4.conf.all.accept_source_route, value: 0 }
+  - { key: net.ipv4.conf.default.accept_source_route, value: 0 }
+  - { key: net.ipv4.conf.all.arp_filter, value: 1 }
+  - { key: net.ipv4.conf.all.arp_ignore, value: 2 }
+  - { key: net.ipv4.conf.all.route_localnet, value: 0 }
+  - { key: net.ipv4.conf.all.drop_gratuitous_arp, value: 1 }
+  - { key: net.ipv4.conf.default.rp_filter, value: 1 }
+  - { key: net.ipv4.conf.all.rp_filter, value: 1 }
+  - { key: net.ipv4.conf.default.send_redirects, value: 0 }
+  - { key: net.ipv4.conf.all.send_redirects, value: 0 }
+  - { key: net.ipv4.icmp_ignore_bogus_error_responses, value: 1 }
+  - { key: net.ipv4.ip_local_port_range, value: "32768 65535" }
+  - { key: net.ipv4.tcp_rfc1337, value: 1 }
+  - { key: net.ipv4.tcp_syncookies, value: 1 }
+  - { key: net.ipv6.conf.default.disable_ipv6, value: 1 }
+  - { key: net.ipv6.conf.all.disable_ipv6, value: 1 }
+  # FILESYSTEM hardening
+  - { key: fs.suid_dumpable, value: 0 }
+  - { key: fs.protected_fifos, value: 2 }
+  - { key: fs.protected_regular, value: 2 }
+  - { key: fs.protected_symlinks, value: 1 }
+  - { key: fs.protected_hardlinks, value: 1 }
+
+common_http_port: "{{ http_port | default(80) }}"
+common_https_port: "{{ https_port | default(443) }}"

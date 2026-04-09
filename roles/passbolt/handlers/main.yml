@@ -1,0 +1,4 @@
+---
+- name: Display Registration Link
+  ansible.builtin.debug:
+    msg: "Clique ici pour finir l'install : {{ passbolt_bootstrap_output.stdout | regex_search('https://.*') }}"

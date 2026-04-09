@@ -1,33 +1,32 @@
 ---
-
 - name: Create application directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
   loop:
-    - "/opt/talos/{{ role_name }}"
-    - "/opt/talos/{{ role_name }}/data"
-    - "/opt/talos/{{ role_name }}/config"
-    - "/opt/talos/{{ role_name }}/db_data"
+    - "{{ affine_root_dir }}"
+    - "{{ affine_root_dir }}/data"
+    - "{{ affine_root_dir }}/config"
+    - "{{ affine_root_dir }}/db_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/{{ role_name }}/docker-compose.yml"
-    mode: '0644'
+    dest: "{{ affine_root_dir }}/docker-compose.yml"
+    mode: "0644"
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/{{ role_name }}"
+    project_src: "{{ affine_root_dir }}"
     state: present
     pull: always
 
 - name: Database initialisation
   ansible.builtin.command:
-    cmd: "docker exec {{ role_name }} node ./scripts/self-host-predeploy.js"
-  register: migration_output
-  until: migration_output.rc == 0
+    cmd: "docker exec affine node ./scripts/self-host-predeploy.js"
+  register: affine_migration_output
+  until: affine_migration_output.rc == 0
   retries: 10
   delay: 15
-  changed_when: "'Successfully' in migration_output.stdout"
+  changed_when: "'Successfully' in affine_migration_output.stdout"

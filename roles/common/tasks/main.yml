@@ -1,8 +1,7 @@
 ---
-
 - name: "Configure NTP (Time Sync)"
   ansible.builtin.import_tasks: subtasks/ntp.yml
-  tags: setup_ntp 
+  tags: setup_ntp
 
 - name: "Setup users & groups"
   ansible.builtin.import_tasks: subtasks/users.yml
@@ -19,3 +18,15 @@
 - name: "Configure CrowdSec IPS"
   ansible.builtin.import_tasks: subtasks/crowdsec.yml
   tags: setup_crowdsec
+
+- name: "SU cmd rules"
+  ansible.builtin.import_tasks: subtasks/pamd.yml
+  tags: setup_pamd
+
+- name: "Sysctl hardening"
+  ansible.builtin.import_tasks: subtasks/sysctl.yml
+  tags: sysctl_hardening
+
+- name: "System hardening"
+  ansible.builtin.import_tasks: subtasks/hardening.yml
+  tags: system_hardening

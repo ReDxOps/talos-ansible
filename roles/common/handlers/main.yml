@@ -9,3 +9,14 @@
   ansible.builtin.service:
     name: networking
     state: restarted
+
+- name: Create Crowdsec enrollment marker
+  ansible.builtin.file:
+    path: /etc/crowdsec/console-enrolled
+    state: touch
+    mode: '0644'
+
+- name: Restart Crowdsec
+  ansible.builtin.service:
+    name: crowdsec
+    state: restarted

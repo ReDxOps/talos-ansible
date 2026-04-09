@@ -13,6 +13,6 @@
 
 - name: Start and enable Chrony service
   ansible.builtin.service:
-    name: chrony 
+    name: chrony
     state: started
     enabled: true

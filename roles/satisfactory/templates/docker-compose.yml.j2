@@ -1,7 +1,7 @@
 services:
   app:
     image: "wolveix/satisfactory-server:{{ satisfactory_image_tag }}"
-    container_name: "{{ role_name }}"
+    container_name: "satisfactory"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

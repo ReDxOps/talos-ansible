@@ -1,7 +1,7 @@
 services:
   app:
     image: "requarks/wiki:{{ wikijs_image_tag }}"
-    container_name: "{{ role_name }}"
+    container_name: "wikijs"
     restart: unless-stopped
     depends_on:
       - db
@@ -15,10 +15,10 @@ services:
       - wiki_internal
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ role_name }}.rule=Host(`wiki.{{ traefik_domain }}`)"
-      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
-      - "traefik.http.routers.{{ role_name }}.tls=true"
-      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=3000"
+      - "traefik.http.routers.wikijs.rule=Host(`wiki.{{ traefik_domain }}`)"
+      - "traefik.http.routers.wikijs.entrypoints=websecure"
+      - "traefik.http.routers.wikijs.tls=true"
+      - "traefik.http.services.wikijs.loadbalancer.server.port=3000"
     environment:
       DB_HOST: db
       DB_NAME: wikijs
@@ -27,7 +27,7 @@ services:
       DB_PORT: 5432
       DB_TYPE: postgres
   db:
-    image: postgres:{{ postgres_image_tag }}
+    image: postgres:{{ wikijs_postgres_image_tag }}
     container_name: wikijs_db
     security_opt:
       - no-new-privileges:true
