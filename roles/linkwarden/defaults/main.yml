@@ -2,8 +2,17 @@
 linkwarden_image_tag: "v2.13.5"
 linkwarden_postgres_image_tag: "17-alpine"
 linkwarden_meilisearch_image_tag: "v1.38.2"
+
+linkwarden_role_name: "linkwarden"
+linkwarden_root_dir: "{{ project_root_dir }}/{{ linkwarden_role_name }}"
+
+linkwarden_db_name: "linkwarden_db"
 linkwarden_db_user: "{{ vault_linkwarden_db_user }}"
 linkwarden_db_password: "{{ vault_linkwarden_db_password }}"
 linkwarden_nextauth_secret: "{{ vault_linkwarden_nextauth_secret }}"
 linkwarden_meilisearch_master_key: "{{ vault_linkwarden_meilisearch_master_key }}"
-linkwarden_database_url: "{{ vault_linkwarden_database_url }}"
+
+linkwarden_reverse_proxy_network: "{{ traefik_network }}"
+linkwarden_database_url: "postgresql://{{ vault_linkwarden_db_user }}:{{ vault_linkwarden_db_password }}@db:5432/{{ linkwarden_db_name }}"
+linkwarden_web_url: "{{ linkwarden_role_name }}.{{ traefik_domain }}"
+

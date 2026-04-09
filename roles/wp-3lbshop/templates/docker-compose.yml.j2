@@ -1,7 +1,7 @@
 services:
   app:
     image: "wordpress:{{ wp_3lbshop_wordpress_image_tag }}"
-    container_name: "wp-3lbshop"
+    container_name: "{{ wp_3lbshop_role_name }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -11,46 +11,47 @@ services:
       - ./src:/var/www/html
       - ./config/php.ini:/usr/local/etc/php/conf.d/php.ini
     networks:
-      - proxy
-      - "wp-3lbshop_internal"
+      - "{{ wp_3lbshop_reverse_proxy_network }}"
+      - "{{ wp_3lbshop_role_name }}_internal"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wp-3lbshop.rule=Host(`wp-3lbshop.{{ traefik_domain }}`)"
-      - "traefik.http.routers.wp-3lbshop.entrypoints=websecure"
-      - "traefik.http.routers.wp-3lbshop.tls=true"
-      - "traefik.http.services.wp-3lbshop.loadbalancer.server.port=80"
+      - "traefik.http.routers.{{ wp_3lbshop_role_name }}.rule=Host(`{{ wp_3lbshop_web_url }}`)"
+      - "traefik.http.routers.{{ wp_3lbshop_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ wp_3lbshop_role_name }}.tls=true"
+      - "traefik.http.services.{{ wp_3lbshop_role_name }}.loadbalancer.server.port=80"
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_NAME: "{{ wp_3lbshop_db_name }}"
       WORDPRESS_DB_PASSWORD: "{{ wp_3lbshop_db_password }}"
       WORDPRESS_DB_USER: "{{ wp_3lbshop_db_user }}"
 
   db:
     image: "mysql:{{ wp_3lbshop_mysql_image_tag }}"
+    container_name: "{{ wp_3lbshop_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/mysql
     networks:
-      - "wp-3lbshop_internal"
+      - "{{ wp_3lbshop_role_name }}_internal"
     environment:
-      MYSQL_DATABASE: wordpress
+      MYSQL_DATABASE: "{{ wp_3lbshop_db_name }}"
       MYSQL_USER: "{{ wp_3lbshop_db_user }}"
       MYSQL_PASSWORD: "{{ wp_3lbshop_db_password }}"
       MYSQL_ROOT_PASSWORD: "{{ wp_3lbshop_db_root_password }}"
 
   redis:
-    image: redis:alpine
+    image: "redis:{{ wp_3lbshop_redis_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     networks:
-      - "wp-3lbshop_internal"
+      - "{{ wp_3lbshop_role_name }}_internal"
 
 networks:
-  proxy:
+  "{{ wp_3lbshop_reverse_proxy_network }}":
     external: true
-  "wp-3lbshop_internal":
-    name: "wp-3lbshop_internal"
+  "{{ wp_3lbshop_role_name }}_internal":
+    name: "{{ wp_3lbshop_role_name }}_internal"
     internal: true

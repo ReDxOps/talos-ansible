@@ -1,21 +1,21 @@
 services:
   app:
     image: "vendor/image:{{ app_image_tag }}"
-    container_name: "{{ role_name }}"
+    container_name: "{{ skeleton_role_name }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./data:/app/data
     networks:
-      - proxy
+      - "{{ affine_reverse_proxy_network }}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ role_name }}.rule=Host(`{{ role_name }}.{{ traefik_domain }}`)"
-      - "traefik.http.routers.{{ role_name }}.entrypoints=websecure"
-      - "traefik.http.routers.{{ role_name }}.tls=true"
-      - "traefik.http.services.{{ role_name }}.loadbalancer.server.port=80"
+      - "traefik.http.routers.{{ skeleton_role_name }}.rule=Host(`{{ skeleton_web_url }}`)"
+      - "traefik.http.routers.{{ skeleton_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ skeleton_role_name }}.tls=true"
+      - "traefik.http.services.{{ skeleton_role_name }}.loadbalancer.server.port=80"
 
 networks:
-  proxy:
+  "{{ affine_reverse_proxy_network }}":
     external: true

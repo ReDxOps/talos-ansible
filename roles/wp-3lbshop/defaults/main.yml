@@ -1,12 +1,19 @@
 ---
 wp_3lbshop_wordpress_image_tag: "php8.4-apache"
 wp_3lbshop_mysql_image_tag: "8.0"
+wp_3lbshop_redis_image_tag: "8.6.2-alpine"
 
 wp_3lbshop_php_upload_max_filesize: "128M"
 wp_3lbshop_php_post_max_size: "128M"
 wp_3lbshop_php_memory_limit: "512M"
 wp_3lbshop_php_max_execution_time: "300"
 
+wp_3lbshop_db_name: "wp_3lbshop_db"
 wp_3lbshop_db_user: "{{ vault_wp_3lbshop_db_user }}"
 wp_3lbshop_db_password: "{{ vault_wp_3lbshop_db_password }}"
 wp_3lbshop_db_root_password: "{{ vault_wp_3lbshop_db_root_password }}"
+
+wp_3lbshop_role_name: "wp_3lbshop"
+wp_3lbshop_root_dir: "{{ project_root_dir }}/{{ wp_3lbshop_role_name }}"
+wp_3lbshop_reverse_proxy_network: "{{ traefik_network }}"
+wp_3lbshop_web_url: "{{ wp_3lbshop_role_name }}.{{ traefik_domain }}"

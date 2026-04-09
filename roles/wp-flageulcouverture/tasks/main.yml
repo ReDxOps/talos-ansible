@@ -6,18 +6,18 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/wp-flageulcouverture"
-    - "/opt/talos/wp-flageulcouverture/src"
-    - "/opt/talos/wp-flageulcouverture/db_data"
+    - "{{ wp_flageulcouverture_root_dir }}"
+    - "{{ wp_flageulcouverture_root_dir }}/src"
+    - "{{ wp_flageulcouverture_root_dir }}/db_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/wp-flageulcouverture/docker-compose.yml"
+    dest: "{{ wp_flageulcouverture_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/wp-flageulcouverture"
+    project_src: "{{ wp_flageulcouverture_root_dir }}"
     state: present
     pull: always

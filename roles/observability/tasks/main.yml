@@ -2,7 +2,7 @@
 
 - name: Create data directories with specific permissions
   ansible.builtin.file:
-    path: "/opt/talos/observability/data/{{ item.name }}"
+    path: "{{ observability_root_dir }}/data/{{ item.name }}"
     state: directory
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
@@ -21,12 +21,12 @@
     group: '0'
     mode: '0755'
   loop:
-    - /opt/talos/observability/config/prometheus
-    - /opt/talos/observability/config/loki
-    - /opt/talos/observability/config/promtail
-    - /opt/talos/observability/config/alertmanager
-    - /opt/talos/observability/config/grafana/provisioning/datasources
-    - /opt/talos/observability/config/grafana/provisioning/dashboards/json
+    - "{{ observability_root_dir }}/config/prometheus"
+    - "{{ observability_root_dir }}/config/loki"
+    - "{{ observability_root_dir }}/config/promtail"
+    - "{{ observability_root_dir }}/config/alertmanager"
+    - "{{ observability_root_dir }}/config/grafana/provisioning/datasources"
+    - "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json"
 
 - name: Copy configuration templates
   ansible.builtin.template:
@@ -34,19 +34,19 @@
     dest: "{{ item.dest }}"
     mode: '0644'
   loop:
-    - { src: 'prometheus.yml.j2', dest: '/opt/talos/observability/config/prometheus/prometheus.yml' }
-    - { src: 'loki-config.yml.j2', dest: '/opt/talos/observability/config/loki/loki-config.yml' }
-    - { src: 'promtail-config.yml.j2', dest: '/opt/talos/observability/config/promtail/promtail-config.yml' }
-    - { src: 'alerts.yml.j2', dest: '/opt/talos/observability/config/prometheus/alerts.yml' }
-    - { src: 'alertmanager.yml.j2', dest: '/opt/talos/observability/config/alertmanager/alertmanager.yml' }
-    - { src: 'datasources.yml.j2', dest: '/opt/talos/observability/config/grafana/provisioning/datasources/datasources.yml' }
-    - { src: 'dashboards.yml.j2', dest: '/opt/talos/observability/config/grafana/provisioning/dashboards/dashboards.yml' }
-    - { src: 'docker-compose.yml.j2', dest: '/opt/talos/observability/docker-compose.yml' }
+    - { src: 'prometheus.yml.j2', dest: '{{ observability_root_dir }}/config/prometheus/prometheus.yml' }
+    - { src: 'loki-config.yml.j2', dest: '{{ observability_root_dir }}/config/loki/loki-config.yml' }
+    - { src: 'promtail-config.yml.j2', dest: '{{ observability_root_dir }}/config/promtail/promtail-config.yml' }
+    - { src: 'alerts.yml.j2', dest: '{{ observability_root_dir }}/config/prometheus/alerts.yml' }
+    - { src: 'alertmanager.yml.j2', dest: '{{ observability_root_dir }}/config/alertmanager/alertmanager.yml' }
+    - { src: 'datasources.yml.j2', dest: '{{ observability_root_dir }}/config/grafana/provisioning/datasources/datasources.yml' }
+    - { src: 'dashboards.yml.j2', dest: '{{ observability_root_dir }}/config/grafana/provisioning/dashboards/dashboards.yml' }
+    - { src: 'docker-compose.yml.j2', dest: '{{ observability_root_dir }}/docker-compose.yml' }
 
 - name: Download external dashboards from Grafana API
   ansible.builtin.get_url:
     url: "{{ item.url }}"
-    dest: "/opt/talos/observability/config/grafana/provisioning/dashboards/json/{{ item.dest }}"
+    dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item.dest }}"
     mode: '0644'
     owner: '472'
   loop:
@@ -55,7 +55,7 @@
 
 - name: Fix Prometheus datasource variable in downloaded dashboards
   ansible.builtin.replace:
-    path: "/opt/talos/observability/config/grafana/provisioning/dashboards/json/{{ item }}"
+    path: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
     regexp: '\$\{DS_PROMETHEUS\}'
     replace: 'Prometheus'
   loop:
@@ -66,7 +66,7 @@
 - name: Copy local dashboard files
   ansible.builtin.copy:
     src: "dashboards/{{ item }}"
-    dest: "/opt/talos/observability/config/grafana/provisioning/dashboards/json/{{ item }}"
+    dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
     mode: '0644'
     owner: '472'
   loop:
@@ -75,6 +75,6 @@
 
 - name: Start observability stack
   community.docker.docker_compose_v2:
-    project_src: /opt/talos/observability
+    project_src: {{ observability_root_dir }}
     pull: always
     state: present

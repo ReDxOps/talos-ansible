@@ -28,7 +28,7 @@ http:
           - "{{ traefik_dashboard_auth }}"
   routers:
     dashboard:
-      rule: "Host(`traefik.{{ traefik_domain }}`)"
+      rule: "Host(`{{ traefik_web_url }}`)"
       service: "api@internal"
       middlewares:
         - "secHeaders"

@@ -37,10 +37,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network={{ invoiceninja_reverse_proxy_network }}"
-      - "traefik.http.routers.invoiceninja.rule=Host(`{{ invoiceninja_web_url }}`)"
-      - "traefik.http.routers.invoiceninja.entrypoints=websecure"
-      - "traefik.http.routers.invoiceninja.tls=true"
-      - "traefik.http.services.invoiceninja.loadbalancer.server.port=80"
+      - "traefik.http.routers.{{ invoiceninja_role_name }}.rule=Host(`{{ invoiceninja_web_url }}`)"
+      - "traefik.http.routers.{{ invoiceninja_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ invoiceninja_role_name }}.tls=true"
+      - "traefik.http.services.{{ invoiceninja_role_name }}.loadbalancer.server.port=80"
 
   redis:
     image: "redis:{{ invoiceninja_redis_image_tag }}"

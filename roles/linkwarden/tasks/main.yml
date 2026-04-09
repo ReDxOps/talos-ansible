@@ -6,19 +6,19 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/linkwarden"
-    - "/opt/talos/linkwarden/data"
-    - "/opt/talos/linkwarden/db_data"
-    - "/opt/talos/linkwarden/meili_data"
+    - "{{ linkwarden_root_dir }}"
+    - "{{ linkwarden_root_dir }}/data"
+    - "{{ linkwarden_root_dir }}/db_data"
+    - "{{ linkwarden_root_dir }}/meili_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/linkwarden/docker-compose.yml"
+    dest: "{{ linkwarden_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/linkwarden"
+    project_src: "{{ linkwarden_root_dir }}"
     state: present
     pull: always

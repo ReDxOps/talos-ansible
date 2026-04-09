@@ -1,7 +1,7 @@
 services:
   portainer:
     image: portainer/portainer-ce:{{ portainer_image_tag }}
-    container_name: portainer
+    container_name: "{{ portainer_role_name }}"
     command: 
       - "--admin-password={{ portainer_admin_password_hash | replace('$', '$$') }}"
     restart: always
@@ -12,14 +12,15 @@ services:
       - ./data:/data
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - proxy
+      - "{{ portainer_reverse_proxy_network }}"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`{{ portainer_domain }}`)"
-      - "traefik.http.routers.portainer.entrypoints=websecure"
-      - "traefik.http.routers.portainer.tls=true"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.docker.network={{ portainer_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ portainer_role_name }}.rule=Host(`{{ portainer_web_url }}`)"
+      - "traefik.http.routers.{{ portainer_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ portainer_role_name }}.tls=true"
+      - "traefik.http.services.{{ portainer_role_name }}.loadbalancer.server.port=9000"
 
 networks:
-  proxy:
+  "{{ portainer_reverse_proxy_network }}":
     external: true

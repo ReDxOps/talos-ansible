@@ -20,10 +20,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network={{ affine_reverse_proxy_network }}"
-      - "traefik.http.routers.affine.rule=Host(`{{ affine_web_url }}`)"
-      - "traefik.http.routers.affine.entrypoints=websecure"
-      - "traefik.http.routers.affine.tls=true"
-      - "traefik.http.services.affine.loadbalancer.server.port=3010"
+      - "traefik.http.routers.{{ affine_role_name }}.rule=Host(`{{ affine_web_url }}`)"
+      - "traefik.http.routers.{{ affine_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ affine_role_name }}.tls=true"
+      - "traefik.http.services.{{ affine_role_name }}.loadbalancer.server.port=3010"
     environment:
       DATABASE_URL: "{{ affine_database_url }}"
       REDIS_SERVER_HOST: redis
@@ -64,7 +64,7 @@ services:
       - "{{ affine_role_name }}_internal"
 
 networks:
-  "{{ affine_reverse_proxy_network }}"
+  "{{ affine_reverse_proxy_network }}":
     external: true
   "{{ affine_role_name }}_internal":
     name: "{{ affine_role_name }}_internal"

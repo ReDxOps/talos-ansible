@@ -8,3 +8,6 @@ satisfactory_server_maxplayers: "32"
 
 satisfactory_game_port: 7777
 satisfactory_messaging_port: 8888
+
+satisfactory_role_name: "satisfactory"
+satisfactory_root_dir: "{{ project_root_dir }}/{{ satisfactory_role_name }}"
