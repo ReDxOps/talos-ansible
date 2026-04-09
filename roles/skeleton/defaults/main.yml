@@ -1,2 +1,7 @@
 ---
 skeleton_app_image_tag: "1.0"
+
+skeleton_role_name: "skeleton"
+skeleton_root_dir: "{{ project_root_dir }}/{{ skeleton_role_name }}"
+skeleton_reverse_proxy_network: "{{ traefik_network }}"
+skeleton_web_url: "{{ skeleton_role_name }}.{{ traefik_domain }}"

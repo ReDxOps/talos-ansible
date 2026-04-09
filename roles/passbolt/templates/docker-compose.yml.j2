@@ -2,27 +2,27 @@ services:
   app:
     image: "passbolt/passbolt:{{ passbolt_image_tag }}"
     restart: unless-stopped
-    container_name: "passbolt"
+    container_name: "{{ passbolt_role_name }}"
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./gpg_volume:/etc/passbolt/gpg
       - ./jwt_volume:/etc/passbolt/jwt
     networks:
-      - proxy
-      - "passbolt_internal"
+      - "{{ passbolt_reverse_proxy_network }}"
+      - "{{ passbolt_role_name }}_internal"
     labels:
       - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
-      - "traefik.http.routers.passbolt.rule=Host(`passbolt.{{ traefik_domain }}`)"
-      - "traefik.http.routers.passbolt.entrypoints=websecure"
-      - "traefik.http.routers.passbolt.tls=true"
-      - "traefik.http.services.passbolt.loadbalancer.server.port=8080"
+      - "traefik.docker.network={{ passbolt_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ passbolt_role_name }}.rule=Host(`{{ passbolt_web_url }}`)"
+      - "traefik.http.routers.{{ passbolt_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ passbolt_role_name }}.tls=true"
+      - "traefik.http.services.{{ passbolt_role_name }}.loadbalancer.server.port=8080"
     environment:
-      APP_FULL_BASE_URL: "https://passbolt.{{ traefik_domain }}"
+      APP_FULL_BASE_URL: "https://{{ passbolt_web_url }}"
 
       DATASOURCES_DEFAULT_HOST: "db"
-      DATASOURCES_DEFAULT_DATABASE: "passbolt"
+      DATASOURCES_DEFAULT_DATABASE: "{{ passbolt_db_name }}"
       DATASOURCES_DEFAULT_USERNAME: "{{ passbolt_db_user }}"
       DATASOURCES_DEFAULT_PASSWORD: "{{ passbolt_db_password }}"
 
@@ -32,32 +32,33 @@ services:
       EMAIL_TRANSPORT_DEFAULT_USERNAME: "{{ passbolt_smtp_user }}"
       EMAIL_TRANSPORT_DEFAULT_PASSWORD: "{{ passbolt_smtp_password }}"
 
-      PASSBOLT_KEY_NAME: "TALOS Passbolt Server"
-      PASSBOLT_KEY_EMAIL: "passbolt@{{ traefik_domain }}"
+      PASSBOLT_KEY_NAME: "{{ passbolt_send_name }}"
+      PASSBOLT_KEY_EMAIL: "{{ passbolt_email_sender }}"
 
-      PASSBOLT_SSL_FORCE: "false"
+      PASSBOLT_SSL_FORCE: "{{ passbolt_ssl_force }}"
       PASSBOLT_TRUSTED_PROXIES: "172.18.0.0/16"
 
     command: [ "/usr/bin/wait-for.sh", "-t", "0", "db:3306", "--", "/docker-entrypoint.sh" ]
 
   db:
     image: "mariadb:{{ passbolt_mariadb_image_tag }}"
+    container_name: "{{ passbolt_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/mysql
     networks:
-      - "passbolt_internal"
+      - "{{ passbolt_role_name }}_internal"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
-      MYSQL_DATABASE: "passbolt"
+      MYSQL_DATABASE: "{{ passbolt_db_name }}"
       MYSQL_USER: "{{ passbolt_db_user }}"
       MYSQL_PASSWORD: "{{ passbolt_db_password }}"
 
 networks:
-  proxy:
+  "{{ passbolt_reverse_proxy_network }}":
     external: true
-  "passbolt_internal":
-    name: "passbolt_internal"
+  "{{ passbolt_role_name }}_internal":
+    name: "{{ passbolt_role_name }}_internal"
     internal: true

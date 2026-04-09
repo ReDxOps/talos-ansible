@@ -6,17 +6,17 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/skeleton"
-    - "/opt/talos/skeleton/data"
+    - "{{ skeleton_root_dir }}"
+    - "{{ skeleton_root_dir }}/data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/skeleton/docker-compose.yml"
+    dest: "{{ skeleton_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/skeleton"
+    project_src: "{{ skeleton_root_dir }}"
     state: present
     pull: always

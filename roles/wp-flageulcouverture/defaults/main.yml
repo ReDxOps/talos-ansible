@@ -1,7 +1,15 @@
 ---
-wp_flageul_wordpress_image_tag: "php8.4-apache"
-wp_flageul_mysql_image_tag: "8.0"
+wp_flageulcouverture_wordpress_image_tag: "php8.4-apache"
+wp_flageulcouverture_mysql_image_tag: "8.0"
 
+wp_flageulcouverture_db_name: "wp_flageulcouverture_db"
 wp_flageulcouverture_db_user: "{{ vault_wp_flageulcouverture_db_user }}"
 wp_flageulcouverture_db_password: "{{ vault_wp_flageulcouverture_db_password }}"
 wp_flageulcouverture_db_root_password: "{{ vault_wp_flageulcouverture_db_root_password }}"
+
+
+
+wp_flageulcouverture_role_name: "wp_flageulcouverture"
+wp_flageulcouverture_root_dir: "{{ project_root_dir }}/{{ wp_flageulcouverture_role_name }}"
+wp_flageulcouverture_reverse_proxy_network: "{{ traefik_network }}"
+wp_flageulcouverture_web_url: "{{ wp_flageulcouverture_role_name }}.{{ traefik_domain }}"

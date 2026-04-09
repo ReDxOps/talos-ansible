@@ -8,18 +8,18 @@
     group: "{{ item.group | default('root') }}"
     mode: '0755'
   loop:
-    - {path: "/opt/talos/vikunja"}
-    - {path: "/opt/talos/vikunja/data", owner: 1000, group: 1000}
-    - {path: "/opt/talos/vikunja/db_data"}
+    - {path: "{{ vikunja_root_dir }}"}
+    - {path: "{{ vikunja_root_dir }}/data", owner: 1000, group: 1000}
+    - {path: "{{ vikunja_root_dir }}/db_data"}
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/vikunja/docker-compose.yml"
+    dest: "{{ vikunja_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/vikunja"
+    project_src: "{{ vikunja_root_dir }}"
     state: present
     pull: always

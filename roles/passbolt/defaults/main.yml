@@ -2,6 +2,7 @@
 passbolt_image_tag: "5.10.0-1-ce-non-root"
 passbolt_mariadb_image_tag: "11.8"
 
+passbolt_db_name: "{{ passbolt_db }}"
 passbolt_db_user: "{{ vault_passbolt_db_user }}"
 passbolt_db_password: "{{ vault_passbolt_db_password }}"
 
@@ -9,8 +10,15 @@ passbolt_smtp_host: "{{ smtp_host }}"
 passbolt_smtp_port: "{{ smtp_port }}"
 passbolt_smtp_user: "{{ smtp_user }}"
 passbolt_smtp_password: "{{ smtp_password }}"
-passbolt_email_sender: "passbolt@{{ traefik_domain }}"
+passbolt_email_sender: "{{ passbolt_role_name }}@{{ traefik_domain }}"
 
 passbolt_admin_email: "remydubois411@gmail.com"
-passbolt_admin_first_name: "Remy"
+passbolt_admin_first_name: "Rémy"
 passbolt_admin_last_name: "Dubois"
+
+passbolt_role_name: "passbolt"
+passbolt_root_dir: "{{ project_root_dir }}/{{ passbolt_role_name }}"
+passbolt_reverse_proxy_network: "{{ traefik_network }}"
+passbolt_web_url: "{{ passbolt_role_name }}.{{ traefik_domain }}"
+passbolt_ssl_force: false
+passbolt_send_name: "TALOS Passbolt Server"

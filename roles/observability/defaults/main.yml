@@ -10,3 +10,7 @@ observability_loki_image_tag: "3.5.11"
 observability_promtail_image_tag: "3.5.11"
 observability_alertmanager_image_tag: "v0.27.0"
 observability_alertmanager_webhook_url: "{{ vault_observability_alertmanager_webhook_url }}"
+
+observability_role_name: "observability"
+observability_reverse_proxy_network: "{{ traefik_network }}"
+observability_root_dir: "{{ project_root_dir }}/{{ observability_role_name }}"

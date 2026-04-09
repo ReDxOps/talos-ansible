@@ -1,7 +1,7 @@
 services:
   app:
     image: "requarks/wiki:{{ wikijs_image_tag }}"
-    container_name: "wikijs"
+    container_name: "{{ wikijs_role_name }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -11,37 +11,38 @@ services:
       - ./data:/app/data
       - ./wiki-uploads:/app/data/uploads
     networks:
-      - proxy
-      - wiki_internal
+      - "{{ wikijs_reverse_proxy_network }}"
+      - "{{ wikijs_role_name }}_internal"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wikijs.rule=Host(`wiki.{{ traefik_domain }}`)"
-      - "traefik.http.routers.wikijs.entrypoints=websecure"
-      - "traefik.http.routers.wikijs.tls=true"
-      - "traefik.http.services.wikijs.loadbalancer.server.port=3000"
+      "traefik.docker.network={{ wikijs_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ wikijs_role_name }}.rule=Host(`{{ wikijs_web_url }}`)"
+      - "traefik.http.routers.{{ wikijs_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ wikijs_role_name }}.tls=true"
+      - "traefik.http.services.{{ wikijs_role_name }}.loadbalancer.server.port=3000"
     environment:
       DB_HOST: db
-      DB_NAME: wikijs
+      DB_NAME: "{{ wikijs_db_name }}"
       DB_USER: "{{ wikijs_db_user }}"
       DB_PASS: "{{ wikijs_db_password }}"
       DB_PORT: 5432
       DB_TYPE: postgres
   db:
     image: postgres:{{ wikijs_postgres_image_tag }}
-    container_name: wikijs_db
+    container_name: "{{ wikijs_role_name }}-db"
     security_opt:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/postgresql/data
     restart: unless-stopped
     networks:
-      - wiki_internal
+      - "{{ wikijs_role_name }}_internal"
     environment:
-      POSTGRES_DB: wikijs
+      POSTGRES_DB: "{{ wikijs_db_name }}"
       POSTGRES_USER: "{{ wikijs_db_user }}"
       POSTGRES_PASSWORD: "{{ wikijs_db_password }}"
 networks:
-  proxy:
+  "{{ wikijs_reverse_proxy_network }}":
     external: true
-  wiki_internal:
+  "{{ wikijs_role_name }}_internal":
     internal: true

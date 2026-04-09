@@ -6,10 +6,10 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/wp-3lbshop"
-    - "/opt/talos/wp-3lbshop/src"
-    - "/opt/talos/wp-3lbshop/config"
-    - "/opt/talos/wp-3lbshop/db_data"
+    - "{{ wp_3lbshop_root_dir }}"
+    - "{{ wp_3lbshop_root_dir }}/src"
+    - "{{ wp_3lbshop_root_dir }}/config"
+    - "{{ wp_3lbshop_root_dir }}/db_data"
 
 - name: Copy docker-compose and php.ini template
   ansible.builtin.template:
@@ -17,11 +17,11 @@
     dest: "{{ item.dest }}"
     mode: '0644'
   loop:
-    - { src: docker-compose.yml.j2, dest: "/opt/talos/wp-3lbshop/docker-compose.yml" }
-    - { src: php.ini.j2, dest: "/opt/talos/wp-3lbshop/config/php.ini" }
+    - { src: docker-compose.yml.j2, dest: "{{ wp_3lbshop_root_dir }}/docker-compose.yml" }
+    - { src: php.ini.j2, dest: "{{ wp_3lbshop_root_dir }}/config/php.ini" }
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/wp-3lbshop"
+    project_src: "{{ wp_3lbshop_root_dir }}"
     state: present
     pull: always

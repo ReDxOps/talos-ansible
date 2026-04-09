@@ -6,19 +6,19 @@
     state: directory
     mode: '0755'
   loop:
-    - "/opt/talos/wikijs"
-    - "/opt/talos/wikijs/data"
-    - "/opt/talos/wikijs/wiki-uploads"
-    - "/opt/talos/wikijs/db_data"
+    - "{{ wikijs_root_dir }}"
+    - "{{ wikijs_root_dir }}/data"
+    - "{{ wikijs_root_dir }}/wiki-uploads"
+    - "{{ wikijs_root_dir }}/db_data"
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/wikijs/docker-compose.yml"
+    dest: "{{ wikijs_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/wikijs"
+    project_src: "{{ wikijs_root_dir }}"
     state: present
     pull: always

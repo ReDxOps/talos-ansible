@@ -8,20 +8,20 @@
     owner: "{{ item.owner | default('root') }}"
     group: "{{ item.group | default('root') }}"
   loop:
-    - { path: "/opt/talos/passbolt" }
-    - { path: "/opt/talos/passbolt/db_data" }
-    - { path: "/opt/talos/passbolt/gpg_volume", owner: 33, group: 33 }
-    - { path: "/opt/talos/passbolt/jwt_volume", owner: 33, group: 33 }
+    - { path: "{{ passbolt_root_dir }}" }
+    - { path: "{{ passbolt_root_dir }}/db_data" }
+    - { path: "{{ passbolt_root_dir }}/gpg_volume", owner: 33, group: 33 }
+    - { path: "{{ passbolt_root_dir }}/jwt_volume", owner: 33, group: 33 }
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/passbolt/docker-compose.yml"
+    dest: "{{ passbolt_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/passbolt"
+    project_src: "{{ passbolt_root_dir }}"
     state: present
     pull: always
 

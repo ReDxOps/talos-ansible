@@ -1,23 +1,23 @@
 services:
   traefik:
     image: "traefik:{{ traefik_image_tag }}"
-    container_name: traefik
+    container_name: "{{ traefik_role_name }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     environment:
-      - TRAEFIK_LOG_LEVEL=INFO
+      TRAEFIK_LOG_LEVEL: "{{ traefik_log_level }}"
     ports:
-      - "80:80"  
-      - "443:443"
+      - "{{ traefik_http_port }}:80"  
+      - "{{ traefik_https_port }}:443"
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro
       - ./dynamic.yml:/etc/traefik/dynamic.yml:ro
       - ./data/acme.json:/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      - proxy
+      - "{{ traefik_reverse_proxy_network }}"
 
 networks:
-  proxy:
+  "{{ traefik_reverse_proxy_network }}":
     external: true

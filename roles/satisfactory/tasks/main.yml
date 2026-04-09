@@ -7,17 +7,17 @@
     mode: '0755'
     owner: "{{ item.owner | default('root') }}"
   loop:
-    - {path: "/opt/talos/satisfactory"}
-    - {path: "/opt/talos/satisfactory/data", owner: 1000}
+    - {path: "{{ satisfactory_root_dir }}"}
+    - {path: "{{ satisfactory_root_dir }}/data", owner: 1000}
 
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
-    dest: "/opt/talos/satisfactory/docker-compose.yml"
+    dest: "{{ satisfactory_root_dir }}/docker-compose.yml"
     mode: '0644'
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
-    project_src: "/opt/talos/satisfactory"
+    project_src: "{{ satisfactory_root_dir }}"
     state: present
     pull: always
