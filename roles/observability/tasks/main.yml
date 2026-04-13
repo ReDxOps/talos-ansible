@@ -1,25 +1,24 @@
 ---
-
 - name: Create data directories with specific permissions
   ansible.builtin.file:
     path: "{{ observability_root_dir }}/data/{{ item.name }}"
     state: directory
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
-    mode: '0755'
+    mode: "0755"
   loop:
-    - { name: 'prometheus', owner: '65534', group: '65534' }
-    - { name: 'grafana', owner: '472', group: '0' }
-    - { name: 'loki', owner: '10001', group: '10001' }
-    - { name: 'alertmanager', owner: '65534', group: '65534' }
+    - { name: "prometheus", owner: "65534", group: "65534" }
+    - { name: "grafana", owner: "472", group: "0" }
+    - { name: "loki", owner: "10001", group: "10001" }
+    - { name: "alertmanager", owner: "65534", group: "65534" }
 
 - name: Create configuration and provisioning directories
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    owner: '472'
-    group: '0'
-    mode: '0755'
+    owner: "472"
+    group: "0"
+    mode: "0755"
   loop:
     - "{{ observability_root_dir }}/config/prometheus"
     - "{{ observability_root_dir }}/config/loki"
@@ -32,23 +31,23 @@
   ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
-    mode: '0644'
+    mode: "0644"
   loop:
-    - { src: 'prometheus.yml.j2', dest: '{{ observability_root_dir }}/config/prometheus/prometheus.yml' }
-    - { src: 'loki-config.yml.j2', dest: '{{ observability_root_dir }}/config/loki/loki-config.yml' }
-    - { src: 'promtail-config.yml.j2', dest: '{{ observability_root_dir }}/config/promtail/promtail-config.yml' }
-    - { src: 'alerts.yml.j2', dest: '{{ observability_root_dir }}/config/prometheus/alerts.yml' }
-    - { src: 'alertmanager.yml.j2', dest: '{{ observability_root_dir }}/config/alertmanager/alertmanager.yml' }
-    - { src: 'datasources.yml.j2', dest: '{{ observability_root_dir }}/config/grafana/provisioning/datasources/datasources.yml' }
-    - { src: 'dashboards.yml.j2', dest: '{{ observability_root_dir }}/config/grafana/provisioning/dashboards/dashboards.yml' }
-    - { src: 'docker-compose.yml.j2', dest: '{{ observability_root_dir }}/docker-compose.yml' }
+    - { src: "prometheus.yml.j2", dest: "{{ observability_root_dir }}/config/prometheus/prometheus.yml" }
+    - { src: "loki-config.yml.j2", dest: "{{ observability_root_dir }}/config/loki/loki-config.yml" }
+    - { src: "promtail-config.yml.j2", dest: "{{ observability_root_dir }}/config/promtail/promtail-config.yml" }
+    - { src: "alerts.yml.j2", dest: "{{ observability_root_dir }}/config/prometheus/alerts.yml" }
+    - { src: "alertmanager.yml.j2", dest: "{{ observability_root_dir }}/config/alertmanager/alertmanager.yml" }
+    - { src: "datasources.yml.j2", dest: "{{ observability_root_dir }}/config/grafana/provisioning/datasources/datasources.yml" }
+    - { src: "dashboards.yml.j2", dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/dashboards.yml" }
+    - { src: "docker-compose.yml.j2", dest: "{{ observability_root_dir }}/docker-compose.yml" }
 
 - name: Download external dashboards from Grafana API
   ansible.builtin.get_url:
     url: "{{ item.url }}"
     dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item.dest }}"
-    mode: '0644'
-    owner: '472'
+    mode: "0644"
+    owner: "472"
   loop:
     - { url: "https://grafana.com/api/dashboards/1860/revisions/latest/download", dest: "dashboard-1860.json" }
     - { url: "https://grafana.com/api/dashboards/11462/revisions/latest/download", dest: "traefik-dashboard.json" }
@@ -57,7 +56,7 @@
   ansible.builtin.replace:
     path: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
     regexp: '\$\{DS_PROMETHEUS\}'
-    replace: 'Prometheus'
+    replace: "Prometheus"
   loop:
     - dashboard-1860.json
     - traefik-dashboard.json
@@ -67,14 +66,14 @@
   ansible.builtin.copy:
     src: "dashboards/{{ item }}"
     dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
-    mode: '0644'
-    owner: '472'
+    mode: "0644"
+    owner: "472"
   loop:
     - docker-dashboard.json
     - docker-logs-dashboard.json
 
 - name: Start observability stack
   community.docker.docker_compose_v2:
-    project_src: {{ observability_root_dir }}
+    project_src: "{{ observability_root_dir }}"
     pull: always
     state: present

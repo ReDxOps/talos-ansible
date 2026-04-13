@@ -1,0 +1,12 @@
+---
+- name: Security hardening
+  import_playbook: playbooks/01_common.yml
+
+- name: Docker runtime
+  import_playbook: playbooks/02_docker.yml
+
+- name: Infrastructure services
+  import_playbook: playbooks/03_service_infra.yml
+
+- name: Application stacks
+  import_playbook: playbooks/04_applications.yml

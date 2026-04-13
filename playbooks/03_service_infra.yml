@@ -1,0 +1,17 @@
+---
+- name: Infrastructure services
+  hosts: all
+  become: true
+
+  roles:
+    - role: traefik
+      tags: traefik
+
+    - role: portainer
+      tags: portainer
+
+    - role: observability
+      tags: observability
+
+    - role: redxops.kopia
+      tags: kopia

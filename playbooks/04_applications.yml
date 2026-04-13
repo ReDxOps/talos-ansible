@@ -1,0 +1,32 @@
+---
+- name: Application stacks
+  hosts: all
+  become: true
+
+  roles:
+    - role: wikijs
+      tags: wikijs
+
+    - role: linkwarden
+      tags: linkwarden
+
+    - role: vikunja
+      tags: vikunja
+
+    - role: passbolt
+      tags: passbolt
+
+    - role: affine
+      tags: affine
+
+    - role: satisfactory
+      tags: satisfactory
+
+    - role: invoiceninja
+      tags: invoiceninja
+
+    - role: wp-flageulcouverture
+      tags: wp-flageulcouverture, wordpress
+
+    - role: wp-3lbshop
+      tags: wp-3lbshop, wordpress

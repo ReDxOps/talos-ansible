@@ -1,5 +1,5 @@
 ---
-- name: Server initialisation
+- name: server initialisation
   hosts: all
   become: true
   gather_facts: false

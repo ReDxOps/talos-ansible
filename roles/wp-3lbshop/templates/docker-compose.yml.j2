@@ -1,3 +1,5 @@
+---
+
 services:
   app:
     image: "wordpress:{{ wp_3lbshop_wordpress_image_tag }}"
@@ -39,7 +41,7 @@ services:
       MYSQL_DATABASE: "{{ wp_3lbshop_db_name }}"
       MYSQL_USER: "{{ wp_3lbshop_db_user }}"
       MYSQL_PASSWORD: "{{ wp_3lbshop_db_password }}"
-      MYSQL_ROOT_PASSWORD: "{{ wp_3lbshop_db_root_password }}"
+      MYSQL_RANDOM_ROOT_PASSWORD: true
 
   redis:
     image: "redis:{{ wp_3lbshop_redis_image_tag }}"
