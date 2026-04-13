@@ -11,7 +11,6 @@ wp_3lbshop_php_max_execution_time: "300"
 wp_3lbshop_db_name: "wp_3lbshop_db"
 wp_3lbshop_db_user: "{{ vault_wp_3lbshop_db_user }}"
 wp_3lbshop_db_password: "{{ vault_wp_3lbshop_db_password }}"
-wp_3lbshop_db_root_password: "{{ vault_wp_3lbshop_db_root_password }}"
 
 wp_3lbshop_role_name: "wp_3lbshop"
 wp_3lbshop_root_dir: "{{ project_root_dir }}/{{ wp_3lbshop_role_name }}"

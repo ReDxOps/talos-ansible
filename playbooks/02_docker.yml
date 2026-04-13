@@ -1,5 +1,5 @@
 ---
-- name: Install Docker Engine
+- name: Docker runtime
   hosts: all
   become: true
 

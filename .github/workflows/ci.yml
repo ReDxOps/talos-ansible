@@ -1,0 +1,47 @@
+name: CI
+run-name: Lint & Syntax Check for ${{ github.ref_name }}
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ansible-test:
+    name: Quality & Syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible & Tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible-core ansible-lint
+
+      - name: Install Dependencies (Galaxy)
+        run: |
+          if [ -f requirements.yml ]; then
+            ansible-galaxy role install -r requirements.yml
+            ansible-galaxy collection install -r requirements.yml
+          fi
+
+      - name: Setup Vault Passwords
+        run: |
+          echo "${{ secrets.VAULT_PASS_DEV }}" > .vault_pass_dev
+          echo "${{ secrets.VAULT_PASS_PROD }}" > .vault_pass_prod
+
+      - name: Ansible Lint (Master Playbook)
+        run: ansible-lint site.yml
+
+      - name: Syntax Check (Master Playbook)
+        run: ansible-playbook site.yml --syntax-check

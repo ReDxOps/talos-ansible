@@ -1,16 +1,15 @@
 ---
-
 - name: Create traefik data directory
   ansible.builtin.file:
     path: "{{ traefik_root_dir }}/data"
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Create traefik acme file
   ansible.builtin.file:
     path: "{{ traefik_root_dir }}/data/acme.json"
     state: touch
-    mode: '0600'
+    mode: "0600"
     modification_time: preserve
     access_time: preserve
 
@@ -18,19 +17,19 @@
   ansible.builtin.template:
     src: traefik.yml.j2
     dest: "{{ traefik_root_dir }}/traefik.yml"
-    mode: '0644'
+    mode: "0644"
 
 - name: Copy traefik dynamic conf template
   ansible.builtin.template:
     src: dynamic.yml.j2
     dest: "{{ traefik_root_dir }}/dynamic.yml"
-    mode: '0644'
+    mode: "0644"
 
 - name: Copy traefik docker compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ traefik_root_dir }}/docker-compose.yml"
-    mode: '0644'
+    mode: "0644"
 
 - name: Create docker network
   community.docker.docker_network:
@@ -39,6 +38,6 @@
 
 - name: Start traefik compose stack
   community.docker.docker_compose_v2:
-    project_src: {{ traefik_root_dir }}
+    project_src: "{{ traefik_root_dir }}"
     pull: always
     state: present

@@ -15,4 +15,3 @@ linkwarden_meilisearch_master_key: "{{ vault_linkwarden_meilisearch_master_key }
 linkwarden_reverse_proxy_network: "{{ traefik_network }}"
 linkwarden_database_url: "postgresql://{{ vault_linkwarden_db_user }}:{{ vault_linkwarden_db_password }}@db:5432/{{ linkwarden_db_name }}"
 linkwarden_web_url: "{{ linkwarden_role_name }}.{{ traefik_domain }}"
-
