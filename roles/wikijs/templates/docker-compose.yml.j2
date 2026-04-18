@@ -17,7 +17,7 @@ services:
       - "{{ wikijs_role_name }}_internal"
     labels:
       - "traefik.enable=true"
-      "traefik.docker.network={{ wikijs_reverse_proxy_network }}"
+      - "traefik.docker.network={{ wikijs_reverse_proxy_network }}"
       - "traefik.http.routers.{{ wikijs_role_name }}.rule=Host(`{{ wikijs_web_url }}`)"
       - "traefik.http.routers.{{ wikijs_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ wikijs_role_name }}.tls=true"
@@ -47,4 +47,5 @@ networks:
   "{{ wikijs_reverse_proxy_network }}":
     external: true
   "{{ wikijs_role_name }}_internal":
+    name: "{{ wikijs_role_name }}_internal"
     internal: true

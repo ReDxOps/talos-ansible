@@ -1,5 +1,9 @@
 ---
 ansible_user: "{{ target_user }}"
 ansible_port: "{{ target_ssh_port }}"
-
 traefik_domain: "remydubois.fr"
+
+kopia_client_hostname: "talos-backup-prod"
+kopia_repository_description: "TALOS Infrastructure Backup Production Repository"
+
+kopia_s3_bucket_name: "talos-backup-prod"

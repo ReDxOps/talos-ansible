@@ -5,5 +5,4 @@ exclude_paths:
   - scripts/
   - docs/
   - .vagrant/
-  - roles/geerlingguy.docker/
-  - roles/redxops.kopia/
+  - roles_external/

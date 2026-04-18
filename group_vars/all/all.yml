@@ -22,3 +22,50 @@ smtp_password: "{{ vault_smtp_password }}"
 smtp_port: 587
 
 traefik_network: "talos_network"
+
+kopia_state: present
+kopia_service_name: "kopia"
+kopia_image_tag: "0.22.3"
+kopia_timezone: "Europe/Paris"
+kopia_backup_agent_name: "kopia-backup-agent"
+
+kopia_password: "{{ vault_kopia_password }}"
+kopia_repository_username: "{{ vault_kopia_repository_username }}"
+
+kopia_s3_endpoint_url: "ec05260ab81ba0bdf549ac94b31821c0.eu.r2.cloudflarestorage.com"
+kopia_s3_access_key_id: "{{ vault_kopia_s3_access_key_id }}"
+kopia_s3_access_key_secret: "{{ vault_kopia_s3_access_key_secret }}"
+
+kopia_root_dir: "/opt/talos/kopia"
+
+kopia_local_dump_dir: "{{ kopia_root_dir }}/dumps_sql"
+kopia_scripts_dir: "{{ kopia_root_dir }}/scripts"
+
+kopia_config_path: "/app/config/repository.config"
+
+kopia_folders_to_save:
+  - "/opt/talos"
+
+kopia_container_suffix: "-db"
+kopia_cleanup_sqldumps_after_backup: true
+
+kopia_policy_keep_daily: 7
+kopia_policy_keep_weekly: 4
+kopia_policy_keep_monthly: 6
+
+kopia_policy_compression: "zstd"
+
+kopia_backup_execution_timer: "*-*-* 03:00:00"
+
+kopia_email_report_enabled: true
+kopia_email_report_to: "remydubois411@gmail.com"
+kopia_email_from: "talos-backup@remydubois.fr"
+kopia_smtp_host: "{{ smtp_host }}"
+kopia_smtp_port: "{{ smtp_port }}"
+kopia_smtp_username: "{{ smtp_user }}"
+kopia_smtp_password: "{{ smtp_password }}"
+
+kopia_traefik_enabled: true
+kopia_traefik_network: "proxy"
+kopia_traefik_domain: "kopia.{{ traefik_domain }}"
+kopia_web_port_expose: 51515

@@ -6,42 +6,110 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
+
+env:
+  VAULT_PASS_DEV: ${{ secrets.VAULT_PASS_DEV }}
+  VAULT_PASS_PROD: ${{ secrets.VAULT_PASS_PROD }}
+  ANSIBLE_VAULT_IDENTITY_LIST: dev@env:VAULT_PASS_DEV,prod@env:VAULT_PASS_PROD
 
 jobs:
-  ansible-test:
+  quality-check:
     name: Quality & Syntax
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: "3.11"
+          cache: "pip"
 
-      - name: Install Ansible & Tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install ansible-core ansible-lint
+      - name: Install Ansible Core & Ansible Lint
+        run: pip install -r requirements.txt
 
-      - name: Install Dependencies (Galaxy)
+      - name: Cache Ansible Collections
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./collections/ansible_collections
+          key: ansible-collections-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-collections-
+
+      - name: Cache Ansible Roles
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./roles_external
+          key: ansible-roles-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-roles-
+
+      - name: Install Ansible Galaxy Dependencies
         run: |
           if [ -f requirements.yml ]; then
-            ansible-galaxy role install -r requirements.yml
-            ansible-galaxy collection install -r requirements.yml
+            ansible-galaxy role install -r requirements.yml --force
+            ansible-galaxy collection install -r requirements.yml --force-with-deps
           fi
 
-      - name: Setup Vault Passwords
-        run: |
-          echo "${{ secrets.VAULT_PASS_DEV }}" > .vault_pass_dev
-          echo "${{ secrets.VAULT_PASS_PROD }}" > .vault_pass_prod
-
-      - name: Ansible Lint (Master Playbook)
-        run: ansible-lint site.yml
+      - name: Ansible Lint (All Playbooks)
+        run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
         run: ansible-playbook site.yml --syntax-check
+
+      - name: Syntax Check (Bootstrap Playbook)
+        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check
+
+  simulation-lab:
+    name: Playbooks check in Docker container
+    runs-on: ubuntu-latest
+    needs: quality-check
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Ansible Core & Ansible Lint
+        run: pip install -r requirements.txt
+
+      - name: Cache Ansible Collections
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./collections/ansible_collections
+          key: ansible-collections-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-collections-
+
+      - name: Cache Ansible Roles
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./roles_external
+          key: ansible-roles-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-roles-
+
+      - name: Install Ansible Galaxy Dependencies
+        run: |
+          if [ -f requirements.yml ]; then
+            ansible-galaxy role install -r requirements.yml --force
+            ansible-galaxy collection install -r requirements.yml --force-with-deps
+          fi
+
+      - name: Run Simulation-lab Container
+        run: docker run -d --name simulation-lab --privileged --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:rw jrei/systemd-debian:12
+
+      - name: Install python In Simulation-lab Container
+        run: docker exec simulation-lab sh -c "apt update && apt install -y python3 sudo openssh-server isc-dhcp-client gnupg"
+
+      - name: Ansible Execute Bootstrap Playbook
+        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker"
+
+      - name: Ansible Playbooks Check
+        run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff
