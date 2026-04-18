@@ -13,7 +13,7 @@ on:
 env:
   VAULT_PASS_DEV: ${{ secrets.VAULT_PASS_DEV }}
   VAULT_PASS_PROD: ${{ secrets.VAULT_PASS_PROD }}
-  ANSIBLE_VAULT_IDENTITY_LIST: dev@env:VAULT_PASS_DEV,prod@env:VAULT_PASS_PROD
+  ANSIBLE_VAULT_IDENTITY_LIST: dev@.vault_pass_dev.sh, prod@.vault_pass_prod.sh
 
 jobs:
   quality-check:
@@ -23,6 +23,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Prepare Vault Passwords
+        run: |
+          echo 'echo "$VAULT_PASS_DEV"' > .vault_pass_dev.sh
+          echo 'echo "$VAULT_PASS_PROD"' > .vault_pass_prod.sh
+          chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -73,6 +79,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Prepare Vault Passwords
+        run: |
+          echo 'echo "$VAULT_PASS_DEV"' > .vault_pass_dev.sh
+          echo 'echo "$VAULT_PASS_PROD"' > .vault_pass_prod.sh
+          chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
