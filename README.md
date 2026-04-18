@@ -40,107 +40,88 @@ Ce projet n'est pas "juste un serveur". C'est une plateforme d'ingénierie qui r
 
 La documentation est la source de vérité absolue.
 
-> [!IMPORTANT]
-> Ne lancez aucune commande admin sans avoir consulté les procédures correspondantes.
-
 <div align="center">
 
-| 🏛️ ARCHITECTURE | 📅 MIGRATION | ⚡ CHEATSHEET | 🕵️‍♂️ AUDIT |
+| 🏛️ ARCHITECTURE | ⚡ CHEATSHEET | 🔐 SECRETS | 🕵️‍♂️ AUDIT |
 | :---: | :---: | :---: | :---: |
-| [Accéder à l'Architecture](docs/ARCHITECTURE.md) | [Voir le Plan](docs/MIGRATION_PLAN.md) | [Commandes Vitales](docs/CHEATSHEET.md) | [Rapport de Sécurité](docs/AUDIT_REPORT.md) |
-| *Network, Security, Stack* | *Zero-to-Hero Guide* | *Ops, Clean, Logs* | *Risques & Fixes* |
+| [L'Architecture](docs/ARCHITECTURE.md) | [Les Commandes](docs/CHEATSHEET.md) | [Gestion Vault](docs/VAULT.md) | [Rapport](docs/AUDIT_REPORT.md) |
+| *Network, Security, Playbooks* | *Ops, site.yml, tags* | *ID Dev vs Prod* | *Risques & Fixes* |
 
 </div>
 
 ---
 
-## 🛠️ PRÉ-REQUIS & INSTALLATION (CONTROL NODE)
-
-Ce projet nécessite une machine de contrôle ("Control Node") pour piloter le déploiement.
+## 🛠️ PRÉ-REQUIS & INSTALLATION
 
 ### 1. La Stack Logicielle
 | Outil | Rôle | Version Min |
 | :--- | :--- | :--- |
-| **Git** | Versioning du dépôt. | `2.x` |
-| **Ansible** | Moteur d'automatisation (Le Pilote). | `2.10+` |
-| **Vagrant** | Gestionnaire de machines virtuelles (Labo). | `2.3+` |
-| **VMware Fusion/Workstation** | Hyperviseur (Moteur de VM). | `13+` |
-| **VS Code** | Éditeur de code recommandé. | `Latest` |
+| **Ansible** | Moteur d'automatisation. | `2.15+` |
+| **Python** | Runtime Ansible. | `3.10+` |
+| **Vagrant** | Hyperviseur de Lab. | `2.3+` |
 
-### 2. Guide d'Installation
-
-#### 🍏 macOS (Via Homebrew)
-Le standard "Gold" pour ce projet.
+### 2. Initialisation du Control Node
 ```bash
-# 1. Install Homebrew (si absent)
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# 1. Cloner le dépôt
+git clone git@github.com:ReDxOps/talos.git && cd talos
 
-# 2. Install Tools
-brew install git ansible vagrant
-brew install --cask visual-studio-code vmware-fusion
-
-# 3. Install Ansible Galaxy Roles
-ansible-galaxy install -r requirements.yml
-```
-
-#### 🐧 Linux (Debian/Ubuntu)
-```bash
-sudo apt update && sudo apt install -y git ansible vagrant software-properties-common wget
-ansible-galaxy install -r requirements.yml
+# 2. Installer les collections & rôles (Galaxy)
+ansible-galaxy role install -r requirements.yml
+ansible-galaxy collection install -r requirements.yml
 ```
 
 ---
 
-## ⚡ DÉMARRAGE RAPIDE (DEV)
+## ⚡ DÉMARRAGE RAPIDE (LAB DEV)
 
-### 1. Initialiser l'environnement
+### 1. Monter l'infrastructure de test
 ```bash
-git clone git@github.com:user/talos.git
-cd talos
 vagrant up
 ```
 
-### 2. 🐣 Bootstrap (Day 0)
-C'est le **seul** moment où l'on surcharge l'inventaire. Le serveur est en port 22/vagrant, mais l'inventaire vise déjà 8888/sentinel.
-On force les paramètres de connexion pour ce premier run :
-
+### 2. 🐣 PHASE 0 : Bootstrap (Day-0)
+Opération à usage unique pour transformer une VM nue en cible TALOS sécurisée (Port 22 -> 8888).
 ```bash
-# Surcharge pour le premier lancement uniquement
-ansible-playbook playbooks/bootstrap.yml --limit dev \
-  -e "ansible_port=22" \
-  -e "ansible_user=vagrant" \
-  -e "ansible_ssh_private_key_file=.vagrant/machines/default/vmware_desktop/private_key"
+ansible-playbook playbooks/00_bootstrap.yml \
+  -i inventories/bootstrap/hosts.yml \
+  --limit talos-dev
 ```
 
-### 3. 🚀 Déployer le Socle (Day 1+)
-Une fois le bootstrap terminé, l'inventaire devient **vrai**. On peut lancer les playbooks normalement.
-
+### 3. 🚀 PHASE 1-4 : Déploiement Global (Day-1+)
+Une fois le bootstrap fini, on utilise le Master Playbook qui orchestre toutes les couches.
 ```bash
-# Installer Docker
-ansible-playbook playbooks/install_docker.yml --limit dev
-```
-
-### 3. Accès SSH (Post-Provisioning)
-```bash
-# Port 8888, Utilisateur 'sentinel'
-ssh -p 8888 sentinel@192.168.x.x
+# Déploiement complet sur le lab de dév
+ansible-playbook site.yml
 ```
 
 ---
 
-## 📂 STRUCTURE DU PROJET
+## 🔐 GESTION DES SECRETS (VAULT IDs)
+
+TALOS utilise une isolation stricte des secrets via des **Vault IDs**. Les mots de passe ne sont jamais partagés entre le développement et la production.
+
+*   **Dev** : Chiffré avec `.vault_pass_dev` (`--vault-id dev`)
+*   **Prod** : Chiffré avec `.vault_pass_prod` (`--vault-id prod`)
+
+> [!TIP]
+> `ansible.cfg` est configuré pour détecter automatiquement vos clés locales. Vous n'avez pas besoin de passer les flags manuellement !
+
+---
+
+## 📂 STRUCTURE DU PROJET (V2)
 
 ```text
 talos/
-├── bootstrap/          # 🐣 Init (Inventory Day 0)
-├── docs/               # 📘 Le Codex (Source de Vérité)
-├── group_vars/         # 🔐 Variables globales (Secrets chiffrés) (A venir)
-├── inventory.yml       # 🌍 Inventaire (Prod/Dev - Day 1+)
-├── playbooks/          # 🚀 Playbooks (Bootstrap, Docker, Apps)
-├── roles/              # 🧱 Rôles Ansible (Profils)
-├── requirements.yml    # 📦 Dépendances Galaxy
-├── ansible.cfg         # ⚙️ Config Ansible
-└── Vagrantfile         # 🛠️ Lab local
+├── inventories/             # 🌍 Environnements (Bootstrap, Dev, Prod)
+│   ├── bootstrap/           # Day-0 : Accès initial
+│   ├── dev/                 # Lab Local (Vagrant)
+│   └── prod/                # Serveur de Production
+├── group_vars/              # 🔐 Variables & Secrets (AES-256)
+├── playbooks/               # 🚀 Séquençage (00_ à 04_)
+├── roles/                   # 🧱 Briques logiques (Traefik, Apps, etc.)
+├── ansible.cfg              # ⚙️ Pilotage Cloud-Ready
+├── requirements.yml         # 📦 Dépendances Galaxy
+└── site.yml                 # 🏛️ MASTER ORCHESTRATOR
 ```
 
 ---

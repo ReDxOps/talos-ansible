@@ -10,9 +10,9 @@ services:
     volumes:
       - ./data:/config
     ports:
-      - "{{ satisfactory_game_port }}:{{ satisfactory_game_port }}/udp"
-      - "{{ satisfactory_game_port }}:{{ satisfactory_game_port }}/tcp"
-      - "{{ satisfactory_messaging_port }}:{{ satisfactory_messaging_port }}/tcp"
+      - "{{ satisfactory_external_game_port | string }}:{{ satisfactory_game_port | string }}/udp"
+      - "{{ satisfactory_external_game_port | string }}:{{ satisfactory_game_port | string }}/tcp"
+      - "{{ satisfactory_external_messaging_port | string }}:{{ satisfactory_messaging_port | string }}/tcp"
     deploy:
       resources:
         limits:

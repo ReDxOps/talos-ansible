@@ -2,7 +2,7 @@
 passbolt_image_tag: "5.10.0-1-ce-non-root"
 passbolt_mariadb_image_tag: "11.8"
 
-passbolt_db_name: "{{ passbolt_db }}"
+passbolt_db_name: "passbolt_db"
 passbolt_db_user: "{{ vault_passbolt_db_user }}"
 passbolt_db_password: "{{ vault_passbolt_db_password }}"
 

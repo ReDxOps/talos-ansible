@@ -1,28 +1,43 @@
 ---
-
-- name: Disable UFW temporarily for install
-  community.general.ufw:
-    state: disabled
+- name: Check if Crowdsec is already enrolled
+  ansible.builtin.stat:
+    path: /etc/crowdsec/console-enrolled
+  register: common_crowdsec_enrolled
+  changed_when: false
 
 - name: Force DNS in DHCP client (Persistent)
   ansible.builtin.lineinfile:
     path: /etc/dhcp/dhclient.conf
-    regexp: '^supersede domain-name-servers'
-    line: 'supersede domain-name-servers 8.8.8.8, 1.1.1.1;'
+    regexp: "^supersede domain-name-servers"
+    line: "supersede domain-name-servers 8.8.8.8, 1.1.1.1;"
     state: present
   notify: Restart Network
 
 - name: Apply network changes immediately
   ansible.builtin.meta: flush_handlers
 
-- name: Add GPG apt key for Crowdsec
-  ansible.builtin.apt_key:
+- name: Ensure /etc/apt/keyrings directory exists
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Download Crowdsec GPG key
+  ansible.builtin.get_url:
     url: https://packagecloud.io/crowdsec/crowdsec/gpgkey
-    state: present
+    dest: /tmp/crowdsec.asc
+    checksum: sha256:cd5729fe6f95d29efc48f1cfe63e0d4a3088506cf99f3cf74b572c4b70429980
+    mode: "0644"
+  changed_when: false
+
+- name: Dearmor Crowdsec GPG key to binary keyring
+  ansible.builtin.shell:
+    cmd: gpg --dearmor < /tmp/crowdsec.asc > /etc/apt/keyrings/crowdsec-keyring.gpg
+    creates: /etc/apt/keyrings/crowdsec-keyring.gpg
 
 - name: Add repository for Crowdsec
   ansible.builtin.apt_repository:
-    repo: "deb https://packagecloud.io/crowdsec/crowdsec/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] | lower }} main"
+    repo: "deb [signed-by=/etc/apt/keyrings/crowdsec-keyring.gpg] https://packagecloud.io/crowdsec/crowdsec/debian/ bookworm main"
     state: present
 
 - name: Install Crowdsec package + APT update
@@ -33,14 +48,18 @@
       - crowdsec-firewall-bouncer-iptables
     state: present
 
-- name: Enroll to crowdsec console
-  ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
-  args:
-    creates: /etc/crowdsec/console-enrolled
-  register: common_enrollment_result
-  changed_when: true
-  notify: Create Crowdsec enrollment marker
+- name: Crowdsec enrollement process
+  when: not common_crowdsec_enrolled.stat.exists
+  block:
+    - name: Disable UFW temporarily for install
+      community.general.ufw:
+        state: disabled
 
-- name: Re-enable UFW
-  community.general.ufw:
-    state: enabled
+    - name: Enroll to crowdsec console
+      ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
+      changed_when: true
+      notify: Create Crowdsec enrollment marker
+
+    - name: Re-enable UFW
+      community.general.ufw:
+        state: enabled

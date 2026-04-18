@@ -55,37 +55,69 @@ docker exec crowdsec cscli decisions delete --ip 1.2.3.4
 
 ## 🚀 DÉPLOIEMENTS (PRODUCTION & DEV)
 
-> [!IMPORTANT]
-> Vérifiez toujours votre cible avec le flag `--limit`.
-> *   Dev : `--limit dev`
-> *   Prod : `--limit prod`
-
-### 1. 🐣 Bootstrap (Premier Run / Day 0)
-Configuration initiale (User, SSH Hardening). Nécessite surcharge car l'inventaire vise la cible finale.
+## 🐣 BOOTSTRAP (DAY-0)
+Opération à faire une seule fois par serveur nu.
 ```bash
-# Dev (Vagrant)
-ansible-playbook playbooks/bootstrap.yml --limit dev \
-  -e "ansible_port=22" \
-  -e "ansible_user=vagrant" \
-  -e "ansible_ssh_private_key_file=.vagrant/machines/default/vmware_desktop/private_key"
+# Pour le Lab Vagrant
+ansible-playbook playbooks/00_bootstrap.yml -i inventories/bootstrap/hosts.yml --limit talos-dev
 
-# Prod (Première connexion root)
-ansible-playbook playbooks/bootstrap.yml --limit prod \
-  -e "ansible_port=22" \
-  -e "ansible_user=root"
+# Pour la Prod (si accès root encore actif sur port 22)
+ansible-playbook playbooks/00_bootstrap.yml -i inventories/bootstrap/hosts.yml --limit prod --user root
 ```
 
-### 2. 🐳 Installation Docker (Day 1)
-Une fois le bootstrap fait, tout est standard.
+---
+
+## 🚀 DÉPLOIEMENT (SITE.YML)
+La commande unique pour tout gérer.
 ```bash
-ansible-playbook playbooks/install_docker.yml --limit dev
+# Déploiement complet (par défaut sur dev via ansible.cfg)
+ansible-playbook site.yml
+
+# Déploiement sur la Production
+ansible-playbook site.yml -i inventories/prod/hosts.yml
+
+# Cibler une phase ou un rôle précis (Recommandé)
+ansible-playbook site.yml --tags traefik
+ansible-playbook site.yml --tags common,docker
 ```
 
-### 2. Déploiement Applicatif (Chirurgical)
-Ne touche que l'application ciblée.
+---
+
+## 🔐 SECRETS & VAULT
 ```bash
-# Exemple pour Nextcloud
-ansible-playbook -i inventory.ini site.yml --tags "nextcloud" --limit prod
+# Éditer les secrets de DEV
+ansible-vault edit inventories/dev/group_vars/all/secrets.yml --vault-id dev@.vault_pass_dev
+
+# Éditer les secrets de PROD
+ansible-vault edit inventories/prod/group_vars/all/secrets.yml --vault-id prod@.vault_pass_prod
+
+# Vérifier qu'une variable chiffrée est accessible
+ansible-inventory --list | grep vault_smtp_pass
+```
+
+---
+
+## 🛠️ DIAGNOSTIC & MAINTENANCE
+```bash
+# Vérifier la syntaxe globale de l'infra
+ansible-playbook site.yml --syntax-check
+
+# Lister tous les hôtes et leurs variables
+ansible-inventory --list -y
+
+# Tester la connectivité (Ping Pong)
+ansible all -m ping
+```
+
+---
+
+## 🧹 NETTOYAGE & RÉINITIALISATION
+```bash
+# Supprimer tout Docker sur la VM (Prudence !)
+ansible all -m shell -a "docker system prune -af --volumes"
+
+# Détruire et recréer le Lab
+vagrant destroy -f && vagrant up
 ```
 
 ### 3. Test "Dry Run"

@@ -8,4 +8,5 @@ geerlingguy.docker
 .vscode
 redxops.kopia
 collections
+roles_external
 tmp

@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_check_update = false
   config.vm.box_version = "202510.26.0"
   config.vm.hostname = "talos-dev"
-  #config.ssh.port = 8888 it's for vagrant command after bootstrap like "vagrant reload"
+  #config.ssh.port = 8888 # it's for vagrant command after bootstrap like "vagrant reload"
 
   config.vm.provider "vmware_desktop" do |vmware|
     vmware.memory = "4096"

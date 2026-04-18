@@ -7,3 +7,4 @@
     state: present
     reload: true
   loop: "{{ common_sysctl_params }}"
+  when: ansible_virtualization_type != 'docker'

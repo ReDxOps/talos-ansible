@@ -50,7 +50,7 @@ services:
       POSTGRES_PASSWORD: "{{ vikunja_db_password }}"
 
   redis:
-    image: redis:{{ vikunja_redis_image_tag }}
+    image: "redis:{{ vikunja_redis_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

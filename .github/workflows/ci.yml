@@ -6,42 +6,68 @@ permissions:
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
+
+env:
+  VAULT_PASS_DEV: ${{ secrets.VAULT_PASS_DEV }}
+  VAULT_PASS_PROD: ${{ secrets.VAULT_PASS_PROD }}
+  ANSIBLE_VAULT_IDENTITY_LIST: dev@${{ github.workspace }}/.vault_pass_dev.sh,prod@${{ github.workspace }}/.vault_pass_prod.sh
 
 jobs:
-  ansible-test:
+  quality-check:
     name: Quality & Syntax
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Prepare Vault Passwords & SSH Key
+        run: |
+          echo '#!/bin/bash' > .vault_pass_dev.sh
+          echo 'echo "$VAULT_PASS_DEV"' >> .vault_pass_dev.sh
+          echo '#!/bin/bash' > .vault_pass_prod.sh
+          echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
+          chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
+          mkdir -p ~/.ssh
+          ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.11"
+          python-version: "3.12"
+          cache: "pip"
 
-      - name: Install Ansible & Tools
+      - name: Install Ansible Core & Ansible Lint
         run: |
           python -m pip install --upgrade pip
-          pip install ansible-core ansible-lint
+          pip install -r requirements.txt
 
-      - name: Install Dependencies (Galaxy)
+      - name: Cache Ansible Collections
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./collections/ansible_collections
+          key: ansible-collections-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-collections-
+
+      - name: Cache Ansible Roles
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ./roles_external
+          key: ansible-roles-${{ hashFiles('requirements.yml') }}
+          restore-keys: ansible-roles-
+
+      - name: Install Ansible Galaxy Dependencies
         run: |
           if [ -f requirements.yml ]; then
-            ansible-galaxy role install -r requirements.yml
-            ansible-galaxy collection install -r requirements.yml
+            ansible-galaxy role install -r requirements.yml --force
+            ansible-galaxy collection install -r requirements.yml --force-with-deps
           fi
 
-      - name: Setup Vault Passwords
-        run: |
-          echo "${{ secrets.VAULT_PASS_DEV }}" > .vault_pass_dev
-          echo "${{ secrets.VAULT_PASS_PROD }}" > .vault_pass_prod
-
-      - name: Ansible Lint (Master Playbook)
-        run: ansible-lint site.yml
+      - name: Ansible Lint (All Playbooks)
+        run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
-        run: ansible-playbook site.yml --syntax-check
+        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"

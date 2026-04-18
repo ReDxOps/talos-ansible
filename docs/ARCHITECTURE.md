@@ -25,8 +25,8 @@
 | DÉPLOIEMENT           |              | INFRASTRUCTURE              |
 | (Mode Push)           |   Ansible    |                             |
 | [👤 Admin] ------------------------->| [🚀 PROD]                   |
-|    |                  |              |                             |
-|    +-------------------------------->| [🛠️ VM (Mise à jour)]      |
+|    | (site.yml)       |              |                             |
+|    +-------------------------------->| [🛠️ VM (Vagrant)]           |
 +-----------------------+              +-----------------------------+
 ```
 
@@ -83,22 +83,32 @@ Configuration immuable appliquée à tous les nœuds.
 
 ---
 
-## 5. SÉCURITÉ AVANCÉE (HARDENING)
+## 5. ORCHESTRATION & PLAYBOOKS
 
-> [!IMPORTANT]
-> Ces mesures sont non-négociables pour le niveau "Elite".
+TALOS utilise un séquençage strict en 5 phases (00 à 04) piloté par le **Master Playbook** (`site.yml`).
 
-### 🔐 Ansible & Secrets
-*   **Vault** : AES-256 (`group_vars/all/secrets.yml`).
-*   **Git Hooks** : Interdiction pré-commit des clés en clair.
-*   **Inventaire** : Séparation physique (`prod` vs `dev`).
-*   **Break-glass** : Clé VaultMASTER stockée sur **2 USB LUKS** (Sites distincts).
-
-### 🛡️ Réseau
-*   `talos_network` : Bridge externe unique.
-*   **Zéro Expose** : Aucun port mapping direct pour les DB/Cache.
+### 📦 Séquençage des Phases
+| Phase | Playbook | Cible | Rôle |
+| :--- | :--- | :--- | :--- |
+| **00** | `00_bootstrap.yml` | `bootstrap_nodes` | Initialisation Day-0 (Root) |
+| **01** | `01_common.yml` | `all` | Hardening, SSH, Firewall |
+| **02** | `02_docker.yml` | `all` | Container Runtime |
+| **03** | `03_service_infra.yml`| `all` | Traefik, Backup, Monitoring |
+| **04** | `04_applications.yml` | `all` | Stacks Applicatives (WordPress, Wiki, etc.) |
 
 ---
+
+## 6. SEGMENTATION DES INVENTAIRES
+
+La sécurité de TALOS repose sur une séparation physique des contextes d'exécution.
+
+*   **`inventories/bootstrap/`** : Utilisé uniquement pour la "Phase Zéro". Accès via port 22 et utilisateur par défaut.
+*   **`inventories/dev/`** : Inventaire par défaut (Vagrant). Accès via port 8888 et utilisateur `sentinel`.
+*   **`inventories/prod/`** : Cible réelle. Isolation totale des variables et des secrets.
+
+---
+
+## 7. GESTION DES SECRETS (VAULT IDs)
 
 ## 6. OBSERVABILITÉ & CONTINUITÉ
 

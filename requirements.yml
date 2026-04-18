@@ -1,13 +1,19 @@
 ---
 roles:
   - name: geerlingguy.docker
+    version: "8.0.0"
 
   - src: https://github.com/ReDxOps/ansible-role-kopia.git
     scm: git
-    version: v1.1.2
+    version: v1.2.0
     name: redxops.kopia
 
 collections:
   - name: community.general
+    version: "12.5.0"
+
   - name: community.docker
+    version: "5.2.0"
+
   - name: ansible.posix
+    version: "2.1.0"

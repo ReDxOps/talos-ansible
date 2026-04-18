@@ -1,9 +1,8 @@
-# 📅 PLAN DE MIGRATION TALOS
+# 📅 PLAN DE MIGRATION TALOS (ARCHIVÉ)
 
-![Status](https://img.shields.io/badge/Plan-Actif-blue?style=for-the-badge)
-
-> [!TIP]
-> Ce plan est un guide "Zero-to-Hero". Il couvre le cycle de vie complet, de l'effacement total à la maintenance long terme.
+> [!CAUTION]
+> **STATUT : TERMINÉ ✅**
+> Ce document est conservé à titre d'archive historique. Pour les opérations actuelles, référez-vous au [README](../README.md) et au [CHEATSHEET](CHEATSHEET.md).
 
 ---
 

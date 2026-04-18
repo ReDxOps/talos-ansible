@@ -3,6 +3,9 @@
   hosts: all
   become: true
 
+  vars_files:
+    - ../group_vars/all/all.yml
+
   roles:
     - role: common
       tags: common

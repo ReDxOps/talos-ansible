@@ -42,20 +42,28 @@
     - { src: "dashboards.yml.j2", dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/dashboards.yml" }
     - { src: "docker-compose.yml.j2", dest: "{{ observability_root_dir }}/docker-compose.yml" }
 
-- name: Download external dashboards from Grafana API
-  ansible.builtin.get_url:
-    url: "{{ item.url }}"
-    dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item.dest }}"
-    mode: "0644"
-    owner: "472"
+- name: Check if external dashboards exist
+  ansible.builtin.stat:
+    path: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item.dest }}"
   loop:
     - { url: "https://grafana.com/api/dashboards/1860/revisions/latest/download", dest: "dashboard-1860.json" }
     - { url: "https://grafana.com/api/dashboards/11462/revisions/latest/download", dest: "traefik-dashboard.json" }
+  register: observability_existing_dashboards
+
+- name: Download external dashboards from Grafana API
+  ansible.builtin.get_url:
+    url: "{{ item.item.url }}"
+    dest: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item.item.dest }}"
+    mode: "0644"
+    owner: "472"
+  loop: "{{ observability_existing_dashboards.results }}"
+  when: not item.stat.exists
+  check_mode: false
 
 - name: Fix Prometheus datasource variable in downloaded dashboards
   ansible.builtin.replace:
     path: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
-    regexp: '\$\{DS_PROMETHEUS\}'
+    regexp: "\\$\\{DS_PROMETHEUS\\}"
     replace: "Prometheus"
   loop:
     - dashboard-1860.json
