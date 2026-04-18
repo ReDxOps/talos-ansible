@@ -5,8 +5,8 @@
   gather_facts: false
 
   vars_files:
-    - ../group_vars/all/all.yml
     - "../inventories/{{ target_env | default('dev') }}/group_vars/all/secrets.yml"
+    - ../group_vars/all/all.yml
   pre_tasks:
     - name: Bootstrap Ansible remote directory
       ansible.builtin.raw: mkdir -p ~/.ansible/tmp && chmod 700 ~/.ansible/tmp
