@@ -24,13 +24,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Prepare Vault Passwords
+      - name: Prepare Vault Passwords & SSH Key
         run: |
           echo '#!/bin/bash' > .vault_pass_dev.sh
           echo 'echo "$VAULT_PASS_DEV"' >> .vault_pass_dev.sh
           echo '#!/bin/bash' > .vault_pass_prod.sh
           echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
           chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
+          mkdir -p ~/.ssh
+          ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -82,13 +84,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
-      - name: Prepare Vault Passwords
+      - name: Prepare Vault Passwords & SSH Key
         run: |
           echo '#!/bin/bash' > .vault_pass_dev.sh
           echo 'echo "$VAULT_PASS_DEV"' >> .vault_pass_dev.sh
           echo '#!/bin/bash' > .vault_pass_prod.sh
           echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
           chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
+          mkdir -p ~/.ssh
+          ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
