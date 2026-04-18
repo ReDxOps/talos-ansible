@@ -34,12 +34,8 @@ jobs:
           rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
-
-      - name: Verify Vault Decryption & List Keys
-        run: |
-          ansible-vault view inventories/dev/group_vars/all/secrets.yml --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh | head -n 3
-          echo "--- LISTE DES CLÉS DÉTECTÉES ---"
-          ansible-vault view inventories/dev/group_vars/all/secrets.yml --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh | grep -v '^#' | grep ':' | cut -d: -f1 | sort | uniq
+          # Expose secrets globally for all playbooks
+          cp inventories/dev/group_vars/all/secrets.yml group_vars/all/secrets.yml
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -101,12 +97,8 @@ jobs:
           rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
-
-      - name: Verify Vault Decryption & List Keys
-        run: |
-          ansible-vault view inventories/dev/group_vars/all/secrets.yml --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh | head -n 3
-          echo "--- LISTE DES CLÉS DÉTECTÉES ---"
-          ansible-vault view inventories/dev/group_vars/all/secrets.yml --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh | grep -v '^#' | grep ':' | cut -d: -f1 | sort | uniq
+          # Expose secrets globally for all playbooks
+          cp inventories/dev/group_vars/all/secrets.yml group_vars/all/secrets.yml
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
