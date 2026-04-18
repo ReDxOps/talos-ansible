@@ -1,3 +1,4 @@
+---
 - name: Server initialisation
   hosts: all
   become: true

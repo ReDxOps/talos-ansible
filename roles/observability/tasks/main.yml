@@ -63,7 +63,7 @@
 - name: Fix Prometheus datasource variable in downloaded dashboards
   ansible.builtin.replace:
     path: "{{ observability_root_dir }}/config/grafana/provisioning/dashboards/json/{{ item }}"
-    regexp: '\$\{DS_PROMETHEUS\}'
+    regexp: "\\$\\{DS_PROMETHEUS\\}"
     replace: "Prometheus"
   loop:
     - dashboard-1860.json
