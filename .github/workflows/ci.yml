@@ -13,7 +13,7 @@ on:
 env:
   VAULT_PASS_DEV: ${{ secrets.VAULT_PASS_DEV }}
   VAULT_PASS_PROD: ${{ secrets.VAULT_PASS_PROD }}
-  ANSIBLE_VAULT_IDENTITY_LIST: dev@${{ github.workspace }}/.vault_pass_dev.sh, prod@${{ github.workspace }}/.vault_pass_prod.sh
+  ANSIBLE_VAULT_IDENTITY_LIST: dev@${{ github.workspace }}/.vault_pass_dev.sh,prod@${{ github.workspace }}/.vault_pass_prod.sh
 
 jobs:
   quality-check:
@@ -31,6 +31,7 @@ jobs:
           echo '#!/bin/bash' > .vault_pass_prod.sh
           echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
           chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
+          rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
@@ -76,10 +77,10 @@ jobs:
         run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
-        run: ansible-playbook site.yml --syntax-check
+        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
 
       - name: Syntax Check (Bootstrap Playbook)
-        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check
+        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
 
   simulation-lab:
     name: Playbooks check in Docker container
@@ -97,6 +98,7 @@ jobs:
           echo '#!/bin/bash' > .vault_pass_prod.sh
           echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
           chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
+          rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
@@ -152,7 +154,7 @@ jobs:
         run: docker exec simulation-lab sh -c "apt update && apt install -y python3 sudo openssh-server isc-dhcp-client gnupg"
 
       - name: Ansible Execute Bootstrap Playbook
-        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker"
+        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
 
       - name: Ansible Playbooks Check
-        run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff
+        run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
