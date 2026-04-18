@@ -140,7 +140,7 @@ jobs:
           sleep 5
 
       - name: Install python In Simulation-lab Container
-        run: docker exec simulation-lab sh -c "apt update && DEBIAN_FRONTEND=noninteractive apt install -y python3 python3-debian python3-requests python3-docker docker.io apt-utils sudo openssh-server isc-dhcp-client gnupg"
+        run: docker exec simulation-lab sh -c "apt update && DEBIAN_FRONTEND=noninteractive apt install -y python3 python3-debian python3-requests python3-docker docker.io docker-compose-v2 apt-utils sudo openssh-server isc-dhcp-client gnupg"
 
       - name: Ansible Execute Bootstrap Playbook
         run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml" -e "ansible_user=root"
