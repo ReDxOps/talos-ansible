@@ -26,8 +26,10 @@ jobs:
 
       - name: Prepare Vault Passwords
         run: |
-          echo 'echo "$VAULT_PASS_DEV"' > .vault_pass_dev.sh
-          echo 'echo "$VAULT_PASS_PROD"' > .vault_pass_prod.sh
+          echo '#!/bin/bash' > .vault_pass_dev.sh
+          echo 'echo "$VAULT_PASS_DEV"' >> .vault_pass_dev.sh
+          echo '#!/bin/bash' > .vault_pass_prod.sh
+          echo 'echo "$VAULT_PASS_PROD"' >> .vault_pass_prod.sh
           chmod +x .vault_pass_dev.sh .vault_pass_prod.sh
 
       - name: Setup Python
