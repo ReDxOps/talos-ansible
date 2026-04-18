@@ -34,8 +34,6 @@ jobs:
           rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
-          # Expose secrets globally for all playbooks
-          cp inventories/dev/group_vars/all/secrets.yml group_vars/all/secrets.yml
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -73,10 +71,10 @@ jobs:
         run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
-        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
+        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/secrets.yml"
 
       - name: Syntax Check (Bootstrap Playbook)
-        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
+        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/secrets.yml"
 
   simulation-lab:
     name: Playbooks check in Docker container
@@ -97,8 +95,6 @@ jobs:
           rm -f .vault_pass_dev .vault_pass_prod
           mkdir -p ~/.ssh
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
-          # Expose secrets globally for all playbooks
-          cp inventories/dev/group_vars/all/secrets.yml group_vars/all/secrets.yml
 
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
@@ -146,7 +142,7 @@ jobs:
         run: docker exec simulation-lab sh -c "apt update && apt install -y python3 sudo openssh-server isc-dhcp-client gnupg"
 
       - name: Ansible Execute Bootstrap Playbook
-        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
+        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/secrets.yml"
 
       - name: Ansible Playbooks Check
-        run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh
+        run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/secrets.yml"
