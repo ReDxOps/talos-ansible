@@ -142,7 +142,7 @@ jobs:
         run: docker exec simulation-lab sh -c "apt update && apt install -y python3 python3-debian sudo openssh-server isc-dhcp-client gnupg"
 
       - name: Ansible Execute Bootstrap Playbook
-        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" -e "ansible_user=root" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
+        run: ansible-playbook -i "simulation-lab," playbooks/00_bootstrap.yml -e "ansible_connection=docker" --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml" -e "ansible_user=root"
 
       - name: Ansible Playbooks Check
         run: ansible-playbook -i "simulation-lab," site.yml -e "ansible_connection=docker" --check --diff --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
