@@ -4,12 +4,16 @@
     state: directory
     path: "{{ project_root_dir }}/ansible-venv"
     mode: "0755"
+    owner: "{{ runner_user }}"
+    group: "{{ runner_user }}"
 
-- name: Transfer python requierments file
+- name: Transfer python requirements file
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/../requirements.txt"
     dest: "{{ project_root_dir }}/ansible-venv"
     mode: "0644"
+    owner: "{{ runner_user }}"
+    group: "{{ runner_user }}"
 
 - name: Install python requirements
   ansible.builtin.pip:
@@ -17,3 +21,5 @@
     virtualenv: "{{ project_root_dir }}/ansible-venv"
     virtualenv_command: "python3 -m venv"
     state: present
+  become_user: "{{ runner_user }}"
+  become: true
