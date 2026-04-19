@@ -1,6 +1,4 @@
 ---
-ansible_connection: ssh
-
 project_root_dir: "/opt/talos"
 
 target_user: sentinel
@@ -11,10 +9,12 @@ target_password_hash: "{{ vault_target_password_hash }}"
 docker_users:
   - "{{ target_user }}"
 
+common_docker_group_name: "docker"
 docker_install_compose_plugin: true
 
 http_port: 80
 https_port: 443
+tailscale_p2p_port: 41641
 
 smtp_host: "smtp.eu.mailgun.org"
 smtp_user: "{{ vault_smtp_user }}"
@@ -73,5 +73,6 @@ kopia_web_port_expose: 51515
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
 github_account: "ReDxOps"
-github_repo: "talos"
+github_repo: "talos-ansible"
 access_token: "{{ vault_github_pat }}"
+runner_labels: [ "{{ target_env | default('dev') }}" ]

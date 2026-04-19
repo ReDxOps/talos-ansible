@@ -19,6 +19,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network={{ vikunja_reverse_proxy_network }}"
       - "traefik.http.routers.{{ vikunja_role_name }}.rule=Host(`{{ vikunja_web_url }}`)"
+      - "traefik.http.routers.{{ vikunja_role_name }}.middlewares=secHeaders@file,tailscaleOnly@file"
       - "traefik.http.routers.{{ vikunja_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ vikunja_role_name }}.tls=true"
       - "traefik.http.services.{{ vikunja_role_name }}.loadbalancer.server.port=3456"

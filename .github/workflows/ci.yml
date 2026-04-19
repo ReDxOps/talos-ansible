@@ -70,4 +70,7 @@ jobs:
         run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
-        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace }}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
+        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
+
+      - name: Syntax Check (Bootstrap Playbook)
+        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"

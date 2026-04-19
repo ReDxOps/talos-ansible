@@ -38,6 +38,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network={{ invoiceninja_reverse_proxy_network }}"
       - "traefik.http.routers.{{ invoiceninja_role_name }}.rule=Host(`{{ invoiceninja_web_url }}`)"
+      - "traefik.http.routers.{{ invoiceninja_role_name }}.middlewares=secHeaders@file,tailscaleOnly@file"
       - "traefik.http.routers.{{ invoiceninja_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ invoiceninja_role_name }}.tls=true"
       - "traefik.http.services.{{ invoiceninja_role_name }}.loadbalancer.server.port=80"

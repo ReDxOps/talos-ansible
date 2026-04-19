@@ -31,7 +31,7 @@
 
 - name: Transfer Vault Password to Runner securely
   ansible.builtin.copy:
-    src: "{{ inventory_dir }}/../.vault_pass_prod"
+    src: "{{ playbook_dir }}/../.vault_pass_prod"
     dest: "/home/{{ runner_user }}/.vault_pass_prod"
     owner: "{{ runner_user }}"
     group: "{{ runner_user }}"

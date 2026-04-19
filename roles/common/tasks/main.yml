@@ -11,6 +11,10 @@
   ansible.builtin.import_tasks: subtasks/users.yml
   tags: setup_users
 
+- name: "Install Tailscale"
+  ansible.builtin.import_tasks: subtasks/tailscale.yml
+  tags: tailscale
+
 - name: "Configure sshd service"
   ansible.builtin.import_tasks: subtasks/sshd.yml
   tags: setup_sshd

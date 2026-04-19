@@ -12,7 +12,7 @@ jobs:
   deploy_production:
     name: Deploy production
     environment: production
-    runs-on: self-hosted
+    runs-on: [ self-hosted, dev ]
 
     steps:
       - name: Checkout Repository

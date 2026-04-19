@@ -44,12 +44,13 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network={{ observability_reverse_proxy_network }}"
       - "traefik.http.routers.grafana.rule=Host(`{{ observability_grafana_domain }}`)"
+      - "traefik.http.routers.grafana.middlewares=secHeaders@file,tailscaleOnly@file"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     networks:
       - "{{ observability_reverse_proxy_network }}"
-  
+
   node-exporter:
     image: prom/node-exporter:{{ observability_node_exporter_image_tag }}
     container_name: node-exporter
@@ -106,7 +107,7 @@ services:
   promtail:
     image: grafana/promtail:{{ observability_promtail_image_tag }}
     container_name: promtail
-    user: root 
+    user: root
     restart: always
     security_opt:
       - no-new-privileges:true
