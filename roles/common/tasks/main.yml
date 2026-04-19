@@ -1,4 +1,8 @@
 ---
+- name: "Set System Hostname"
+  ansible.builtin.import_tasks: subtasks/hostname.yml
+  tags: setup_hostname
+
 - name: "Configure NTP (Time Sync)"
   ansible.builtin.import_tasks: subtasks/ntp.yml
   tags: setup_ntp

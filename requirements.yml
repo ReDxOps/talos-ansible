@@ -8,6 +8,9 @@ roles:
     version: v1.2.0
     name: redxops.kopia
 
+  - name: monolithprojects.github_actions_runner
+    version: "1.28.0"
+
 collections:
   - name: community.general
     version: "12.5.0"

@@ -1,0 +1,22 @@
+name: CD
+run-name: Deployment of ${{ github.ref_name }} on production server
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy_production:
+    name: Deploy production
+    environment: production
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Run Deployment
+        run: ansible-playbook site.yml -i inventories/prod/hosts --connection=local --vault-id prod@.vault_pass_prod

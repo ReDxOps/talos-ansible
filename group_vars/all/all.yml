@@ -69,3 +69,9 @@ kopia_traefik_enabled: true
 kopia_traefik_network: "proxy"
 kopia_traefik_domain: "kopia.{{ traefik_domain }}"
 kopia_web_port_expose: 51515
+
+runner_dir: "/opt/talos/github-runner"
+runner_user: "github-runner"
+github_account: "ReDxOps"
+github_repo: "talos"
+access_token: "{{ vault_github_pat }}"

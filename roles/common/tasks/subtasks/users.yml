@@ -1,22 +1,41 @@
 ---
 - name: Create target user group
   ansible.builtin.group:
-    name: "{{ common_target_user }}"
+    name: "{{ item }}"
     state: present
+  loop:
+    - "{{ common_target_user }}"
+    - "{{ runner_user }}"
 
 - name: Create docker group
   ansible.builtin.group:
-    name: docker
+    name: "{{ common_docker_group_name }}"
     state: present
 
 - name: Create target user
   ansible.builtin.user:
-    name: "{{ common_target_user }}"
+    name: "{{ item.name }}"
     state: present
-    password: "{{ common_target_password_hash }}"
+    password: "{{ item.password }}"
     group: "{{ common_target_user }}"
-    groups: docker
+    groups: "{{ item.groups | default('') }}"
     shell: /bin/bash
+  loop:
+    - name: "{{ common_target_user }}"
+      password: "{{ common_target_password_hash }}"
+      group: "{{ common_target_user }}"
+      groups: "{{ common_docker_group_name }}"
+    - name: "{{ runner_user }}"
+      password: "!"
+      group: "{{ runner_user }}"
+
+- name: Transfer Vault Password to Runner securely
+  ansible.builtin.copy:
+    src: "{{ inventory_dir }}/../.vault_pass_prod"
+    dest: "/home/{{ runner_user }}/.vault_pass_prod"
+    owner: "{{ runner_user }}"
+    group: "{{ runner_user }}"
+    mode: "0400"
 
 - name: Set authorized ssh key for target user
   ansible.posix.authorized_key:
@@ -27,12 +46,15 @@
 
 - name: Nopasswd sudo with user
   ansible.builtin.lineinfile:
-    path: "/etc/sudoers.d/{{ common_target_user }}"
+    path: "{{ item.path }}"
     state: present
-    line: "{{ common_target_user }} ALL=(ALL) NOPASSWD: ALL"
+    line: "{{ item.line }}"
     mode: "0440"
     create: true
     validate: /usr/sbin/visudo -cf %s
+  loop:
+    - { path: "/etc/sudoers.d/{{ common_target_user }}", line: "{{ common_target_user }} ALL=(ALL) NOPASSWD: ALL" }
+    - { path: "/etc/sudoers.d/{{ runner_user }}", line: "{{ runner_user }} ALL=(ALL) NOPASSWD: ALL" }
 
 - name: Lock root account
   ansible.builtin.user:
