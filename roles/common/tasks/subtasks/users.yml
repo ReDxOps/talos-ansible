@@ -44,6 +44,7 @@
     user: "{{ common_target_user }}"
     state: present
     exclusive: true
+  when: ansible_connection != 'local'
 
 - name: Nopasswd sudo with user
   ansible.builtin.lineinfile:
