@@ -37,7 +37,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
-          python-version: "3.12"
+          python-version: "3.11"
           cache: "pip"
 
       - name: Install Ansible Core & Ansible Lint
@@ -70,7 +70,9 @@ jobs:
         run: ansible-lint site.yml playbooks/*.yml
 
       - name: Syntax Check (Master Playbook)
-        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
+        run: ansible-playbook site.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{
+          github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
 
       - name: Syntax Check (Bootstrap Playbook)
-        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{ github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
+        run: ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{
+          github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
