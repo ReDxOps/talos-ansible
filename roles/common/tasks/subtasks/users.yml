@@ -36,6 +36,7 @@
     owner: "{{ runner_user }}"
     group: "{{ runner_user }}"
     mode: "0400"
+  when: ansible_connection != 'local'
 
 - name: Set authorized ssh key for target user
   ansible.posix.authorized_key:
