@@ -10,8 +10,8 @@ common_target_packages:
   - htop
   - curl
   - git
-  - ufw
-  - crowdsec
+  - ansible-core
+  - python3-docker
 
 common_sysctl_params:
   # KERNEL hardening
