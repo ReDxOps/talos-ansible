@@ -11,12 +11,15 @@ on:
 jobs:
   deploy_production:
     name: Deploy production
-    environment: production
+    environment: talos-srv
     runs-on: [ self-hosted, dev ]
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
+      - name: Install Dependencies
+        run: ansible-galaxy install -r requirements.yml --force
+
       - name: Run Deployment
-        run: ansible-playbook site.yml -i inventories/prod/hosts --connection=local --vault-id prod@.vault_pass_prod
+        run: ansible-playbook site.yml -i inventories/prod/hosts --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod

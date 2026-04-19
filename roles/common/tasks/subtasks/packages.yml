@@ -1,0 +1,6 @@
+---
+- name: "Install base packages"
+  ansible.builtin.package:
+    name: "{{ common_target_packages }}"
+    state: present
+    update_cache: true

@@ -1,4 +1,8 @@
 ---
+- name: "Install base system packages"
+  ansible.builtin.import_tasks: subtasks/packages.yml
+  tags: setup_packages
+
 - name: "Set System Hostname"
   ansible.builtin.import_tasks: subtasks/hostname.yml
   tags: setup_hostname
