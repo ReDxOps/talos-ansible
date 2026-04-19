@@ -22,3 +22,4 @@
     virtualenv_command: "python3 -m venv"
     state: present
   become_user: "{{ runner_user }}"
+  become: true
