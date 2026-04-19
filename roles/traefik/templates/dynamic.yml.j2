@@ -28,6 +28,12 @@ http:
       basicAuth:
         users:
           - "{{ traefik_dashboard_auth }}"
+    tailscaleOnly:
+      ipWhiteList:
+        sourceRange:
+          - "100.64.0.0/10"      # IP Tailscale
+          - "127.0.0.1/32"       # Internal Trafic
+          - "192.168.100.0/24"   # Vagrant for dev
   routers:
     dashboard:
       rule: "Host(`{{ traefik_web_url }}`)"
@@ -35,4 +41,5 @@ http:
       middlewares:
         - "secHeaders"
         - "dashboardAuth"
+        - "tailscaleOnly"
       tls: {}

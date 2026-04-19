@@ -14,4 +14,8 @@
     - name: Now gather facts safely
       ansible.builtin.setup:
   roles:
-    - common
+    - role: common
+      tags: common
+
+    - role: monolithprojects.github_actions_runner
+      tags: github_action_runner

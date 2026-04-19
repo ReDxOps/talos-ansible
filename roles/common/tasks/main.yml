@@ -1,4 +1,8 @@
 ---
+- name: "Set System Hostname"
+  ansible.builtin.import_tasks: subtasks/hostname.yml
+  tags: setup_hostname
+
 - name: "Configure NTP (Time Sync)"
   ansible.builtin.import_tasks: subtasks/ntp.yml
   tags: setup_ntp
@@ -6,6 +10,10 @@
 - name: "Setup users & groups"
   ansible.builtin.import_tasks: subtasks/users.yml
   tags: setup_users
+
+- name: "Install Tailscale"
+  ansible.builtin.import_tasks: subtasks/tailscale.yml
+  tags: tailscale
 
 - name: "Configure sshd service"
   ansible.builtin.import_tasks: subtasks/sshd.yml
