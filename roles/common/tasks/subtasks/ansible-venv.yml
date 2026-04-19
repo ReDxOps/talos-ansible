@@ -1,0 +1,19 @@
+---
+- name: Create ansible-venv directory
+  ansible.builtin.file:
+    state: directory
+    path: "{{ project_root_dir }}/ansible-venv"
+    mode: "0755"
+
+- name: Transfer python requierments file
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../requirements.txt"
+    dest: "{{ project_root_dir }}/ansible-venv"
+    mode: "0644"
+
+- name: Install python requirements
+  ansible.builtin.pip:
+    requirements: "{{ project_root_dir }}/ansible-venv/requirements.txt"
+    virtualenv: "{{ project_root_dir }}/ansible-venv"
+    virtualenv_command: "python3 -m venv"
+    state: present

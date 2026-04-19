@@ -42,3 +42,7 @@
 - name: "System hardening"
   ansible.builtin.import_tasks: subtasks/hardening.yml
   tags: system_hardening
+
+- name: "Setup ansible-venv"
+  ansible.builtin.import_tasks: subtasks/ansible-venv.yml
+  tags: ansible-venv
