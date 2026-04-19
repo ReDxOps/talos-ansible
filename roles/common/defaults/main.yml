@@ -10,7 +10,8 @@ common_target_packages:
   - htop
   - curl
   - git
-  - ansible-core
+  - python3-venv
+  - python3-pip
   - python3-docker
 
 common_sysctl_params:
