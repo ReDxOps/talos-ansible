@@ -12,13 +12,6 @@
     name: "{{ common_docker_group_name }}"
     state: present
 
-- name: Remove default user
-  ansible.builtin.user:
-    name: "{{ common_default_user }}"
-    state: absent
-    force: true
-  when: remove_default_user
-
 - name: Create target user
   ansible.builtin.user:
     name: "{{ item.name }}"
@@ -27,6 +20,7 @@
     group: "{{ common_target_user }}"
     groups: "{{ item.groups | default('') }}"
     shell: /bin/bash
+  no_log: true
   loop:
     - name: "{{ common_target_user }}"
       password: "{{ common_target_password_hash }}"
@@ -69,3 +63,10 @@
   ansible.builtin.user:
     name: root
     password_lock: true
+
+- name: Remove default user
+  ansible.builtin.user:
+    name: "{{ common_default_user }}"
+    state: absent
+    force: true
+  when: remove_default_user

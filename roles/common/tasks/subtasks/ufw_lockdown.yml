@@ -1,0 +1,18 @@
+---
+- name: Restrict SSH to Tailscale interface ONLY
+  community.general.ufw:
+    rule: allow
+    interface: tailscale0
+    direction: in
+    port: "{{ common_target_ssh_port }}"
+    proto: tcp
+
+- name: Remove global SSH access rule
+  community.general.ufw:
+    rule: allow
+    port: "{{ common_target_ssh_port }}"
+    proto: tcp
+    delete: true
+  when:
+    - ansible_facts["tailscale0"] is not defined
+    - target_env | default('dev') == 'prod'
