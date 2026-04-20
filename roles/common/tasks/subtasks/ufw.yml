@@ -26,13 +26,12 @@
     - { port: "{{ common_https_port }}" }
     - { port: "{{ tailscale_p2p_port }}", protocol: "udp" }
 
-- name: Open SSH on Tailscale interface ONLY
+- name: Open SSH port globally (Safety first for bootstrap)
   community.general.ufw:
     rule: allow
-    interface: tailscale0
-    direction: in
     port: "{{ common_target_ssh_port }}"
     proto: tcp
+  when: ansible_facts["tailscale0"] is not defined
 
 - name: Allow SSH on private Vagrant network (DEV ONLY)
   community.general.ufw:

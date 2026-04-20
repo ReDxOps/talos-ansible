@@ -59,6 +59,7 @@
       ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
       changed_when: true
       notify: Create Crowdsec enrollment marker
+      no_log: true
 
     - name: Re-enable UFW
       community.general.ufw:
