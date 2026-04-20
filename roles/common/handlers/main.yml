@@ -6,6 +6,7 @@
 
 - name: Restart Network
   ansible.builtin.shell: |
+    set -o pipefail
     if systemctl list-unit-files | grep -q "^networking.service"; then
       systemctl restart networking
     elif systemctl list-unit-files | grep -q "^systemd-networkd.service"; then
