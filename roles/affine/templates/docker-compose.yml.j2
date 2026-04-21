@@ -23,6 +23,7 @@ services:
       - "traefik.http.routers.{{ affine_role_name }}.rule=Host(`{{ affine_web_url }}`)"
       - "traefik.http.routers.{{ affine_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ affine_role_name }}.tls=true"
+      - "traefik.http.routers.{{ affine_role_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ affine_role_name }}.loadbalancer.server.port=3010"
     environment:
       DATABASE_URL: "{{ affine_database_url }}"

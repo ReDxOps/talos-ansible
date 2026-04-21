@@ -21,6 +21,7 @@ services:
       - "traefik.http.routers.{{ linkwarden_role_name }}.rule=Host(`{{ linkwarden_web_url }}`)"
       - "traefik.http.routers.{{ linkwarden_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ linkwarden_role_name }}.tls=true"
+      - "traefik.http.routers.{{ linkwarden_role_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ linkwarden_role_name }}.loadbalancer.server.port=3000"
     environment:
       DATABASE_URL: "{{ linkwarden_database_url }}"

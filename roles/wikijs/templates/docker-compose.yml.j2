@@ -22,6 +22,7 @@ services:
       - "traefik.http.routers.{{ wikijs_role_name }}.middlewares=secHeaders@file,tailscaleOnly@file"
       - "traefik.http.routers.{{ wikijs_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ wikijs_role_name }}.tls=true"
+      - "traefik.http.routers.{{ wikijs_role_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ wikijs_role_name }}.loadbalancer.server.port=3000"
     environment:
       DB_HOST: db

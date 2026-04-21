@@ -19,6 +19,7 @@ services:
       - "traefik.http.routers.{{ passbolt_role_name }}.rule=Host(`{{ passbolt_web_url }}`)"
       - "traefik.http.routers.{{ passbolt_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ passbolt_role_name }}.tls=true"
+      - "traefik.http.routers.{{ passbolt_role_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ passbolt_role_name }}.loadbalancer.server.port=8080"
     environment:
       APP_FULL_BASE_URL: "https://{{ passbolt_web_url }}"
