@@ -2,7 +2,7 @@
 traefik_acme_email: "remydubois411@gmail.com"
 traefik_image_tag: "v3.6"
 traefik_dashboard_auth: "{{ vault_traefik_dashboard_auth }}"
-traefik_log_level: "INFO"
+traefik_log_level: "DEBUG"
 traefik_role_name: "traefik"
 traefik_root_dir: "{{ project_root_dir }}/{{ traefik_role_name }}"
 traefik_reverse_proxy_network: "{{ traefik_network }}"

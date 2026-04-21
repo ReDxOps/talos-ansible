@@ -5,7 +5,7 @@ global:
   sendAnonymousUsage: false
 
 log:
-  level: INFO
+  level: "{{ traefik_log_level }}"
 
 entryPoints:
   web:
@@ -53,4 +53,4 @@ certificatesResolvers:
       storage: "acme.json"
       dnsChallenge:
         provider: cloudflare
-        delayBeforeCheck: 0
+        delayBeforeCheck: 10
