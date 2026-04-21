@@ -6,7 +6,7 @@ affine_redis_image_tag: "8.6.2-alpine"
 affine_role_name: "affine"
 affine_root_dir: "{{ project_root_dir }}/{{ affine_role_name }}"
 affine_reverse_proxy_network: "{{ traefik_network }}"
-affine_web_url: "{{ traefik_domain_deadcable }}"
+affine_web_url: "{{ affine_role_name }}.{{ traefik_domain_deadcable }}"
 
 affine_db_name: "affine_db"
 affine_database_url: "postgresql://{{ affine_db_user }}:{{ affine_db_password }}@db:5432/{{ affine_db_name }}"

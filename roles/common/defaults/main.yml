@@ -10,6 +10,7 @@ common_target_packages:
   - htop
   - curl
   - git
+  - rsync
   - python3-venv
   - python3-pip
   - python3-docker
