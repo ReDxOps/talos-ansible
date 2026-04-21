@@ -9,8 +9,9 @@ services:
       - no-new-privileges:true
     environment:
       TRAEFIK_LOG_LEVEL: "{{ traefik_log_level }}"
+      CF_DNS_API_TOKEN: "{{ vault_cloudflare_dns_api_token }}"
     ports:
-      - "{{ traefik_http_port }}:80"  
+      - "{{ traefik_http_port }}:80"
       - "{{ traefik_https_port }}:443"
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro

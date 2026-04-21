@@ -20,6 +20,7 @@ services:
       - "traefik.http.routers.{{ wp_flageulcouverture_role_name }}.rule=Host(`{{ wp_flageulcouverture_web_url }}`)"
       - "traefik.http.routers.{{ wp_flageulcouverture_role_name }}.entrypoints=websecure"
       - "traefik.http.routers.{{ wp_flageulcouverture_role_name }}.tls=true"
+      - "traefik.http.routers.{{ wp_flageulcouverture_role_name }}.tls.certresolver=letsencrypt-http"
       - "traefik.http.services.{{ wp_flageulcouverture_role_name }}.loadbalancer.server.port=80"
     environment:
       WORDPRESS_DB_HOST: db

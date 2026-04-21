@@ -3,6 +3,9 @@ target_env: prod
 ansible_user: "{{ target_user }}"
 ansible_port: "{{ target_ssh_port }}"
 traefik_domain: "remydubois.fr"
+traefik_domain_deadcable: "deadcable.fr"
+traefik_domain_flageulcouverture: "flageulcouverture.fr"
+traefik_domain_3lbshop: "3lbshop.com"
 
 kopia_client_hostname: "talos-backup-prod"
 kopia_repository_description: "TALOS Infrastructure Backup Production Repository"
