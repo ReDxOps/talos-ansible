@@ -21,7 +21,7 @@ entryPoints:
     address: ":443"
     http:
       tls:
-        certResolver: letsencrypt
+        certResolver: letsencrypt-dns
 
 providers:
   docker:
@@ -32,7 +32,7 @@ providers:
 
 api:
   dashboard: true
-  insecure: false 
+  insecure: false
 
 metrics:
   prometheus:
@@ -41,9 +41,16 @@ metrics:
     addServicesLabels: true
 
 certificatesResolvers:
-  letsencrypt:
+  letsencrypt-http:
     acme:
       email: "{{ traefik_acme_email }}"
       storage: "acme.json"
       httpChallenge:
         entryPoint: web
+  letsencrypt-dns:
+    acme:
+      email: "{{ traefik_acme_email }}"
+      storage: "acme.json"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 0
