@@ -47,6 +47,7 @@ services:
       - "traefik.http.routers.grafana.middlewares=secHeaders@file,tailscaleOnly@file"
       - "traefik.http.routers.grafana.entrypoints=websecure"
       - "traefik.http.routers.grafana.tls=true"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     networks:
       - "{{ observability_reverse_proxy_network }}"
