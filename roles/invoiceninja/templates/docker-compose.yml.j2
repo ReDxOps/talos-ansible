@@ -30,7 +30,7 @@ services:
       - ./app_storage:/var/www/html/storage:ro
     depends_on:
       app:
-        condition: service_healthy
+        condition: service_started
     networks:
       - "{{ invoiceninja_reverse_proxy_network }}"
       - "{{ invoiceninja_role_name }}_internal"

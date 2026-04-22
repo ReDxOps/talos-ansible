@@ -69,7 +69,7 @@ kopia_smtp_username: "{{ smtp_user }}"
 kopia_smtp_password: "{{ smtp_password }}"
 
 kopia_traefik_enabled: true
-kopia_traefik_network: "proxy"
+kopia_traefik_network: "{{ traefik_network }}"
 kopia_traefik_domain: "kopia.{{ traefik_domain }}"
 kopia_web_port_expose: 51515
 

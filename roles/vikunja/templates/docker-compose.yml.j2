@@ -29,7 +29,7 @@ services:
       HOME: /app/vikunja/files
       VIKUNJA_DATABASE_HOST: db
       VIKUNJA_DATABASE_TYPE: postgres
-      VIKUNJA_DATABASE_DATABASE: vikunja
+      VIKUNJA_DATABASE_DATABASE: "{{ vikunja_db_name }}"
       VIKUNJA_DATABASE_USER: "{{ vikunja_db_user }}"
       VIKUNJA_DATABASE_PASSWORD: "{{ vikunja_db_password }}"
       VIKUNJA_REDIS_ENABLED: "true"
