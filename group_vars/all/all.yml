@@ -75,6 +75,25 @@ kopia_web_port_expose: 51515
 kopia_traefik_entrypoints: "websecure"
 kopia_traefik_certresolver: "letsencrypt-dns"
 kopia_traefik_middlewares: "secHeaders@file,tailscaleOnly@file"
+kopia_ignore_custom:
+  # Infrastructure & CI
+  - "**/github-runner/"
+  - "**/ansible-venv/"
+
+  # Observability (Données volatiles)
+  - "**/prometheus/data/"
+  - "**/loki/data/"
+
+  # Gaming (Binaires lourds)
+  - "**/satisfactory/data/gamefiles/"
+  - "**/satisfactory/data/backups/"
+  - "**/satisfactory/data/logs/"
+
+  # Databases (Sauvegardées via les dumps SQL)
+  - "**/db_data/"
+  - "**/mysql_data/"
+  - "**/postgres_data/"
+  - "**/mariadb_data/"
 
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
