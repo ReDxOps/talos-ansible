@@ -72,6 +72,9 @@ kopia_traefik_enabled: true
 kopia_traefik_network: "{{ traefik_network }}"
 kopia_traefik_domain: "kopia.{{ traefik_domain }}"
 kopia_web_port_expose: 51515
+kopia_traefik_entrypoints: "websecure"
+kopia_traefik_certresolver: "letsencrypt-dns"
+kopia_traefik_middlewares: "secHeaders@file,tailscaleOnly@file"
 
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
