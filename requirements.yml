@@ -5,7 +5,7 @@ roles:
 
   - src: https://github.com/ReDxOps/ansible-role-kopia.git
     scm: git
-    version: v1.2.1
+    version: v1.2.2
     name: redxops.kopia
 
   - name: monolithprojects.github_actions_runner
