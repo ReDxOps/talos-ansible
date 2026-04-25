@@ -1,6 +1,6 @@
 ---
 services:
-  app:
+  "{{ invoiceninja_role_name }}":
     image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_image_tag }}"
     container_name: "{{ invoiceninja_role_name }}"
     restart: unless-stopped
@@ -29,7 +29,7 @@ services:
       - ./app_public:/var/www/html/public:ro
       - ./app_storage:/var/www/html/storage:ro
     depends_on:
-      app:
+      "{{ invoiceninja_role_name }}":
         condition: service_started
     networks:
       - "{{ invoiceninja_reverse_proxy_network }}"
@@ -60,6 +60,7 @@ services:
 
   db:
     image: "mariadb:{{ invoiceninja_mariadb_image_tag }}"
+    container_name: "{{ invoiceninja_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -28,19 +28,16 @@
     mode: "0644"
   loop:
     - invoiceninja.conf
-    - laravel.conf
 
-- name: Copy docker-compose template
+- name: Copy templates
   ansible.builtin.template:
-    src: docker-compose.yml.j2
-    dest: "{{ invoiceninja_root_dir }}/docker-compose.yml"
-    mode: "0644"
-
-- name: Copy .env template
-  ansible.builtin.template:
-    src: .env.j2
-    dest: "{{ invoiceninja_root_dir }}/.env"
-    mode: "0600"
+    src: "{{ item.src }}"
+    dest: "{{ invoiceninja_root_dir }}/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: ".env.j2", dest: ".env", mode: "0600" }
+    - { src: "docker-compose.yml.j2", dest: "docker-compose.yml", mode: "0644" }
+    - { src: laravel.conf.j2, dest: "nginx/laravel.conf", mode: "0644" }
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
