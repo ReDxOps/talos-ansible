@@ -16,7 +16,7 @@ invoiceninja_db_name: "invoiceninja_db"
 invoiceninja_db_user: "{{ vault_invoiceninja_db_user }}"
 invoiceninja_db_password: "{{ vault_invoiceninja_db_password }}"
 
-invoiceninja_initial_user: "{{ vault_invoiceninja_initial_user }}"
+invoiceninja_initial_user_email: "{{ vault_invoiceninja_initial_user_email }}"
 invoiceninja_initial_user_password: "{{ vault_invoiceninja_initial_user_password }}"
 
 invoiceninja_smtp_host: "{{ smtp_host }}"
