@@ -29,6 +29,8 @@ services:
       DATABASE_URL: "{{ affine_database_url }}"
       REDIS_SERVER_HOST: redis
       AFFINE_INDEXER_ENABLED: false
+      AFFINE_SERVER_EXTERNAL_URL: "https://{{ affine_web_url }}"
+      AFFINE_SERVER_HTTPS: true
 
   db:
     image: "pgvector/pgvector:{{ affine_postgres_image_tag }}"
