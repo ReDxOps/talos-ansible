@@ -27,3 +27,37 @@ ark_fjordur_udp_socket_port: "7791"
 ark_fjordur_rcon_port: "27020"
 ark_fjordur_server_list_port: "27015"
 ark_fjordur_game_mod_ids: "731604991,1404697612,1609138312,761535755,1428596566,2182894352,889745138,821530042,1486535761,1522327484,1373744537,1565015734"
+
+ark_game_user_settings:
+  - { section: "ServerSettings", option: "DifficultyOffset", value: "1.0"}
+  - { section: "ServerSettings", option: "OverrideOfficialDifficulty", value: "20.0"}
+  - { section: "ServerSettings", option: "HarvestAmountMultiplier", value: "2.5"}
+  - { section: "ServerSettings", option: "HarvestHealthMultiplier", value: "1.5"}
+  - { section: "ServerSettings", option: "ResourceRespawnPeriodMultiplier", value: "0.7"}
+  - { section: "ServerSettings", option: "TamingSpeedMultiplier", value: "4.0"}
+  - { section: "ServerSettings", option: "DinoCharacterFoodDrainMultiplier", value: "1.2"}
+  - { section: "ServerSettings", option: "XPMultiplier", value: "2.5"}
+  - { section: "ServerSettings", option: "DayCycleSpeedScale", value: "0.7"}
+  - { section: "ServerSettings", option: "DayTimeSpeedScale", value: "0.5"}
+  - { section: "ServerSettings", option: "NightTimeSpeedScale", value: "2.0"}
+  - { section: "ServerSettings", option: "PlayerCharacterWaterDrainMultiplier", value: "0.8"}
+  - { section: "ServerSettings", option: "PlayerCharacterFoodDrainMultiplier", value: "0.8"}
+  - { section: "ServerSettings", option: "PlayerStaminaDrainMultiplier", value: "0.7"}
+  - { section: "ServerSettings", option: "DinoStaminaDrainMultiplier", value: "0.7"}
+  - { section: "ServerSettings", option: "SupplyCrateLootQualityMultiplier", value: "2.5"}
+  - { section: "ServerSettings", option: "FishingLootQualityMultiplier", value: "2.0"}
+  - { section: "ServerSettings", option: "DinoCountMultiplier", value: "1.2"}
+  - { section: "ServerSettings", option: "ItemStackSizeMultiplier", value: "5.0"}
+  - { section: "ServerSettings", option: "DinoDamageMultiplier", value: "1.1"}
+  - { section: "ServerSettings", option: "DinoResistanceMultiplier", value: "0.9"}
+  - { section: "ServerSettings", option: "PlayerDamageMultiplier", value: "1.0"}
+  - { section: "ServerSettings", option: "PlayerResistanceMultiplier", value: "0.9"}
+  - { section: "ServerSettings", option: "bDisableStructurePlacementCollision", value: "true"}
+
+ark_game_settings:
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player", value: "1000000.0"}
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed", value: "1000000.0"}
+  - { section: "/script/shootergame.shootergamemode", option: "EggHatchSpeedMultiplier", value: "8.0"}
+  - { section: "/script/shootergame.shootergamemode", option: "BabyMatureSpeedMultiplier", value: "10.0"}
+  - { section: "/script/shootergame.shootergamemode", option: "BabyCuddleIntervalMultiplier", value: "0.25"}
+  

@@ -5,6 +5,7 @@ services:
     image: "hermsi/ark-server:{{ ark_image_tag }}"
     container_name: "{{ ark_fjordur_name }}"
     restart: unless-stopped
+    stop_grace_period: 2m
     volumes:
       - "./{{ ark_fjordur_name }}:/app"
       - "./{{ ark_fjordur_backup_directory_name }}:/home/steam/ARK-Backups"
