@@ -9,10 +9,7 @@ services:
       - no-new-privileges:true
     volumes:
       - ./data:/config
-    ports:
-      - "{{ satisfactory_external_game_port | string }}:{{ satisfactory_game_port | string }}/udp"
-      - "{{ satisfactory_external_game_port | string }}:{{ satisfactory_game_port | string }}/tcp"
-      - "{{ satisfactory_external_messaging_port | string }}:{{ satisfactory_messaging_port | string }}/tcp"
+    network_mode: "host"
     deploy:
       resources:
         limits:

@@ -18,6 +18,8 @@ docker_install_compose_plugin: true
 http_port: 80
 https_port: 443
 tailscale_p2p_port: 41641
+satisfactory_game_port: 7777
+satisfactory_messaging_port: 8889
 
 smtp_host: "smtp.eu.mailgun.org"
 smtp_user: "{{ vault_smtp_user }}"
