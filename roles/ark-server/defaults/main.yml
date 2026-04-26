@@ -1,0 +1,29 @@
+---
+ark_image_tag: "latest"
+
+ark_role_name: "ark-server"
+ark_root_dir: "{{ project_root_dir }}/{{ ark_role_name }}"
+
+ark_server_password: "{{ vault_ark_server_password }}"
+ark_admin_password: "{{ vault_ark_admin_password }}"
+ark_max_players: "32"
+ark_update_on_start: true
+ark_backup_on_stop: true
+ark_pre_update_on_backup: true
+ark_warn_on_stop: true
+ark_enable_crossplay: true
+ark_disable_battleye: true
+ark_server_volume: "/app"
+ark_cluster_directory: "{{ ark_fjordur_name }}-cluster"
+ark_memory_limit: "8G"
+ark_memory_reservation: "1G"
+
+ark_fjordur_name: "{{ ark_role_name }}-fjordur"
+ark_fjordur_backup_directory_name: "{{ ark_fjordur_name }}-backup"
+ark_fjordur_session_name: "Cluster 420 - Fjordur"
+ark_fjordur_server_map: "Fjordur"
+ark_fjordur_game_client_port: "7790"
+ark_fjordur_udp_socket_port: "7791"
+ark_fjordur_rcon_port: "27020"
+ark_fjordur_server_list_port: "27015"
+ark_fjordur_game_mod_ids: "731604991,1404697612,1609138312,761535755,1428596566,2182894352,889745138,821530042,1486535761,1522327484,1373744537,1565015734"

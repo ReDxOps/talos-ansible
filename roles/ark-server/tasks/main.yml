@@ -1,0 +1,24 @@
+---
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ ark_root_dir }}"
+    - "{{ ark_root_dir }}/{{ ark_fjordur_name }}"
+    - "{{ ark_root_dir }}/{{ ark_fjordur_backup_directory_name }}"
+    - "{{ ark_root_dir }}/{{ ark_cluster_directory }}"
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ ark_root_dir }}/docker-compose.yml"
+    mode: '0644'
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "{{ ark_root_dir }}"
+    state: present
+    pull: always

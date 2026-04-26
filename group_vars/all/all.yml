@@ -21,6 +21,11 @@ tailscale_p2p_port: 41641
 satisfactory_game_port: 7777
 satisfactory_messaging_port: 8889
 
+ark_fjordur_game_client_port: 7790
+ark_fjordur_udp_socket_port: 7791
+ark_fjordur_rcon_port: 27020
+ark_fjordur_server_list_port: 27015
+
 smtp_host: "smtp.eu.mailgun.org"
 smtp_user: "{{ vault_smtp_user }}"
 smtp_password: "{{ vault_smtp_password }}"
@@ -96,6 +101,9 @@ kopia_ignore_custom:
   - "**/mysql_data/"
   - "**/postgres_data/"
   - "**/mariadb_data/"
+
+  - "**/ark-server/ark-server-fjordur/ShooterGame/Content/"
+  - "**/ark-server/ark-server-fjordur/Engine/"
 
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
