@@ -10,7 +10,7 @@ services:
     volumes:
       - ./data:/app/data
     networks:
-      - "{{ affine_reverse_proxy_network }}"
+      - "{{ skeleton_reverse_proxy_network }}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.{{ skeleton_role_name }}.rule=Host(`{{ skeleton_web_url }}`)"
@@ -19,5 +19,5 @@ services:
       - "traefik.http.services.{{ skeleton_role_name }}.loadbalancer.server.port=80"
 
 networks:
-  "{{ affine_reverse_proxy_network }}":
+  "{{ skeleton_reverse_proxy_network }}":
     external: true

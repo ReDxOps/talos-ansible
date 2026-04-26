@@ -28,6 +28,10 @@
     - { port: "{{ satisfactory_game_port }}" }
     - { port: "{{ satisfactory_game_port }}", protocol: "udp" }
     - { port: "{{ satisfactory_messaging_port }}" }
+    - { port: "{{ ark_fjordur_game_client_port }}", protocol: "udp" }
+    - { port: "{{ ark_fjordur_udp_socket_port }}", protocol: "udp" }
+    - { port: "{{ ark_fjordur_rcon_port }}"}
+    - { port: "{{ ark_fjordur_server_list_port }}", protocol: "udp" }
 
 - name: Open SSH port globally (Safety first for bootstrap)
   community.general.ufw:

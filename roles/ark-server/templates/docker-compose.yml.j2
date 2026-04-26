@@ -1,0 +1,42 @@
+---
+
+services:
+  "{{ ark_fjordur_name }}":
+    image: "hermsi/ark-server:{{ ark_image_tag }}"
+    container_name: "{{ ark_fjordur_name }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - "./{{ ark_fjordur_name }}:/app"
+      - "./{{ ark_fjordur_backup_directory_name }}:/home/steam/ARK-Backups"
+      - "./{{ ark_cluster_directory }}:/ark/server/ShooterGame/Saved/clusters"
+    environment:
+      SESSION_NAME: "{{ ark_fjordur_session_name }}"
+      SERVER_MAP: "{{ ark_fjordur_server_map }}"
+      SERVER_PASSWORD: "{{ ark_server_password }}"
+      ADMIN_PASSWORD: "{{ ark_admin_password }}"
+      MAX_PLAYERS: "{{ ark_max_players }}"
+      UPDATE_ON_START: "{{ ark_update_on_start }}"
+      BACKUP_ON_STOP: "{{ ark_backup_on_stop }}"
+      PRE_UPDATE_BACKUP: "{{ ark_pre_update_on_backup }}"
+      WARN_ON_STOP: "{{ ark_warn_on_stop }}"
+      ENABLE_CROSSPLAY: "{{ ark_enable_crossplay }}"
+      DISABLE_BATTLEYE: "{{ ark_disable_battleye }}"
+      ARK_SERVER_VOLUME: "{{ ark_server_volume }}"
+      GAME_CLIENT_PORT: "{{ ark_fjordur_game_client_port }}"
+      UDP_SOCKET_PORT: "{{ ark_fjordur_udp_socket_port }}"
+      RCON_PORT: "{{ ark_fjordur_rcon_port }}"
+      SERVER_LIST_PORT: "{{ ark_fjordur_server_list_port }}"
+      GAME_MOD_IDS: "{{ ark_fjordur_game_mod_ids }}"
+    ports:
+      - "{{ ark_fjordur_game_client_port }}:{{ ark_fjordur_game_client_port }}/udp"
+      - "{{ ark_fjordur_udp_socket_port }}:{{ ark_fjordur_udp_socket_port }}/udp"
+      - "{{ ark_fjordur_rcon_port }}:{{ ark_fjordur_rcon_port }}/tcp"
+      - "{{ ark_fjordur_server_list_port }}:{{ ark_fjordur_server_list_port }}/udp"
+    deploy:
+      resources:
+        limits:
+          memory: "{{ ark_memory_limit }}"
+        reservations:
+          memory: "{{ ark_memory_reservation }}"
