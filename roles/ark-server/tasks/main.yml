@@ -22,7 +22,7 @@
 
 - name: Check GameUserSettings.ini
   community.general.ini_file: 
-    path: "{{ ark_config_path }}/GameUserSettings.ini"
+    path: "{{ ark_fjordur_config_path }}/GameUserSettings.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -36,7 +36,7 @@
 
 - name: Check Game.ini
   community.general.ini_file: 
-    path: "{{ ark_config_path }}/Game.ini"
+    path: "{{ ark_fjordur_config_path }}/Game.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -50,7 +50,7 @@
 
 - name: Check Custom Loots in Game.ini (blockinfile)
   ansible.builtin.blockinfile:
-    path: "{{ ark_config_path }}/Game.ini"
+    path: "{{ ark_fjordur_config_path }}/Game.ini"
     marker: "; {mark} ANSIBLE MANAGED LOOT DROPS"
     block: "{{ ark_custom_loots }}"
     owner: "1000"
@@ -68,7 +68,7 @@
 
 - name: Modify GameUserSettings.ini
   community.general.ini_file: 
-    path: "{{ ark_config_path }}/GameUserSettings.ini"
+    path: "{{ ark_fjordur_config_path }}/GameUserSettings.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -81,7 +81,7 @@
 
 - name: Modify Game.ini
   community.general.ini_file: 
-    path: "{{ ark_config_path }}/Game.ini"
+    path: "{{ ark_fjordur_config_path }}/Game.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -94,7 +94,7 @@
 
 - name: Modify Custom Loots in Game.ini (blockinfile)
   ansible.builtin.blockinfile:
-    path: "{{ ark_config_path }}/Game.ini"
+    path: "{{ ark_fjordur_config_path }}/Game.ini"
     marker: "; {mark} ANSIBLE MANAGED LOOT DROPS"
     block: "{{ ark_custom_loots }}"
     owner: "1000"
