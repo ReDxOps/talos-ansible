@@ -22,7 +22,7 @@
 
 - name: Check GameUserSettings.ini
   community.general.ini_file: 
-    path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/GameUserSettings.ini"
+    path: "{{ ark_config_path }}/GameUserSettings.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -36,7 +36,7 @@
 
 - name: Check Game.ini
   community.general.ini_file: 
-    path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/Game.ini"
+    path: "{{ ark_config_path }}/Game.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -48,15 +48,27 @@
   check_mode: yes
   register: game_settings_status
 
+- name: Check Custom Loots in Game.ini (blockinfile)
+  ansible.builtin.blockinfile:
+    path: "{{ ark_config_path }}/Game.ini"
+    marker: "; {mark} ANSIBLE MANAGED LOOT DROPS"
+    block: "{{ ark_custom_loots }}"
+    owner: "1000"
+    group: "1000"
+    mode: "0644"
+    create: yes
+  check_mode: yes
+  register: game_loots_status
+
 - name: Stop application stack
   community.docker.docker_compose_v2:
     project_src: "{{ ark_root_dir }}"
     state: stopped
-  when: compose_file_status.changed or game_user_settings_status.changed or game_settings_status.changed
+  when: compose_file_status.changed or game_user_settings_status.changed or game_settings_status.changed or game_loots_status.changed
 
 - name: Modify GameUserSettings.ini
   community.general.ini_file: 
-    path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/GameUserSettings.ini"
+    path: "{{ ark_config_path }}/GameUserSettings.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -69,7 +81,7 @@
 
 - name: Modify Game.ini
   community.general.ini_file: 
-    path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/Game.ini"
+    path: "{{ ark_config_path }}/Game.ini"
     section: "{{ item.section }}"
     option: "{{ item.option }}"
     value: "{{ item.value }}"
@@ -79,6 +91,17 @@
     create: yes
   loop: "{{ ark_game_settings }}" 
   when: game_settings_status.changed
+
+- name: Modify Custom Loots in Game.ini (blockinfile)
+  ansible.builtin.blockinfile:
+    path: "{{ ark_config_path }}/Game.ini"
+    marker: "; {mark} ANSIBLE MANAGED LOOT DROPS"
+    block: "{{ ark_custom_loots }}"
+    owner: "1000"
+    group: "1000"
+    mode: "0644"
+    create: yes
+  when: game_loots_status.changed
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
