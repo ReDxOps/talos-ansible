@@ -15,7 +15,7 @@ ark_enable_crossplay: true
 ark_disable_battleye: true
 ark_server_volume: "/app"
 ark_cluster_directory: "{{ ark_fjordur_name }}-cluster"
-ark_memory_limit: "8G"
+ark_memory_limit: "12G"
 ark_memory_reservation: "1G"
 
 ark_fjordur_name: "{{ ark_role_name }}-fjordur"
