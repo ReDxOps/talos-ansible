@@ -15,7 +15,7 @@ ark_enable_crossplay: true
 ark_disable_battleye: true
 ark_server_volume: "/app"
 ark_cluster_directory: "{{ ark_fjordur_name }}-cluster"
-ark_memory_limit: "8G"
+ark_memory_limit: "12G"
 ark_memory_reservation: "1G"
 
 ark_fjordur_name: "{{ ark_role_name }}-fjordur"
@@ -45,6 +45,7 @@ ark_fjordur_game_mod_ids:
   - "2147192126"
   - "2477325185"
   - "924933745"
+  - "1498101840"
 
 ark_fjordur_config_path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/server/ShooterGame/Saved/Config/LinuxServer"
 
@@ -73,6 +74,19 @@ ark_game_user_settings:
   - { section: "ServerSettings", option: "PlayerDamageMultiplier", value: "1.0" }
   - { section: "ServerSettings", option: "PlayerResistanceMultiplier", value: "0.9" }
   - { section: "ServerSettings", option: "bDisableStructurePlacementCollision", value: "true" }
+  - { section: "ServerSettings", option: "CopyDisablePvEGamma", value: "false" }
+  - { section: "ServerSettings", option: "EnablePvPGamma", value: "true" }
+  - { section: "ServerSettings", option: "ShowFloatingDamageText", value: "true" }
+  - { section: "ServerSettings", option: "ShowMapPlayerLocation", value: "true" }
+  - { section: "ServerSettings", option: "AlwaysAllowStructurePickup", value: "true" }
+  - { section: "ServerSettings", option: "StructurePickupHoldDuration", value: "0.5" }
+  - { section: "ServerSettings", option: "AllowCaveBuildingPvE", value: "true" }
+  - { section: "ServerSettings", option: "bDisableFriendlyFire", value: "true" }
+  - { section: "ServerSettings", option: "CaveDamageMultiplier", value: "1.0" }
+  - { section: "ServerSettings", option: "CropGrowthSpeedMultiplier", value: "10.0" }
+  - { section: "ServerSettings", option: "CropDecaySpeedMultiplier", value: "0.1" }
+  - { section: "ServerSettings", option: "PoopIntervalMultiplier", value: "0.5" }
+  - { section: "ServerSettings", option: "MaxPersonalTamedDinos", value: "5000" }
 
 ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[7]", value: "1000000.0" }
