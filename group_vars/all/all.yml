@@ -102,8 +102,9 @@ kopia_ignore_custom:
   - "**/postgres_data/"
   - "**/mariadb_data/"
 
-  - "**/ark-server/ark-server-fjordur/ShooterGame/Content/"
-  - "**/ark-server/ark-server-fjordur/Engine/"
+  - "**/ark-server-fjordur/server/ShooterGame/Content/"
+  - "**/ark-server-fjordur/server/Engine/"
+  - "**/ark-server-fjordur/server/ShooterGame/Binaries/"
 
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
