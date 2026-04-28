@@ -105,6 +105,7 @@ kopia_ignore_custom:
   - "**/ark-server-fjordur/server/ShooterGame/Content/"
   - "**/ark-server-fjordur/server/Engine/"
   - "**/ark-server-fjordur/server/ShooterGame/Binaries/"
+  - "**/ark-server-fjordur/staging/"
 
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"

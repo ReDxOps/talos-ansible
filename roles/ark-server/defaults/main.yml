@@ -46,6 +46,8 @@ ark_fjordur_game_mod_ids:
   - "2477325185"
   - "924933745"
   - "1498101840"
+  - "1204667931"
+  - "2121213202"
 
 ark_fjordur_config_path: "{{ ark_root_dir }}/{{ ark_fjordur_name }}/server/ShooterGame/Saved/Config/LinuxServer"
 
@@ -87,6 +89,8 @@ ark_game_user_settings:
   - { section: "ServerSettings", option: "CropDecaySpeedMultiplier", value: "0.1" }
   - { section: "ServerSettings", option: "PoopIntervalMultiplier", value: "0.5" }
   - { section: "ServerSettings", option: "MaxPersonalTamedDinos", value: "5000" }
+  - { section: "DinoStorage2", option: "EnableEggGeneration", value: "True" }
+  - { section: "DinoStorage2", option: "EggGenerationIntervalMultiplier", value: "0.2" }
 
 ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[7]", value: "1000000.0" }
@@ -102,11 +106,11 @@ ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[5]", value: "20.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[8]", value: "15.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[10]", value: "15.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[0]", value: "15.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[1]", value: "15.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[0]", value: "7.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[1]", value: "7.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[4]", value: "20.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[5]", value: "20.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[8]", value: "15.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[8]", value: "7.0" }
 
 ark_custom_loots: |
   [/Game/PrimalEarth/CoreBlueprints/TestGameMode.TestGameMode_C]
