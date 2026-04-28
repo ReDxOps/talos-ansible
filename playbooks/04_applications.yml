@@ -36,3 +36,6 @@
 
     - role: ark-server
       tags: ark
+
+    - role: sparky-fitness
+      tags: sparky

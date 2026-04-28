@@ -9,6 +9,7 @@
     group: "1000"
     mode: "0644"
     create: true
+    no_extra_spaces: true
   loop: "{{ ark_game_user_settings }}"
 
 - name: Modify Game.ini
@@ -21,6 +22,7 @@
     group: "1000"
     mode: "0644"
     create: true
+    no_extra_spaces: true
   loop: "{{ ark_game_settings }}"
 
 - name: Modify Custom Loots in Game.ini (blockinfile)
