@@ -20,54 +20,24 @@
     mode: "0644"
   register: compose_file_status
 
-- name: Check GameUserSettings.ini
-  community.general.ini_file:
-    path: "{{ ark_fjordur_config_path }}/GameUserSettings.ini"
-    section: "{{ item.section }}"
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
+- name: Track desired configuration state
+  ansible.builtin.copy:
+    content: "{{ {'user_settings': ark_game_user_settings, 'game_settings': ark_game_settings, 'custom_loots': ark_custom_loots} | to_nice_json }}"
+    dest: "{{ ark_root_dir }}/.ark_config_state.json"
     owner: "1000"
     group: "1000"
     mode: "0644"
-    create: true
-  loop: "{{ ark_game_user_settings }}"
-  check_mode: true
-  register: game_user_settings_status
-  notify: Modify GameUserSettings.ini
-
-- name: Check Game.ini
-  community.general.ini_file:
-    path: "{{ ark_fjordur_config_path }}/Game.ini"
-    section: "{{ item.section }}"
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
-    owner: "1000"
-    group: "1000"
-    mode: "0644"
-    create: true
-  loop: "{{ ark_game_settings }}"
-  check_mode: true
-  register: game_settings_status
-  notify: Modify Game.ini
-
-- name: Check Custom Loots in Game.ini (blockinfile)
-  ansible.builtin.blockinfile:
-    path: "{{ ark_fjordur_config_path }}/Game.ini"
-    marker: "; {mark} ANSIBLE MANAGED LOOT DROPS"
-    block: "{{ ark_custom_loots }}"
-    owner: "1000"
-    group: "1000"
-    mode: "0644"
-    create: true
-  check_mode: true
-  register: game_loots_status
-  notify: Modify Custom Loots in Game.ini (blockinfile)
+  register: ark_config_state
+  notify:
+    - Modify GameUserSettings.ini
+    - Modify Game.ini
+    - Modify Custom Loots in Game.ini (blockinfile)
 
 - name: Stop application stack
   community.docker.docker_compose_v2:
     project_src: "{{ ark_root_dir }}"
     state: stopped
-  when: compose_file_status.changed or game_user_settings_status.changed or game_settings_status.changed or game_loots_status.changed
+  when: compose_file_status.changed or ark_config_state.changed
 
 - name: Flush handlers to apply config while server is stopped
   ansible.builtin.meta: flush_handlers
