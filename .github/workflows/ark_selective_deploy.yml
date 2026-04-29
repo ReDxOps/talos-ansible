@@ -2,9 +2,7 @@ name: ARK Selective Deploy
 
 on:
   push:
-    branches: [ "main" ]
-    paths:
-      - "roles/ark-server/vars/main.yml"
+    branches: [ "ark-live" ]
 
 jobs:
   deploy_ark:
