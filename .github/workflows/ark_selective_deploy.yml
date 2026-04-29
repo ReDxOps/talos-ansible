@@ -1,0 +1,29 @@
+name: ARK Selective Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "roles/ark-server/vars/main.yml"
+
+jobs:
+  deploy_ark:
+    name: Selective ARK Deployment
+    runs-on: [ self-hosted, prod ]
+    env:
+      ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Install Dependencies
+        run: $ANSIBLE_BIN_PATH/ansible-galaxy install -r requirements.yml --force
+
+      - name: Run ARK Targeted Deployment
+        run: |
+          $ANSIBLE_BIN_PATH/ansible-playbook site.yml \
+          -i inventories/prod/hosts.yml \
+          --connection=local \
+          --tags ark \
+          --vault-id prod@/home/github-runner/.vault_pass_prod
