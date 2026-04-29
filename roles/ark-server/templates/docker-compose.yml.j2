@@ -5,7 +5,7 @@ services:
     image: "hermsi/ark-server:{{ ark_image_tag }}"
     container_name: "{{ ark_fjordur_name }}"
     restart: unless-stopped
-    stop_grace_period: 2m
+    stop_grace_period: 4m
     volumes:
       - "./{{ ark_fjordur_name }}:/app"
       - "./{{ ark_fjordur_backup_directory_name }}:/home/steam/ARK-Backups"
@@ -28,6 +28,7 @@ services:
       RCON_PORT: "{{ ark_fjordur_rcon_port }}"
       SERVER_LIST_PORT: "{{ ark_fjordur_server_list_port }}"
       GAME_MOD_IDS: "{{ ark_fjordur_game_mod_ids | join(',') }}"
+      am_ark_extra_opts: "-ForceAllowCaveFlyers"
     ports:
       - "{{ ark_fjordur_game_client_port }}:{{ ark_fjordur_game_client_port }}/udp"
       - "{{ ark_fjordur_udp_socket_port }}:{{ ark_fjordur_udp_socket_port }}/udp"

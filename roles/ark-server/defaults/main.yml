@@ -98,7 +98,7 @@ ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[7]", value: "1000000.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[7]", value: "1000000.0" }
   - { section: "/script/shootergame.shootergamemode", option: "EggHatchSpeedMultiplier", value: "8.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "BabyMatureSpeedMultiplier", value: "40.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "BabyMatureSpeedMultiplier", value: "60.0" }
   - { section: "/script/shootergame.shootergamemode", option: "BabyCuddleIntervalMultiplier", value: "0.01" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[0]", value: "15.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[1]", value: "15.0" }
@@ -108,13 +108,20 @@ ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[5]", value: "20.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[8]", value: "15.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_Player[10]", value: "15.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[0]", value: "7.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[1]", value: "7.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[0]", value: "3.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[1]", value: "3.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[4]", value: "20.0" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[5]", value: "20.0" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[8]", value: "7.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed[8]", value: "3.0" }
   - { section: "/script/shootergame.shootergamemode", option: "MatingIntervalMultiplier", value: "0.1" }
-  - { section: "/script/shootergame.shootergamemode", option: "BabyImprintAmountMultiplier", value: "4" }
+  - { section: "/script/shootergame.shootergamemode", option: "BabyImprintAmountMultiplier", value: "5.5" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoWild[0]", value: "10.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoWild[2]", value: "2.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoWild[8]", value: "10.0" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Add[0]", value: "0.45" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Add[8]", value: "0.45" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Affinity[0]", value: "0.45" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Affinity[8]", value: "0.45" }
 
 ark_custom_loots: |
   [/Game/PrimalEarth/CoreBlueprints/TestGameMode.TestGameMode_C]
