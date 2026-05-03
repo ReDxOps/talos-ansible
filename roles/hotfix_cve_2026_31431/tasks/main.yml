@@ -1,0 +1,20 @@
+# Patch CVE-2026-31431 (Copy Fail)
+---
+
+- name: Create a blacklist file for desactivate algif_aead
+  ansible.builtin.copy:
+    dest: /etc/modprobe.d/disable-algif.conf
+    content: "install algif_aead /bin/false\n"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Verify if algif_aead module is running
+  ansible.builtin.shell: lsmod | grep -qw algif_aead
+  register: module_loaded
+  failed_when: false
+  changed_when: fals
+
+- name: Unload algif_aead module from RAM
+  ansible.builtin.command: rmmod algif_aead
+  when: module_loaded.rc == 0
