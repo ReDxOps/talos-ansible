@@ -95,7 +95,7 @@ ark_game_settings:
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Add[0]", value: "0.45" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Add[8]", value: "0.45" }
   - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Affinity[0]", value: "0.45" }
-  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Affinity[8]", value: "0.45" }
+  - { section: "/script/shootergame.shootergamemode", option: "PerLevelStatsMultiplier_DinoTamed_Affinity[8]", value: "0.46" }
 
 # --- Custom Loots (Game.ini block) ---
 ark_custom_loots: |
