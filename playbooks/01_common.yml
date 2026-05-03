@@ -9,3 +9,6 @@
   roles:
     - role: common
       tags: common
+
+    - role: hotfix_cve_2026_31431
+      tags: hotfix_copyfail
