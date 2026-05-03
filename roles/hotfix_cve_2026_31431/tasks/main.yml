@@ -10,11 +10,12 @@
     mode: "0644"
 
 - name: Verify if algif_aead module is running
-  ansible.builtin.shell: lsmod | grep -qw algif_aead
-  register: module_loaded
+  ansible.builtin.command: grep -qw algif_aead /proc/modules
+  register: hotfix_cve_2026_31431_module_loaded
   failed_when: false
-  changed_when: fals
+  changed_when: false
 
 - name: Unload algif_aead module from RAM
   ansible.builtin.command: rmmod algif_aead
-  when: module_loaded.rc == 0
+  when: hotfix_cve_2026_31431_module_loaded.rc == 0
+  changed_when: false
