@@ -26,14 +26,17 @@
     pull: always
 
 - name: Check if Passbolt is already initialized
-  ansible.builtin.command: "docker exec passbolt ls /etc/passbolt/gpg/serverkey.asc"
+  ansible.builtin.command: "docker compose exec -T app ls /etc/passbolt/gpg/serverkey.asc"
+  args:
+    chdir: "{{ passbolt_root_dir }}"
   register: passbolt_init_file
   failed_when: false
   changed_when: false
 
 - name: Wait for Passbolt to be fully initialized (DB migrations)
   ansible.builtin.command:
-    cmd: "docker exec passbolt ./bin/cake passbolt healthcheck --json"
+    cmd: "docker compose exec -T app ./bin/cake passbolt healthcheck --json"
+    chdir: "{{ passbolt_root_dir }}"
   register: passbolt_healthcheck_result
   until: >
     'true' in passbolt_healthcheck_result.stdout and
@@ -47,7 +50,8 @@
 
 - name: Check if admin user exists
   ansible.builtin.command:
-    cmd: "docker exec passbolt ./bin/cake passbolt users_index"
+    cmd: "docker compose exec -T app ./bin/cake passbolt users_index"
+    chdir: "{{ passbolt_root_dir }}"
   register: passbolt_users_list
   changed_when: false
   failed_when: false
@@ -55,12 +59,13 @@
 - name: Auto-bootstrap first admin
   ansible.builtin.command:
     cmd: >
-      docker exec passbolt
+      docker compose exec -T app
       ./bin/cake passbolt register_user
       -u {{ passbolt_admin_email }}
       -f {{ passbolt_admin_first_name }}
       -l {{ passbolt_admin_last_name }}
       -r admin
+    chdir: "{{ passbolt_root_dir }}"
   when: passbolt_admin_email not in passbolt_users_list.stdout
   register: passbolt_bootstrap_output
   changed_when: true
