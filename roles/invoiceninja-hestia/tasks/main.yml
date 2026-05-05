@@ -1,0 +1,46 @@
+---
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ invoiceninja_hestia_root_dir }}"
+    - "{{ invoiceninja_hestia_root_dir }}/app_public"
+    - "{{ invoiceninja_hestia_root_dir }}/app_storage"
+    - "{{ invoiceninja_hestia_root_dir }}/db_data"
+    - "{{ invoiceninja_hestia_root_dir }}/files"
+    - "{{ invoiceninja_hestia_root_dir }}/nginx"
+
+- name: Copy modified php application files
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+  loop:
+    - { src: Account.php, dest: "{{ invoiceninja_hestia_root_dir }}/files/Account.php" }
+    - { src: Ninja.php, dest: "{{ invoiceninja_hestia_root_dir }}/files/Ninja.php" }
+
+- name: Copy Nginx configuration files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ invoiceninja_hestia_root_dir }}/nginx/{{ item }}"
+    mode: "0644"
+  loop:
+    - invoiceninja.conf
+
+- name: Copy templates
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ invoiceninja_hestia_root_dir }}/{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: ".env.j2", dest: ".env", mode: "0600" }
+    - { src: "docker-compose.yml.j2", dest: "docker-compose.yml", mode: "0644" }
+    - { src: laravel.conf.j2, dest: "nginx/laravel.conf", mode: "0644" }
+
+- name: Start docker-compose stack
+  community.docker.docker_compose_v2:
+    project_src: "{{ invoiceninja_hestia_root_dir }}"
+    state: present
+    pull: always

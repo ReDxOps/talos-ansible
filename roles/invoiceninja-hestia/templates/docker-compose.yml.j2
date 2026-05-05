@@ -1,0 +1,86 @@
+---
+services:
+  "{{ invoiceninja_hestia_role_name }}":
+    image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_hestia_image_tag }}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./app_public:/var/www/html/public
+      - ./app_storage:/var/www/html/storage
+      - ./files/Account.php:/var/www/html/app/Models/Account.php
+      - ./files/Ninja.php:/var/www/html/app/Utils/Ninja.php
+    networks:
+      - "{{ invoiceninja_hestia_role_name }}_internal"
+  nginx:
+    image: nginx:{{ invoiceninja_hestia_nginx_image_tag }}
+    restart: unless-stopped
+    volumes:
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./app_public:/var/www/html/public:ro
+      - ./app_storage:/var/www/html/storage:ro
+    depends_on:
+      "{{ invoiceninja_hestia_role_name }}":
+        condition: service_started
+    networks:
+      - "{{ invoiceninja_hestia_reverse_proxy_network }}"
+      - "{{ invoiceninja_hestia_role_name }}_internal"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network={{ invoiceninja_hestia_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ invoiceninja_hestia_role_name }}.rule=Host(`{{ invoiceninja_hestia_web_url }}`)"
+      - "traefik.http.routers.{{ invoiceninja_hestia_role_name }}.middlewares=secHeaders@file,tailscaleOnly@file"
+      - "traefik.http.routers.{{ invoiceninja_hestia_role_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ invoiceninja_hestia_role_name }}.tls=true"
+      - "traefik.http.routers.{{ invoiceninja_hestia_role_name }}.tls.certresolver=letsencrypt-http"
+      - "traefik.http.services.{{ invoiceninja_hestia_role_name }}.loadbalancer.server.port=80"
+
+  redis:
+    image: "redis:{{ invoiceninja_hestia_redis_image_tag }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - "{{ invoiceninja_hestia_role_name }}_internal"
+
+  db:
+    image: "mariadb:{{ invoiceninja_hestia_mariadb_image_tag }}"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./db_data:/var/lib/mysql
+    networks:
+      - "{{ invoiceninja_hestia_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_DATABASE: "{{ invoiceninja_hestia_db_name }}"
+      MYSQL_USER: "{{ invoiceninja_hestia_db_user }}"
+      MYSQL_PASSWORD: "{{ invoiceninja_hestia_db_password }}"
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u\"$${MYSQL_USER}\" -p\"$${MYSQL_PASSWORD}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+networks:
+  "{{ invoiceninja_hestia_reverse_proxy_network }}":
+    external: true
+  "{{ invoiceninja_hestia_role_name }}_internal":
+    name: "{{ invoiceninja_hestia_role_name }}_internal"
+    internal: true
