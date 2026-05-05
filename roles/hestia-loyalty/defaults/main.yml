@@ -1,0 +1,48 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+app_name: "hestia-loyalty"
+app_env: "staging"
+
+hestia_loyalty_root_dir: "{{ project_root_dir }}/hestia-loyalty-{{ app_env }}"
+
+hestia_loyalty_group_name: "hestialoyalty"
+hestia_loyalty_user_name: "hestialoyalty"
+
+hestia_loyalty_group_id: "5000"
+hestia_loyalty_user_id: "5000"
+
+hestia_loyalty_image: "ghcr.io/donmarax/hestia-loyalty"
+hestia_staging_loyalty_tag: "staging"
+hestia_production_loyalty_tag: "production"
+
+hestia_loyalty_db_image: "postgres"
+hestia_loyalty_db_tag: "18.3-alpine3.23"
+
+hestia_loyalty_reverse_proxy_network: "{{ traefik_network }}"
+hestia_loyalty_web_url: "https://hestialoyalty.fr"
+hestia_loyalty_staging_web_url: "https://staging.hestialoyalty.fr"
+
+hestia_loyalty_db_name: "hestia_loyalty_db"
+hestia_loyalty_db_user: "{{ vault_hestia_loyalty_db_user }}"
+hestia_loyalty_db_password: "{{ vault_hestia_loyalty_db_password }}"
+
+hestia_loyalty_ram_reservation: "256M"
+hestia_loyalty_ram_limit: "512M"
+hestia_loyalty_db_ram_reservation: "256M"
+hestia_loyalty_db_ram_limit: "512M"
+
+hestia_loyalty_nextjs_auth_secret: "{{ vault_hestia_loyalty_nextjs_auth_secret }}"
+
+hestia_loyalty_email_provider: "resend"
+hestia_loyalty_email_provider_api_key: "{{ vault_hestia_loyalty_email_provider_api_key }}"
+
+hestia_loyalty_apple_wallet_pass_type_id: "{{ vault_hestia_loyalty_apple_wallet_pass_type_id }}"
+hestia_loyalty_apple_wallet_team_id: "{{ vault_hestia_loyalty_apple_wallet_team_id }}"
+hestia_loyalty_google_wallet_issuer_id: "{{ vault_hestia_loyalty_google_wallet_issuer_id }}"
+
+hestia_loyalty_superadmin_email: "{{ vault_hestia_loyalty_superadmin_email }}"
+hestia_loyalty_superadmin_password: "{{ vault_hestia_loyalty_superadmin_password }}"
+
+hestia_loyalty_portainer_url: "{{ portainer_url }}"
+hestia_loyalty_portainer_access_token: "{{ portainer_access_token }}"

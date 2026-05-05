@@ -1,5 +1,5 @@
 ---
-invoiceninja_hestia_hestia_image_tag: "5.13"
+invoiceninja_hestia_app_image_tag: "5.13"
 invoiceninja_hestia_mariadb_image_tag: "11.8"
 invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"
 invoiceninja_hestia_nginx_image_tag: "1.29.8"

@@ -1,0 +1,106 @@
+---
+name: "{{ app_name }}-{{ app_env }}"
+
+services:
+
+  app:
+{% if app_env != 'prod' %}
+    image: "{{ hestia_loyalty_image }}:{{ hestia_staging_loyalty_tag }}"
+{% else %}
+    image: "{{ hestia_loyalty_image }}:{{ hestia_production_loyalty_tag }}"
+{% endif %}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./{{ app_name }}_data:/app/public/uploads
+    networks:
+      - internal
+      - proxy
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.rule=Host(`{{ (hestia_loyalty_web_url if app_env == 'prod' else hestia_loyalty_staging_web_url) | regex_replace('^https?://', '') }}`)"
+{% if app_env != 'prod' %}
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.middlewares=secHeaders@file,tailscaleOnly@file"
+{% else %}
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.middlewares=secHeaders@file"
+{% endif %}
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.tls=true"
+      - "traefik.http.routers.{{ app_name }}-{{ app_env }}.tls.certresolver=letsencrypt-dns"
+      - "traefik.http.services.{{ app_name }}-{{ app_env }}.loadbalancer.server.port=3000"
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      resources:
+        reservations:
+          memory: "{{ hestia_loyalty_ram_reservation }}"
+        limits:
+          memory: "{{ hestia_loyalty_ram_limit }}"
+    cpu_shares: 512
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  db:
+    image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    labels:
+      - "kopia.backup.target=true"
+    deploy:
+      resources:
+        reservations:
+          memory: "{{ hestia_loyalty_db_ram_reservation }}"
+        limits:
+          memory: "{{ hestia_loyalty_db_ram_limit }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+
+networks:
+  internal:
+    internal: true
+  proxy:
+    name: "{{ hestia_loyalty_reverse_proxy_network }}"
+    external: true
+
+volumes:
+  db_data:
