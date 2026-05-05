@@ -56,7 +56,7 @@ kopia_config_path: "/app/config/repository.config"
 kopia_folders_to_save:
   - "/opt/talos"
 
-kopia_container_suffix: "-db"
+kopia_container_label: "kopia.backup.target=true"
 kopia_cleanup_sqldumps_after_backup: true
 
 kopia_policy_keep_daily: 7
@@ -113,3 +113,6 @@ github_account: "ReDxOps"
 github_repo: "talos-ansible"
 access_token: "{{ vault_github_pat }}"
 runner_labels: [ "{{ target_env | default('dev') }}" ]
+
+portainer_url: "https://portainer.remydubois.fr"
+portainer_access_token: "{{ vault_portainer_access_token }}"

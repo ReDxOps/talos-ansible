@@ -4,7 +4,6 @@ services:
   app:
     image: "passbolt/passbolt:{{ passbolt_image_tag }}"
     restart: unless-stopped
-    container_name: "{{ passbolt_role_name }}"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -45,7 +44,6 @@ services:
 
   db:
     image: "mariadb:{{ passbolt_mariadb_image_tag }}"
-    container_name: "{{ passbolt_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -53,6 +51,8 @@ services:
       - ./db_data:/var/lib/mysql
     networks:
       - "{{ passbolt_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
       MYSQL_DATABASE: "{{ passbolt_db_name }}"

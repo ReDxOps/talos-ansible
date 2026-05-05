@@ -3,7 +3,6 @@
 services:
   app:
     image: "wordpress:{{ wp_3lbshop_wordpress_image_tag }}"
-    container_name: "{{ wp_3lbshop_role_name }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -30,7 +29,6 @@ services:
 
   db:
     image: "mysql:{{ wp_3lbshop_mysql_image_tag }}"
-    container_name: "{{ wp_3lbshop_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -38,6 +36,8 @@ services:
       - ./db_data:/var/lib/mysql
     networks:
       - "{{ wp_3lbshop_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
     environment:
       MYSQL_DATABASE: "{{ wp_3lbshop_db_name }}"
       MYSQL_USER: "{{ wp_3lbshop_db_user }}"

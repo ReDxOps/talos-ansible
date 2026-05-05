@@ -3,7 +3,6 @@
 services:
   app:
     image: "ghcr.io/linkwarden/linkwarden:{{ linkwarden_image_tag }}"
-    container_name: "{{ linkwarden_role_name }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -31,7 +30,6 @@ services:
 
   db:
     image: "postgres:{{ linkwarden_postgres_image_tag }}"
-    container_name: "{{ linkwarden_role_name }}-db"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -39,6 +37,8 @@ services:
     restart: unless-stopped
     networks:
       - "{{ linkwarden_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
     environment:
       POSTGRES_DB: "{{ linkwarden_db_name }}"
       POSTGRES_USER: "{{ linkwarden_db_user }}"
@@ -46,7 +46,6 @@ services:
 
   meilisearch:
     image: "getmeili/meilisearch:{{ linkwarden_meilisearch_image_tag }}"
-    container_name: "{{ linkwarden_role_name }}_meilisearch"
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped

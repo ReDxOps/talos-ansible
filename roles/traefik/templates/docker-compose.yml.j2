@@ -3,7 +3,6 @@
 services:
   traefik:
     image: "traefik:{{ traefik_image_tag }}"
-    container_name: "{{ traefik_role_name }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

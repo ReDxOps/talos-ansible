@@ -2,7 +2,6 @@
 services:
   "{{ invoiceninja_role_name }}":
     image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_image_tag }}"
-    container_name: "{{ invoiceninja_role_name }}"
     restart: unless-stopped
     env_file:
       - .env
@@ -22,7 +21,6 @@ services:
       - "{{ invoiceninja_role_name }}_internal"
   nginx:
     image: nginx:{{ invoiceninja_nginx_image_tag }}
-    container_name: "{{ invoiceninja_role_name }}-nginx"
     restart: unless-stopped
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
@@ -46,7 +44,6 @@ services:
 
   redis:
     image: "redis:{{ invoiceninja_redis_image_tag }}"
-    container_name: "{{ invoiceninja_role_name }}-redis"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -60,7 +57,6 @@ services:
 
   db:
     image: "mariadb:{{ invoiceninja_mariadb_image_tag }}"
-    container_name: "{{ invoiceninja_role_name }}-db"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -68,6 +64,8 @@ services:
       - ./db_data:/var/lib/mysql
     networks:
       - "{{ invoiceninja_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
       MYSQL_DATABASE: "{{ invoiceninja_db_name }}"
