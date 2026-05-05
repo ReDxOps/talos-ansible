@@ -2,7 +2,7 @@
 
 services:
   portainer:
-    image: portainer/portainer-ce:{{ portainer_image_tag }}
+    image: portainer/portainer-ee:{{ portainer_image_tag }}
     command:
       - "--admin-password={{ portainer_admin_password_hash | replace('$', '$$') }}"
     restart: always
