@@ -3,7 +3,6 @@
 services:
   app:
     image: "vendor/image:{{ app_image_tag }}"
-    container_name: "{{ skeleton_role_name }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

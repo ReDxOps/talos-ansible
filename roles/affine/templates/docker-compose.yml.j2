@@ -2,7 +2,6 @@
 services:
   app:
     image: "ghcr.io/toeverything/affine:{{ affine_image_tag }}"
-    container_name: "{{ affine_role_name }}"
     restart: unless-stopped
     depends_on:
       redis:
@@ -34,7 +33,6 @@ services:
 
   db:
     image: "pgvector/pgvector:{{ affine_postgres_image_tag }}"
-    container_name: "{{ affine_role_name }}-db"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -42,6 +40,8 @@ services:
     restart: unless-stopped
     networks:
       - "{{ affine_role_name }}_internal"
+    labels:
+      - "kopia.backup.target=true"
     environment:
       POSTGRES_DB: "{{ affine_db_name }}"
       POSTGRES_USER: "{{ affine_db_user }}"
@@ -54,7 +54,6 @@ services:
 
   redis:
     image: "redis:{{ affine_redis_image_tag }}"
-    container_name: "{{ affine_role_name }}-redis"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

@@ -3,7 +3,6 @@
 services:
   "{{ sparkyfitness_role_name }}":
     image: "codewithcj/sparkyfitness_server:{{ sparkyfitness_app_image_tag }}"
-    container_name: "{{ sparkyfitness_role_name }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -43,7 +42,6 @@ services:
 
   "{{ sparkyfitness_role_name }}-nginx":
     image: codewithcj/sparkyfitness:{{ sparkyfitness_nginx_image_tag }}
-    container_name: "{{ sparkyfitness_role_name }}-nginx"
     security_opt:
       - no-new-privileges:true
     labels:
@@ -69,10 +67,11 @@ services:
 
   "{{ sparkyfitness_role_name }}-db":
     image: "postgres:{{ sparkyfitness_postgres_image_tag }}"
-    container_name: "{{ sparkyfitness_role_name }}-db"
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped
+    labels:
+      - "kopia.backup.target=true"
     environment:
       POSTGRES_DB: "{{ sparkyfitness_db_name }}"
       POSTGRES_USER: "{{ sparkyfitness_db_user }}"
