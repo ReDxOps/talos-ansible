@@ -39,3 +39,6 @@
 
     - role: sparky-fitness
       tags: sparky
+
+    - role: invoiceninja-hestia
+      tags: invoiceninja-hestia

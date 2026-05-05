@@ -1,0 +1,30 @@
+---
+invoiceninja_hestia_hestia_image_tag: "5.13"
+invoiceninja_hestia_mariadb_image_tag: "11.8"
+invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"
+invoiceninja_hestia_nginx_image_tag: "1.29.8"
+invoiceninja_hestia_role_name: "invoiceninja-hestia"
+invoiceninja_hestia_root_dir: "{{ project_root_dir }}/{{ invoiceninja_hestia_role_name }}"
+
+invoiceninja_hestia_web_url: "facturation.hestialoyalty.fr"
+invoiceninja_hestia_app_key: "{{ vault_invoiceninja_hestia_app_key }}"
+invoiceninja_hestia_app_env: "production"
+invoiceninja_hestia_app_debug: false
+
+invoiceninja_hestia_db_port: 3306
+invoiceninja_hestia_db_name: "invoiceninja_hestia_db"
+invoiceninja_hestia_db_user: "{{ vault_invoiceninja_hestia_db_user }}"
+invoiceninja_hestia_db_password: "{{ vault_invoiceninja_hestia_db_password }}"
+
+invoiceninja_hestia_initial_user_email: "{{ vault_invoiceninja_hestia_initial_user_email }}"
+invoiceninja_hestia_initial_user_password: "{{ vault_invoiceninja_hestia_initial_user_password }}"
+
+invoiceninja_hestia_smtp_host: "{{ smtp_host }}"
+invoiceninja_hestia_smtp_port: "{{ smtp_port }}"
+invoiceninja_hestia_smtp_username: "{{ smtp_user }}"
+invoiceninja_hestia_smtp_password: "{{ smtp_password }}"
+invoiceninja_hestia_smtp_encryption: "null"
+invoiceninja_hestia_smtp_send_from_address: "factures@remydubois.fr"
+invoiceninja_hestia_smtp_send_from_name: "Facturation Hestia"
+
+invoiceninja_hestia_reverse_proxy_network: "{{ traefik_network }}"
