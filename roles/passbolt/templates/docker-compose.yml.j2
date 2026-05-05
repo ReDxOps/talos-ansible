@@ -4,6 +4,8 @@ services:
   app:
     image: "passbolt/passbolt:{{ passbolt_image_tag }}"
     restart: unless-stopped
+    depends_on:
+      - db
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -45,6 +47,7 @@ services:
   db:
     image: "mariadb:{{ passbolt_mariadb_image_tag }}"
     restart: unless-stopped
+    stop_grace_period: 1m
     security_opt:
       - no-new-privileges:true
     volumes:

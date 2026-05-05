@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
     owner: "{{ item.owner | default('root') }}"
     group: "{{ item.group | default('root') }}"
   loop:
@@ -17,7 +17,7 @@
   ansible.builtin.template:
     src: docker-compose.yml.j2
     dest: "{{ passbolt_root_dir }}/docker-compose.yml"
-    mode: '0644'
+    mode: "0644"
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
@@ -39,9 +39,8 @@
     chdir: "{{ passbolt_root_dir }}"
   register: passbolt_healthcheck_result
   until: >
-    'true' in passbolt_healthcheck_result.stdout and
-    'databaseConnect' in passbolt_healthcheck_result.stdout and
-    '"databaseConnect":true' in passbolt_healthcheck_result.stdout
+    'true' in passbolt_healthcheck_result.stdout and 'databaseConnect' in passbolt_healthcheck_result.stdout and '"databaseConnect":true' in
+    passbolt_healthcheck_result.stdout
   retries: 30
   delay: 10
   changed_when: false
@@ -59,12 +58,8 @@
 - name: Auto-bootstrap first admin
   ansible.builtin.command:
     cmd: >
-      docker compose exec -T app
-      ./bin/cake passbolt register_user
-      -u {{ passbolt_admin_email }}
-      -f {{ passbolt_admin_first_name }}
-      -l {{ passbolt_admin_last_name }}
-      -r admin
+      docker compose exec -T app ./bin/cake passbolt register_user -u {{ passbolt_admin_email }} -f {{ passbolt_admin_first_name }} -l {{
+      passbolt_admin_last_name }} -r admin
     chdir: "{{ passbolt_root_dir }}"
   when: passbolt_admin_email not in passbolt_users_list.stdout
   register: passbolt_bootstrap_output
