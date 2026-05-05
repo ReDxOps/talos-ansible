@@ -24,7 +24,8 @@
 
 - name: Database initialisation
   ansible.builtin.command:
-    cmd: "docker exec affine node ./scripts/self-host-predeploy.js"
+    cmd: "docker compose exec -T app node ./scripts/self-host-predeploy.js"
+    chdir: "{{ affine_root_dir }}"
   register: affine_migration_output
   until: affine_migration_output.rc == 0
   retries: 10
