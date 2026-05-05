@@ -13,8 +13,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file:
-      - .env
+
     cap_drop:
       - ALL
     security_opt:
@@ -27,6 +26,7 @@ services:
 
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network={{ hestia_loyalty_reverse_proxy_network }}"
       - "traefik.http.routers.{{ app_name }}-{{ app_env }}.rule=Host(`{{ (hestia_loyalty_web_url if app_env == 'prod' else hestia_loyalty_staging_web_url) | regex_replace('^https?://', '') }}`)"
 {% if app_env != 'prod' %}
       - "traefik.http.routers.{{ app_name }}-{{ app_env }}.middlewares=secHeaders@file,tailscaleOnly@file"
@@ -60,18 +60,36 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    environment:
+      - DATABASE_URL
+      - NEXT_PUBLIC_APP_URL
+      - NEXT_PUBLIC_SCAN_URL
+      - AUTH_SECRET
+      - EMAIL_PROVIDER
+      - RESEND_API_KEY
+      - APPLE_WALLET_PASS_TYPE_ID
+      - APPLE_WALLET_TEAM_ID
+      - GOOGLE_WALLET_ISSUER_ID
+      - SUPERADMIN_EMAIL
+      - SUPERADMIN_PASSWORD
+      - LANG
 
   db:
     image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"
     restart: unless-stopped
-    env_file:
-      - .env
+
     cap_drop:
       - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
     security_opt:
       - no-new-privileges:true
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql
     networks:
       - internal
     labels:
@@ -83,7 +101,7 @@ services:
         limits:
           memory: "{{ hestia_loyalty_db_ram_limit }}"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -93,6 +111,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - LANG
 
 
 networks:

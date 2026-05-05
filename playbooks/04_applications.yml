@@ -42,3 +42,6 @@
 
     - role: invoiceninja-hestia
       tags: invoiceninja-hestia
+
+    - role: hestia-loyalty
+      tags: hestia-loyalty
