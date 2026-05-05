@@ -1,0 +1,112 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+- name: Create application user group
+  ansible.builtin.group:
+    name: "{{ hestia_loyalty_group_name }}"
+    state: present
+    gid: "{{ hestia_loyalty_group_id }}"
+
+- name: Create application user
+  ansible.builtin.user:
+    name: "{{ hestia_loyalty_user_name }}"
+    password: "!"
+    state: present
+    uid: "{{ hestia_loyalty_user_id }}"
+    group: "{{ hestia_loyalty_group_name }}"
+
+- name: Create application directory
+  ansible.builtin.file:
+    state: directory
+    group: "{{ hestia_loyalty_group_name }}"
+    owner: "{{ hestia_loyalty_user_name }}"
+    mode: "0755"
+    path: "{{ item }}"
+  loop:
+    - "{{ hestia_loyalty_root_dir }}"
+    - "{{ hestia_loyalty_root_dir }}/{{ app_name }}_data"
+
+- name: Copy application templates
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ hestia_loyalty_user_name }}"
+    group: "{{ hestia_loyalty_group_name }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: ".env.j2", dest: "{{ hestia_loyalty_root_dir }}/.env", mode: "0600" }
+    - { src: "docker-compose.yml.j2", dest: "{{ hestia_loyalty_root_dir }}/docker-compose.yml", mode: "0644" }
+
+- name: Read generated .env file
+  ansible.builtin.slurp:
+    src: "{{ hestia_loyalty_root_dir }}/.env"
+  register: env_file_b64
+
+- name: Parse .env into JSON array for Portainer API
+  ansible.builtin.set_fact:
+    portainer_env_vars: >-
+      {%- set results = [] -%} {%- for line in (env_file_b64['content'] | b64decode).splitlines() -%}
+        {%- if line and not line.startswith('#') and '=' in line -%}
+          {%- set parts = line.split('=', 1) -%}
+          {%- set _ = results.append({'name': parts[0]|trim, 'value': parts[1]|trim}) -%}
+        {%- endif -%}
+      {%- endfor -%} {{ results }}
+
+- name: Read generated docker-compose.yml
+  ansible.builtin.slurp:
+    src: "{{ hestia_loyalty_root_dir }}/docker-compose.yml"
+  register: compose_file_b64
+
+- name: Get Portainer endpoints (Environments)
+  ansible.builtin.uri:
+    url: "{{ hestia_loyalty_portainer_url }}/api/endpoints"
+    method: GET
+    headers:
+      X-API-Key: "{{ hestia_loyalty_portainer_access_token }}"
+    return_content: true
+  register: portainer_endpoints
+
+- name: Set Portainer local endpoint ID fact
+  ansible.builtin.set_fact:
+    portainer_endpoint_id: "{{ (portainer_endpoints.json | selectattr('Name', 'equalto', 'local') | first).Id | default(1) }}"
+
+- name: Get existing Portainer stacks
+  ansible.builtin.uri:
+    url: "{{ hestia_loyalty_portainer_url }}/api/stacks"
+    method: GET
+    headers:
+      X-API-Key: "{{ hestia_loyalty_portainer_access_token }}"
+    return_content: true
+  register: portainer_stacks
+
+- name: Check if our stack already exists
+  ansible.builtin.set_fact:
+    existing_stack: "{{ portainer_stacks.json | selectattr('Name', 'equalto', app_name ~ '-' ~ app_env) | list | first | default(none) }}"
+
+- name: CREATE Stack in Portainer (First Deployment)
+  ansible.builtin.uri:
+    url: "{{ hestia_loyalty_portainer_url }}/api/stacks/create/standalone/string?endpointId={{ portainer_endpoint_id }}"
+    method: POST
+    headers:
+      X-API-Key: "{{ hestia_loyalty_portainer_access_token }}"
+    body_format: json
+    body:
+      Name: "{{ app_name }}-{{ app_env }}"
+      Env: "{{ portainer_env_vars }}"
+      StackFileContent: "{{ compose_file_b64['content'] | b64decode }}"
+    status_code: 200
+  when: existing_stack is none
+
+- name: UPDATE Stack in Portainer (Subsequent Deployments)
+  ansible.builtin.uri:
+    url: "{{ hestia_loyalty_portainer_url }}/api/stacks/{{ existing_stack.Id }}?endpointId={{ portainer_endpoint_id }}"
+    method: PUT
+    headers:
+      X-API-Key: "{{ hestia_loyalty_portainer_access_token }}"
+    body_format: json
+    body:
+      Env: "{{ portainer_env_vars }}"
+      StackFileContent: "{{ compose_file_b64['content'] | b64decode }}"
+      Prune: true
+    status_code: 200
+  when: existing_stack is not none

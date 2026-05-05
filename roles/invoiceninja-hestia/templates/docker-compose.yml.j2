@@ -1,7 +1,7 @@
 ---
 services:
   "{{ invoiceninja_hestia_role_name }}":
-    image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_hestia_image_tag }}"
+    image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_hestia_app_image_tag }}"
     restart: unless-stopped
     env_file:
       - .env
