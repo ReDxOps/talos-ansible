@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 
 - name: Create application user group
@@ -48,7 +48,7 @@
       {%- set results = [] -%} {%- for line in (env_file_b64['content'] | b64decode).splitlines() -%}
         {%- if line and not line.startswith('#') and '=' in line -%}
           {%- set parts = line.split('=', 1) -%}
-          {%- set _ = results.append({'name': parts[0]|trim, 'value': parts[1]|trim}) -%}
+          {%- set _ = results.append({'name': parts[0] | trim, 'value': parts[1] | trim}) -%}
         {%- endif -%}
       {%- endfor -%} {{ results }}
 
