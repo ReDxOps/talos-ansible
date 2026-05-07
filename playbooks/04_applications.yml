@@ -45,3 +45,6 @@
 
     - role: hestia-loyalty
       tags: hestia-loyalty
+
+    - role: hestia-studio
+      tags: hestia-studio
