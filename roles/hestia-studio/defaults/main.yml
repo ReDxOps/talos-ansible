@@ -1,0 +1,16 @@
+---
+hestia_studio_app_image: "ghcr.io/donmarax/hestia-studio-website"
+hestia_studio_app_image_tag: "latest"
+
+hestia_studio_app_name: "hestia-studio"
+
+hestia_studio_group_name: "hestiastudio"
+hestia_studio_user_name: "hestiastudio"
+hestia_studio_group_id: "5001"
+hestia_studio_user_id: "5001"
+
+hestia_studio_root_dir: "{{ project_root_dir }}/{{ hestia_studio_app_name }}"
+hestia_studio_reverse_proxy_network: "{{ traefik_network }}"
+hestia_studio_web_url: "hestiastudio.fr"
+hestia_studio_portainer_url: "{{ portainer_url }}"
+hestia_studio_portainer_access_token: "{{ portainer_access_token }}"

@@ -1,0 +1,90 @@
+---
+
+- name: Create application user group
+  ansible.builtin.group:
+    name: "{{ hestia_studio_group_name }}"
+    state: present
+    gid: "{{ hestia_studio_group_id }}"
+
+- name: Create application user
+  ansible.builtin.user:
+    name: "{{ hestia_studio_user_name }}"
+    password: "!"
+    state: present
+    uid: "{{ hestia_studio_user_id }}"
+    group: "{{ hestia_studio_group_name }}"
+
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ hestia_studio_user_id }}"
+    group: "{{ hestia_studio_group_name }}"
+    mode: "0755"
+  loop:
+    - "{{ hestia_studio_root_dir }}"
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ hestia_studio_root_dir }}/docker-compose.yml"
+    owner: "{{ hestia_studio_user_id }}"
+    group: "{{ hestia_studio_group_name }}"
+    mode: "0644"
+
+- name: Read generated docker-compose.yml
+  ansible.builtin.slurp:
+    src: "{{ hestia_studio_root_dir }}/docker-compose.yml"
+  register: compose_file_b64
+
+- name: Get Portainer endpoints (Environments)
+  ansible.builtin.uri:
+    url: "{{ hestia_studio_portainer_url }}/api/endpoints"
+    method: GET
+    headers:
+      X-API-Key: "{{ hestia_studio_portainer_access_token }}"
+    return_content: true
+  register: portainer_endpoints
+
+- name: Set Portainer local endpoint ID fact
+  ansible.builtin.set_fact:
+    portainer_endpoint_id: "{{ (portainer_endpoints.json | selectattr('Name', 'equalto', 'local') | first).Id | default(1) }}"
+
+- name: Get existing Portainer stacks
+  ansible.builtin.uri:
+    url: "{{ hestia_studio_portainer_url }}/api/stacks"
+    method: GET
+    headers:
+      X-API-Key: "{{ hestia_studio_portainer_access_token }}"
+    return_content: true
+  register: portainer_stacks
+
+- name: Check if our stack already exists
+  ansible.builtin.set_fact:
+    existing_stack: "{{ portainer_stacks.json | selectattr('Name', 'equalto', hestia_studio_app_name) | list | first | default(none) }}"
+
+- name: CREATE Stack in Portainer (First Deployment)
+  ansible.builtin.uri:
+    url: "{{ hestia_studio_portainer_url }}/api/stacks/create/standalone/string?endpointId={{ portainer_endpoint_id }}"
+    method: POST
+    headers:
+      X-API-Key: "{{ hestia_studio_portainer_access_token }}"
+    body_format: json
+    body:
+      Name: "{{ hestia_studio_app_name }}"
+      StackFileContent: "{{ compose_file_b64['content'] | b64decode }}"
+    status_code: 200
+  when: existing_stack is none
+
+- name: UPDATE Stack in Portainer (Subsequent Deployments)
+  ansible.builtin.uri:
+    url: "{{ hestia_studio_portainer_url }}/api/stacks/{{ existing_stack.Id }}?endpointId={{ portainer_endpoint_id }}"
+    method: PUT
+    headers:
+      X-API-Key: "{{ hestia_studio_portainer_access_token }}"
+    body_format: json
+    body:
+      StackFileContent: "{{ compose_file_b64['content'] | b64decode }}"
+      Prune: true
+    status_code: 200
+  when: existing_stack is not none

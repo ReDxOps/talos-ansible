@@ -1,0 +1,26 @@
+---
+
+services:
+  app:
+    image: "{{ hestia_studio_app_image }}:{{ hestia_studio_app_image_tag }}"
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network={{ hestia_studio_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ hestia_studio_app_name }}.rule=Host(`{{ hestia_studio_web_url }}`)"
+      - "traefik.http.routers.{{ hestia_studio_app_name }}.middlewares=secHeaders@file"
+      - "traefik.http.routers.{{ hestia_studio_app_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ hestia_studio_app_name }}.tls=true"
+      - "traefik.http.routers.{{ hestia_studio_app_name }}.tls.certresolver=letsencrypt-dns"
+      - "traefik.http.services.{{ hestia_studio_app_name }}.loadbalancer.server.port=8080"
+
+networks:
+  proxy:
+    name: "{{ hestia_studio_reverse_proxy_network }}"
+    external: true
