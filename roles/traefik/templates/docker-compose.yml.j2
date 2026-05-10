@@ -12,6 +12,8 @@ services:
     ports:
       - "{{ traefik_http_port }}:80"
       - "{{ traefik_https_port }}:443"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - ./traefik.yml:/etc/traefik/traefik.yml:ro
       - ./dynamic.yml:/etc/traefik/dynamic.yml:ro
