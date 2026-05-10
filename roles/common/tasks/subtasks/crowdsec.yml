@@ -58,9 +58,96 @@
     - name: Enroll to crowdsec console
       ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
       changed_when: true
-      notify: Create Crowdsec enrollment marker
+      notify:
+        - Create Crowdsec enrollment marker
+        - Restart Crowdsec
+      no_log: true
+
+    - name: Install Crowdsec collections
+      ansible.builtin.command: "cscli collections install {{ item }}"
+      register: common_collection_install
+      changed_when: "'Installing' in common_collection_install.stdout"
+      loop:
+        - crowdsecurity/traefik
+        - crowdsecurity/wordpress
+        - crowdsecurity/http-cve
+        - crowdsecurity/whitelist-good-bots
+      notify: Restart Crowdsec
+
+    - name: Ensure Crowdsec parsers directory exists
+      ansible.builtin.file:
+        path: /etc/crowdsec/parsers/s02-enrich
+        state: directory
+        mode: "0755"
+
+    - name: Configure Crowdsec local whitelist
+      ansible.builtin.template:
+        src: crowdsec/whitelist.yaml.j2
+        dest: /etc/crowdsec/parsers/s02-enrich/whitelist.yaml
+        mode: "0644"
+      notify: Restart Crowdsec
+
+    - name: Configure Crowdsec LAPI to listen on all interfaces
+      ansible.builtin.lineinfile:
+        path: /etc/crowdsec/config.yaml
+        regexp: "listen_addr: 127.0.0.1:8080"
+        line: "  listen_addr: 0.0.0.0:8080"
+      notify: Restart Crowdsec
+
+    - name: Enable Crowdsec console management
+      ansible.builtin.command: cscli console enable console_management
+      changed_when: false
+      notify: Restart Crowdsec
+
+    - name: Check if Traefik bouncer is already registered
+      ansible.builtin.command: cscli bouncers list -o json
+      register: common_crowdsec_bouncers_list
+      changed_when: false
+      check_mode: false
+
+    - name: Register Traefik bouncer and save API key
+      ansible.builtin.command: cscli bouncers add TraefikBouncer -o raw
+      register: common_crowdsec_traefik_bouncer_key_raw
+      when: "'TraefikBouncer' not in common_crowdsec_bouncers_list.stdout"
+      changed_when: true
+      no_log: true
+
+    - name: Save Traefik bouncer key to file
+      ansible.builtin.copy:
+        dest: /etc/crowdsec/traefik-bouncer.key
+        content: "{{ common_crowdsec_traefik_bouncer_key_raw.stdout }}"
+        mode: "0600"
+      when:
+        - common_crowdsec_traefik_bouncer_key_raw.stdout is defined
+        - common_crowdsec_traefik_bouncer_key_raw.stdout != ""
       no_log: true
 
     - name: Re-enable UFW
       community.general.ufw:
         state: enabled
+
+- name: Configure Crowdsec acquisition
+  ansible.builtin.copy:
+    dest: /etc/crowdsec/acquis.yaml
+    content: |
+      filenames:
+        - /var/log/auth.log
+        - /var/log/syslog
+      labels:
+        type: syslog
+      ---
+      filenames:
+        - {{ project_root_dir }}/traefik/logs/access.log
+      labels:
+        type: traefik
+    mode: "0644"
+  notify: Restart Crowdsec
+
+- name: Ensure Crowdsec services are running
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - crowdsec
+    - crowdsec-firewall-bouncer-iptables

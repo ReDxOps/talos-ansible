@@ -1,0 +1,9 @@
+name: crowdsecurity/whitelist-local
+description: "Whitelist for local network and Tailscale"
+whitelist:
+  reason: "Local and Tailscale networks are trusted"
+  ip:
+    - "127.0.0.1"
+    - "::1"
+  cidr:
+    - "100.64.0.0/10"

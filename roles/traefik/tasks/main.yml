@@ -1,9 +1,23 @@
 ---
-- name: Create traefik data directory
+- name: Read Crowdsec LAPI key for Traefik
+  ansible.builtin.slurp:
+    src: /etc/crowdsec/traefik-bouncer.key
+  register: traefik_traefik_crowdsec_key_b64
+  ignore_errors: true
+
+- name: Set Crowdsec LAPI key fact
+  ansible.builtin.set_fact:
+    traefik_crowdsec_lapi_key: "{{ traefik_traefik_crowdsec_key_b64.content | b64decode | trim }}"
+  when: traefik_traefik_crowdsec_key_b64 is success
+
+- name: Create traefik directories
   ansible.builtin.file:
-    path: "{{ traefik_root_dir }}/data"
+    path: "{{ item }}"
     state: directory
     mode: "0755"
+  loop:
+    - "{{ traefik_root_dir }}/data"
+    - "{{ traefik_root_dir }}/logs"
 
 - name: Create traefik acme file
   ansible.builtin.file:
