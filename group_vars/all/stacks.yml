@@ -1,0 +1,37 @@
+---
+# ==============================================================================
+# APPLICATIONS & SERVICES DASHBOARD
+# ==============================================================================
+# Use this file to centrally manage the desired state of all application stacks.
+# This file overrides the default states defined within each role.
+#
+# Available states:
+# - present : Stack is deployed and running (Default)
+# - stopped : Stack is deployed but containers are stopped (Saves resources)
+# - absent  : Stack is removed from the host (Keep data volumes)
+# ==============================================================================
+
+# --- Gaming Stacks ---
+ark_stack_state: "present"
+satisfactory_stack_state: "stopped"
+
+# --- Core Infrastructure ---
+traefik_stack_state: "present"
+portainer_stack_state: "present"
+observability_stack_state: "present"
+
+# --- Business & Productivity ---
+invoiceninja_stack_state: "present"
+passbolt_stack_state: "present"
+wikijs_stack_state: "present"
+linkwarden_stack_state: "present"
+vikunja_stack_state: "present"
+affine_stack_state: "present"
+sparky_fitness_stack_state: "present"
+
+# --- Websites ---
+wp_3lbshop_stack_state: "present"
+wp_flageulcouverture_stack_state: "present"
+
+# --- Hestia Studio ---
+invoiceninja_hestia_stack_state: "present"

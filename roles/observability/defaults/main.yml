@@ -1,4 +1,5 @@
 ---
+observability_stack_state: "present" # present | stopped | absent
 observability_prometheus_image_tag: "v3.9.1"
 observability_grafana_image_tag: "13.0.0-22288738230"
 observability_grafana_domain: "grafana.{{ traefik_domain }}"

@@ -18,8 +18,8 @@
     dest: "{{ sparkyfitness_root_dir }}/docker-compose.yml"
     mode: "0644"
 
-- name: Start docker-compose stack
+- name: Manage docker-compose stack state
   community.docker.docker_compose_v2:
     project_src: "{{ sparkyfitness_root_dir }}"
-    state: present
-    pull: always
+    state: "{{ sparky_fitness_stack_state }}"
+    pull: "{{ 'always' if sparky_fitness_stack_state == 'present' else 'never' }}"

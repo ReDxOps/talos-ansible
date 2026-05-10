@@ -1,4 +1,5 @@
 ---
+linkwarden_stack_state: "present" # present | stopped | absent
 linkwarden_image_tag: "v2.13.5"
 linkwarden_postgres_image_tag: "17-alpine"
 linkwarden_meilisearch_image_tag: "v1.38.2"

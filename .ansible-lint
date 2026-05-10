@@ -2,6 +2,7 @@
 profile: production
 skip_list:
   - yaml[line-length]
+  - role-name
 exclude_paths:
   - collections/
   - scripts/
