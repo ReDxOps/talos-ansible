@@ -34,6 +34,16 @@ http:
           - "100.64.0.0/10"      # IP Tailscale
           - "127.0.0.1/32"       # Internal Trafic
           - "192.168.100.0/24"   # Vagrant for dev
+    crowdsec-bouncer:
+      plugin:
+        crowdsec-bouncer:
+          enabled: true
+          crowdsecLapiScheme: http
+          crowdsecLapiHost: "172.17.0.1:8080"
+          crowdsecLapiKey: "{{ traefik_crowdsec_lapi_key | default('') }}"
+          updateIntervalSeconds: 60
+          defaultDecisionTimeoutSeconds: 10
+
   routers:
     dashboard:
       rule: "Host(`{{ traefik_web_url }}`)"

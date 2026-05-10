@@ -7,6 +7,15 @@ global:
 log:
   level: "{{ traefik_log_level }}"
 
+accessLog:
+  filePath: "/var/log/traefik/access.log"
+  bufferingSize: 100
+  filters:
+    statusCodes:
+      - "200-299"
+      - "400-499"
+      - "500-599"
+
 entryPoints:
   web:
     address: ":80"
@@ -22,6 +31,14 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt-dns
+      middlewares:
+        - crowdsec-bouncer@file
+
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.3.5"
 
 providers:
   docker:
