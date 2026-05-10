@@ -4,7 +4,7 @@ services:
   "{{ ark_fjordur_name }}":
     image: "hermsi/ark-server:{{ ark_image_tag }}"
     restart: unless-stopped
-    stop_grace_period: 2m
+    stop_grace_period: 5m
     volumes:
       - "./{{ ark_fjordur_name }}:/app"
       - "./{{ ark_fjordur_backup_directory_name }}:/home/steam/ARK-Backups"
@@ -36,5 +36,6 @@ services:
       resources:
         limits:
           memory: "{{ ark_memory_limit }}"
+          memswap_limit: "{{ ark_memory_limit }}"
         reservations:
           memory: "{{ ark_memory_reservation }}"
