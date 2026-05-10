@@ -1,7 +1,25 @@
 ---
+
+skeleton_app_name: "skeleton"
+skeleton_app_image: "skeleton/image"
 skeleton_app_image_tag: "1.0"
 
-skeleton_role_name: "skeleton"
-skeleton_root_dir: "{{ project_root_dir }}/{{ skeleton_role_name }}"
+skeleton_root_dir: "{{ project_root_dir }}/{{ skeleton_app_name }}"
+skeleton_web_url: "{{ skeleton_app_name }}.{{ traefik_domain }}"
 skeleton_reverse_proxy_network: "{{ traefik_network }}"
-skeleton_web_url: "{{ skeleton_role_name }}.{{ traefik_domain }}"
+skeleton_server_port: "80"
+
+skeleton_group_name: "skeleton"
+skeleton_user_name: "skeleton"
+skeleton_group_id: ""
+skeleton_user_id: ""
+
+skeleton_ram_reservation: "256M"
+skeleton_ram_limit: "512M"
+
+skeleton_healthcheck_enabled: false
+skeleton_healthcheck_test: '["CMD", "curl", "-f", "http://localhost:{{ skeleton_server_port }}/health"]'
+skeleton_healthcheck_interval: "30s"
+skeleton_healthcheck_timeout: "10s"
+skeleton_healthcheck_retries: 3
+skeleton_healthcheck_start_period: "20s"

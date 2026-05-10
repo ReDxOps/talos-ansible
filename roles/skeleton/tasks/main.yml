@@ -1,22 +1,44 @@
 ---
 
-- name: Create application directories
+- name: Create application user group
+  ansible.builtin.group:
+    name: "{{ skeleton_group_name }}"
+    state: present
+    gid: "{{ skeleton_group_id | default(omit, boolean=True) }}"
+
+- name: Create application user
+  ansible.builtin.user:
+    name: "{{ skeleton_user_name }}"
+    password: "!"
+    state: present
+    uid: "{{ skeleton_user_id | default(omit, boolean=True) }}"
+    group: "{{ skeleton_group_name }}"
+
+- name: Create application directory
   ansible.builtin.file:
-    path: "{{ item }}"
     state: directory
-    mode: '0755'
+    group: "{{ skeleton_group_name }}"
+    owner: "{{ skeleton_user_name }}"
+    mode: "0755"
+    path: "{{ item }}"
   loop:
     - "{{ skeleton_root_dir }}"
     - "{{ skeleton_root_dir }}/data"
 
-- name: Copy docker-compose template
+- name: Copy application templates
   ansible.builtin.template:
-    src: docker-compose.yml.j2
-    dest: "{{ skeleton_root_dir }}/docker-compose.yml"
-    mode: '0644'
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ skeleton_user_name }}"
+    group: "{{ skeleton_group_name }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: ".env.j2", dest: "{{ skeleton_root_dir }}/.env", mode: "0600" }
+    - { src: "docker-compose.yml.j2", dest: "{{ skeleton_root_dir }}/docker-compose.yml", mode: "0644" }
 
 - name: Start docker-compose stack
   community.docker.docker_compose_v2:
     project_src: "{{ skeleton_root_dir }}"
     state: present
     pull: always
+    remove_orphans: true
