@@ -1,4 +1,5 @@
 ---
+sparky_fitness_stack_state: "present" # present | stopped | absent
 sparkyfitness_app_image_tag: "v0.16.5.8"
 sparkyfitness_nginx_image_tag: "v0.16.5.8"
 sparkyfitness_postgres_image_tag: "18.3-alpine"

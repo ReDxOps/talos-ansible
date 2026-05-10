@@ -36,8 +36,8 @@
     name: "{{ traefik_reverse_proxy_network }}"
     state: present
 
-- name: Start traefik compose stack
+- name: Manage traefik compose stack state
   community.docker.docker_compose_v2:
     project_src: "{{ traefik_root_dir }}"
-    pull: always
-    state: present
+    state: "{{ traefik_stack_state }}"
+    pull: "{{ 'always' if traefik_stack_state == 'present' else 'never' }}"

@@ -1,4 +1,5 @@
 ---
+wp_flageulcouverture_stack_state: "present" # present | stopped | absent
 wp_flageulcouverture_wordpress_image_tag: "php8.4-apache"
 wp_flageulcouverture_mysql_image_tag: "8.0"
 

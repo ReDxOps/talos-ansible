@@ -16,11 +16,11 @@
     dest: "{{ affine_root_dir }}/docker-compose.yml"
     mode: "0644"
 
-- name: Start docker-compose stack
+- name: Manage docker-compose stack state
   community.docker.docker_compose_v2:
     project_src: "{{ affine_root_dir }}"
-    state: present
-    pull: always
+    state: "{{ affine_stack_state }}"
+    pull: "{{ 'always' if affine_stack_state == 'present' else 'never' }}"
 
 - name: Database initialisation
   ansible.builtin.command:

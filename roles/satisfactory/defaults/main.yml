@@ -1,4 +1,5 @@
 ---
+satisfactory_stack_state: "present" # present | stopped | absent
 satisfactory_image_tag: "v1.9"
 
 satisfactory_memory_limit: "8G"

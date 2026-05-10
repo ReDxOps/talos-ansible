@@ -1,4 +1,6 @@
 ---
+ark_stack_state: "present" # present | stopped | absent
+
 ark_image_tag: "latest"
 
 ark_role_name: "ark-server"

@@ -1,4 +1,5 @@
 ---
+invoiceninja_hestia_stack_state: "present" # present | stopped | absent
 invoiceninja_hestia_app_image_tag: "5.13"
 invoiceninja_hestia_mariadb_image_tag: "11.8"
 invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"

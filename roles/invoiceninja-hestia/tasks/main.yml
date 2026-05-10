@@ -39,8 +39,8 @@
     - { src: "docker-compose.yml.j2", dest: "docker-compose.yml", mode: "0644" }
     - { src: laravel.conf.j2, dest: "nginx/laravel.conf", mode: "0644" }
 
-- name: Start docker-compose stack
+- name: Manage docker-compose stack state
   community.docker.docker_compose_v2:
     project_src: "{{ invoiceninja_hestia_root_dir }}"
-    state: present
-    pull: always
+    state: "{{ invoiceninja_hestia_stack_state }}"
+    pull: "{{ 'always' if invoiceninja_hestia_stack_state == 'present' else 'never' }}"
