@@ -1,22 +1,56 @@
 ---
+name: "{{ skeleton_app_name }}"
 
 services:
   app:
-    image: "vendor/image:{{ app_image_tag }}"
+    image: "{{ skeleton_app_image }}:{{ skeleton_app_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
+    cap_drop:
+      - ALL
+    env_file:
+      - .env
     volumes:
       - ./data:/app/data
     networks:
-      - "{{ skeleton_reverse_proxy_network }}"
+      - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.{{ skeleton_role_name }}.rule=Host(`{{ skeleton_web_url }}`)"
-      - "traefik.http.routers.{{ skeleton_role_name }}.entrypoints=websecure"
-      - "traefik.http.routers.{{ skeleton_role_name }}.tls=true"
-      - "traefik.http.services.{{ skeleton_role_name }}.loadbalancer.server.port=80"
+      - "traefik.docker.network={{ skeleton_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ skeleton_app_name }}.rule=Host(`{{ skeleton_web_url }}`)"
+      - "traefik.http.routers.{{ skeleton_app_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ skeleton_app_name }}.middlewares=secHeaders@file"
+      - "traefik.http.routers.{{ skeleton_app_name }}.tls=true"
+      - "traefik.http.routers.{{ skeleton_app_name }}.tls.certresolver=letsencrypt-dns"
+      - "traefik.http.services.{{ skeleton_app_name }}.loadbalancer.server.port={{ skeleton_server_port }}"
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      resources:
+        reservations:
+          memory: "{{ skeleton_ram_reservation }}"
+        limits:
+          memory: "{{ skeleton_ram_limit }}"
+    cpu_shares: 512
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+{% if skeleton_healthcheck_enabled %}
+    healthcheck:
+      test: {{ skeleton_healthcheck_test }}
+      interval: {{ skeleton_healthcheck_interval }}
+      timeout: {{ skeleton_healthcheck_timeout }}
+      retries: {{ skeleton_healthcheck_retries }}
+      start_period: {{ skeleton_healthcheck_start_period }}
+{% endif %}
 
 networks:
-  "{{ skeleton_reverse_proxy_network }}":
+  proxy:
+    name: "{{ skeleton_reverse_proxy_network }}"
     external: true
