@@ -36,6 +36,6 @@ services:
       resources:
         limits:
           memory: "{{ ark_memory_limit }}"
-          memswap_limit: "{{ ark_memory_limit }}"
         reservations:
           memory: "{{ ark_memory_reservation }}"
+    memswap_limit: "{{ ark_memory_limit }}"
