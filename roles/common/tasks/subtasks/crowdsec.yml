@@ -87,13 +87,6 @@
         mode: "0644"
       notify: Restart Crowdsec
 
-    - name: Configure Crowdsec LAPI to listen on all interfaces
-      ansible.builtin.lineinfile:
-        path: /etc/crowdsec/config.yaml
-        regexp: "listen_addr: 127.0.0.1:8080"
-        line: "  listen_addr: 0.0.0.0:8080"
-      notify: Restart Crowdsec
-
     - name: Enable Crowdsec console management
       ansible.builtin.command: cscli console enable console_management
       changed_when: false
@@ -118,6 +111,13 @@
       labels:
         type: traefik
     mode: "0644"
+  notify: Restart Crowdsec
+
+- name: Configure Crowdsec LAPI to listen on all interfaces
+  ansible.builtin.lineinfile:
+    path: /etc/crowdsec/config.yaml
+    regexp: '^\s*listen_uri:\s+127\.0\.0\.1:8080'
+    line: "    listen_uri: 0.0.0.0:8080"
   notify: Restart Crowdsec
 
 - name: Ensure Crowdsec services are running
