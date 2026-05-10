@@ -47,3 +47,10 @@
     project_src: "{{ ark_root_dir }}"
     state: present
     pull: always
+
+- name: Planified restart every 4 hours
+  ansible.builtin.cron:
+    name: "Memory Purge ARK server"
+    minute: "0"
+    hour: "*/4"
+    job: "cd {{ ark_root_dir }} && docker compose restart ark-server > /dev/null 2>&1"
