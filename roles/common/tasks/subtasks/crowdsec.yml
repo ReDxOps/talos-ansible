@@ -150,4 +150,4 @@
     enabled: true
   loop:
     - crowdsec
-    - crowdsec-firewall-bouncer-iptables
+    - crowdsec-firewall-bouncer
