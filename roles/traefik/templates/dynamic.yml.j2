@@ -39,7 +39,7 @@ http:
         crowdsec-bouncer:
           enabled: true
           crowdsecLapiScheme: http
-          crowdsecLapiHost: "172.17.0.1:8080"
+          crowdsecLapiHost: "host.docker.internal:8080"
           crowdsecLapiKey: "{{ traefik_crowdsec_lapi_key | default('') }}"
           updateIntervalSeconds: 60
           defaultDecisionTimeoutSeconds: 10

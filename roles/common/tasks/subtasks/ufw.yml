@@ -16,6 +16,13 @@
     interface: lo
     direction: in
 
+- name: Allow Docker networks to reach Crowdsec LAPI
+  community.general.ufw:
+    rule: allow
+    src: 172.16.0.0/12
+    port: 8080
+    proto: tcp
+
 - name: Open SSH + WEB ports
   community.general.ufw:
     rule: allow
