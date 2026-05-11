@@ -97,6 +97,16 @@
     status_code: 200
   when: existing_stack is none
 
+- name: Get full stack details
+  ansible.builtin.uri:
+    url: "{{ hestia_loyalty_portainer_url }}/api/stacks/{{ existing_stack.Id }}"
+    method: GET
+    headers:
+      X-API-Key: "{{ hestia_loyalty_portainer_access_token }}"
+    return_content: true
+  register: full_existing_stack
+  when: existing_stack is not none
+
 - name: UPDATE Stack in Portainer (Subsequent Deployments)
   ansible.builtin.uri:
     url: "{{ hestia_loyalty_portainer_url }}/api/stacks/{{ existing_stack.Id }}?endpointId={{ portainer_endpoint_id }}"
@@ -108,5 +118,6 @@
       Env: "{{ portainer_env_vars }}"
       StackFileContent: "{{ compose_file_b64['content'] | b64decode }}"
       Prune: true
+      AutoUpdate: "{{ full_existing_stack.json.AutoUpdate | default(omit) }}"
     status_code: 200
   when: existing_stack is not none
