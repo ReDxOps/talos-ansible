@@ -12,6 +12,11 @@ common_default_user: "debian"
 docker_users:
   - "{{ target_user }}"
 
+docker_daemon_options:
+  "log-driver": "json-file"
+  "log-opts": { "max-size": "10m", "max-file": "5", "compress": "true" }
+  "shutdown-timeout": 60
+
 common_docker_group_name: "docker"
 docker_install_compose_plugin: true
 
@@ -112,7 +117,7 @@ runner_user: "github-runner"
 github_account: "ReDxOps"
 github_repo: "talos-ansible"
 access_token: "{{ vault_github_pat }}"
-runner_labels: [ "{{ target_env | default('dev') }}" ]
+runner_labels: ["{{ target_env | default('dev') }}"]
 
 portainer_url: "https://portainer.remydubois.fr"
 portainer_access_token: "{{ vault_portainer_access_token }}"

@@ -1,0 +1,12 @@
+---
+- name: Create directory if not exist
+  ansible.builtin.file:
+    path: "/etc/logrotate.d"
+    state: directory
+    mode: "0755"
+
+- name: Copy custom logrotate template file
+  ansible.builtin.template:
+    src: "talos-apps.logrotate.j2"
+    dest: "/etc/logrotate.d/talos-apps"
+    mode: "0644"

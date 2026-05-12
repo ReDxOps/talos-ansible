@@ -13,6 +13,13 @@
     state: present
   notify: Restart Network
 
+- name: Force DNS immediately in resolv.conf
+  ansible.builtin.lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver 8.8.8.8"
+    insertbefore: BOF
+    state: present
+
 - name: Apply network changes immediately
   ansible.builtin.meta: flush_handlers
 
@@ -55,8 +62,15 @@
       community.general.ufw:
         state: disabled
 
+    - name: Ensure CAPI is registered
+      ansible.builtin.command: "cscli capi register"
+      changed_when: false
+
     - name: Enroll to crowdsec console
       ansible.builtin.command: "cscli console enroll {{ common_crowdsec_web_console_id }} --name {{ inventory_hostname }}"
+      when:
+        - common_crowdsec_web_console_id is defined
+        - common_crowdsec_web_console_id | length > 0
       changed_when: true
       notify:
         - Create Crowdsec enrollment marker
@@ -71,7 +85,7 @@
         - crowdsecurity/traefik
         - crowdsecurity/wordpress
         - crowdsecurity/http-cve
-        - crowdsecurity/whitelist-good-bots
+        - crowdsecurity/whitelist-good-actors
       notify: Restart Crowdsec
 
     - name: Ensure Crowdsec parsers directory exists
@@ -89,6 +103,9 @@
 
     - name: Enable Crowdsec console management
       ansible.builtin.command: cscli console enable console_management
+      when:
+        - common_crowdsec_web_console_id is defined
+        - common_crowdsec_web_console_id | length > 0
       changed_when: false
       notify: Restart Crowdsec
 

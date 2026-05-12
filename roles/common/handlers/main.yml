@@ -14,6 +14,8 @@
     else
       echo "No networking service found, skipping"
     fi
+  args:
+    executable: /bin/bash
   when: ansible_virtualization_type != 'docker'
   changed_when: true
 
@@ -26,4 +28,9 @@
 - name: Restart Crowdsec
   ansible.builtin.service:
     name: crowdsec
+    state: restarted
+
+- name: Restart systemd-journald
+  ansible.builtin.systemd:
+    name: systemd-journald
     state: restarted

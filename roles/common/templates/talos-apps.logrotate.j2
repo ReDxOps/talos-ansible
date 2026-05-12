@@ -1,0 +1,9 @@
+/opt/talos/*/logs/*.log {
+    weekly
+    rotate 2
+    compress
+    delaycompress
+    notifempty
+    missingok
+    copytruncate
+}
