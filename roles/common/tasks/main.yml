@@ -50,3 +50,11 @@
 - name: "Final UFW Lockdown"
   ansible.builtin.import_tasks: subtasks/ufw_lockdown.yml
   tags: setup_ufw
+
+- name: "Systemd Configuration"
+  ansible.builtin.import_tasks: subtasks/systemd.yml
+  tags: setup_systemd
+
+- name: "Logrotate Configuration"
+  ansible.builtin.import_tasks: subtasks/logrotate.yml
+  tags: setup_logrotate

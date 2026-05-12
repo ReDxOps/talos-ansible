@@ -1,0 +1,27 @@
+name: Maintenance
+run-name: TALOS automated maintenance
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 0"
+      timezone: "Europe/Paris"
+jobs:
+  run_maintenance:
+    name: Run automated server maintenance
+    runs-on: [self-hosted, prod]
+    env:
+      ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Install Dependencies
+        run: $ANSIBLE_BIN_PATH/ansible-galaxy install -r requirements.yml --force
+
+      - name: Run Maintenance
+        run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod

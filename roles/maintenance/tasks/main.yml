@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: MIT-0
+---
+- name: Update & packages / dist upgrade
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: "dist"
+
+- name: Clean & Purge apt packages
+  ansible.builtin.apt:
+    clean: true
+    autoremove: true
+  changed_when: false
+
+- name: Verify if reboot is required
+  ansible.builtin.stat:
+    path: /var/run/reboot-required
+  register: maintenance_reboot_required
+
+- name: Reboot the server
+  ansible.builtin.reboot:
+    msg: "Auto reboot by Ansible (maintenance role)"
+  when: maintenance_reboot_required.stat.exists and maintenance_auto_reboot
+
+- name: Notify via webhook if reboot is required
+  ansible.builtin.uri:
+    url: "{{ maintenance_discord_webhook_url }}"
+    method: "POST"
+    body_format: json
+    body: { "content": "Reboot on talos-srv is required", "username": "SENTINEL" }
+    status_code: 204
+  when: maintenance_reboot_required.stat.exists and not maintenance_auto_reboot
+
+- name: Docker prune everything
+  community.docker.docker_prune:
+    builder_cache_all: true
+    containers: true
+    images: true
+    images_filters:
+      dangling: false
+    networks: true
+
+- name: Crowdsec hub packages update
+  ansible.builtin.command:
+    cmd: "cscli hub update"
+  changed_when: false
+
+- name: Crowdsec hub packages upgrade
+  ansible.builtin.command:
+    cmd: "cscli collections upgrade --all"
+  register: maintenance_crowdsec_upgrade
+  changed_when: "'upgraded' in maintenance_crowdsec_upgrade.stdout or 'updated' in maintenance_crowdsec_upgrade.stdout"
+  notify: Reload Crowdsec
+
+- name: Run Kopia full maintenance
+  ansible.builtin.command:
+    cmd: >
+      docker run --rm --hostname="{{ kopia_client_hostname }}"
+      -v "{{ kopia_root_dir }}/config:/app/config"
+      -v "{{ kopia_root_dir }}/cache:/app/cache:rw"
+      -e KOPIA_PASSWORD="{{ kopia_password }}"
+      -e KOPIA_CONFIG_PATH="{{ kopia_config_path }}"
+      kopia/kopia:{{ kopia_image_tag }}
+      maintenance run --full
+  register: maintenance_kopia_full
+  no_log: true
+  changed_when: "'Finished' in maintenance_kopia_full.stdout"

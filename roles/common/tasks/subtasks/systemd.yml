@@ -1,0 +1,14 @@
+---
+
+- name: Create directory if not exist
+  ansible.builtin.file:
+    state: directory
+    mode: "0755"
+    path: "/etc/systemd/journald.conf.d/"
+
+- name: Copy custom journald configuration template
+  ansible.builtin.template:
+    src: "10-retention.conf.j2"
+    dest: "/etc/systemd/journald.conf.d/10-retention.conf"
+    mode: "0644"
+  notify: Restart systemd-journald

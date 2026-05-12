@@ -2,12 +2,12 @@ name: ARK Selective Deploy
 
 on:
   push:
-    branches: [ "ark-live" ]
+    branches: ["ark-live"]
 
 jobs:
   deploy_ark:
     name: Selective ARK Deployment
-    runs-on: [ self-hosted, prod ]
+    runs-on: [self-hosted, prod]
     env:
       ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
 

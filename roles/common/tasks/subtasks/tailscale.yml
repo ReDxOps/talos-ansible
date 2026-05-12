@@ -38,7 +38,11 @@
 
 - name: Up tailscale
   ansible.builtin.command:
-    cmd: tailscale up --authkey="{{ vault_tailscale_auth_key }}"
+    cmd: tailscale up --authkey="{{ vault_tailscale_auth_key }}" --accept-dns=false
   no_log: true
   when: not common_tailscale_is_online
+  changed_when: false
+
+- name: Ensure Tailscale does not override DNS
+  ansible.builtin.command: tailscale set --accept-dns=false
   changed_when: false
