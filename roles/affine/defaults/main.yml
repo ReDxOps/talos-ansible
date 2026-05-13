@@ -1,8 +1,14 @@
 ---
 affine_stack_state: "present" # present | stopped | absent
-affine_image_tag: "0.26.4"
-affine_postgres_image_tag: "pg16"
-affine_redis_image_tag: "8.6.2-alpine"
+
+affine_app_image: ""
+affine_app_image_tag: ""
+
+affine_postgres_image: ""
+affine_postgres_image_tag: ""
+
+affine_redis_image: ""
+affine_redis_image_tag: ""
 
 affine_role_name: "affine"
 affine_root_dir: "{{ project_root_dir }}/{{ affine_role_name }}"

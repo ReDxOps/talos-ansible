@@ -1,6 +1,6 @@
 ---
-hestia_studio_app_image: "ghcr.io/donmarax/hestia-studio-website"
-hestia_studio_app_image_tag: "latest"
+hestia_studio_app_image: ""
+hestia_studio_app_image_tag: ""
 
 hestia_studio_app_name: "hestia-studio"
 

@@ -12,12 +12,12 @@ hestia_loyalty_user_name: "hestialoyalty"
 hestia_loyalty_group_id: "5000"
 hestia_loyalty_user_id: "5000"
 
-hestia_loyalty_image: "ghcr.io/donmarax/hestia-loyalty"
-hestia_staging_loyalty_tag: "staging"
-hestia_production_loyalty_tag: "production"
+hestia_loyalty_app_image: ""
+hestia_loyalty_app_staging_image_tag: ""
+hestia_loyalty_app_production_image_tag: ""
 
-hestia_loyalty_db_image: "postgres"
-hestia_loyalty_db_tag: "18.3-alpine3.23"
+hestia_loyalty_db_image: ""
+hestia_loyalty_db_tag: ""
 
 hestia_loyalty_reverse_proxy_network: "{{ traefik_network }}"
 hestia_loyalty_web_url: "https://hestialoyalty.fr"

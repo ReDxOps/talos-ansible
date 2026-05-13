@@ -1,9 +1,13 @@
 ---
 invoiceninja_stack_state: "present" # present | stopped | absent
-invoiceninja_image_tag: "5.13"
-invoiceninja_mariadb_image_tag: "11.8"
-invoiceninja_redis_image_tag: "8.6.2-alpine"
-invoiceninja_nginx_image_tag: "1.29.8"
+invoiceninja_app_image: ""
+invoiceninja_app_image_tag: ""
+invoiceninja_mariadb_image: ""
+invoiceninja_mariadb_image_tag: ""
+invoiceninja_redis_image: ""
+invoiceninja_redis_image_tag: ""
+invoiceninja_nginx_image: ""
+invoiceninja_nginx_image_tag: ""
 invoiceninja_role_name: "invoiceninja"
 invoiceninja_root_dir: "{{ project_root_dir }}/{{ invoiceninja_role_name }}"
 

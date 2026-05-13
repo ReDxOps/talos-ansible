@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "passbolt/passbolt:{{ passbolt_image_tag }}"
+    image: "{{ passbolt_app_image }}:{{ passbolt_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -45,7 +45,7 @@ services:
     command: [ "/usr/bin/wait-for.sh", "-t", "0", "db:3306", "--", "/docker-entrypoint.sh" ]
 
   db:
-    image: "mariadb:{{ passbolt_mariadb_image_tag }}"
+    image: "{{ passbolt_mariadb_image }}:{{ passbolt_mariadb_image_tag }}"
     restart: unless-stopped
     stop_grace_period: 1m
     security_opt:

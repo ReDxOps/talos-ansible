@@ -1,7 +1,7 @@
 ---
 services:
   "{{ invoiceninja_hestia_role_name }}":
-    image: "invoiceninja/invoiceninja-debian:{{ invoiceninja_hestia_app_image_tag }}"
+    image: "{{ invoiceninja_hestia_app_image }}:{{ invoiceninja_hestia_app_image_tag }}"
     restart: unless-stopped
     env_file:
       - .env
@@ -20,7 +20,7 @@ services:
     networks:
       - "{{ invoiceninja_hestia_role_name }}_internal"
   nginx:
-    image: nginx:{{ invoiceninja_hestia_nginx_image_tag }}
+    image: "{{ invoiceninja_hestia_nginx_image }}:{{ invoiceninja_hestia_nginx_image_tag }}"
     restart: unless-stopped
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
@@ -43,7 +43,7 @@ services:
       - "traefik.http.services.{{ invoiceninja_hestia_role_name }}.loadbalancer.server.port=80"
 
   redis:
-    image: "redis:{{ invoiceninja_hestia_redis_image_tag }}"
+    image: "{{ invoiceninja_hestia_redis_image }}:{{ invoiceninja_hestia_redis_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -56,7 +56,7 @@ services:
       - "{{ invoiceninja_hestia_role_name }}_internal"
 
   db:
-    image: "mariadb:{{ invoiceninja_hestia_mariadb_image_tag }}"
+    image: "{{ invoiceninja_hestia_mariadb_image }}:{{ invoiceninja_hestia_mariadb_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

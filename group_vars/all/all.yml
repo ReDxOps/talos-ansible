@@ -40,7 +40,7 @@ traefik_network: "talos_network"
 
 kopia_state: present
 kopia_service_name: "kopia"
-kopia_image_tag: "0.22.3"
+
 kopia_timezone: "Europe/Paris"
 kopia_backup_agent_name: "kopia-backup-agent"
 

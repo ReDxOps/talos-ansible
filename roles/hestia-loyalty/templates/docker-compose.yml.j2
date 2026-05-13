@@ -5,9 +5,9 @@ services:
 
   app:
 {% if app_env != 'prod' %}
-    image: "{{ hestia_loyalty_image }}:{{ hestia_staging_loyalty_tag }}"
+    image: "{{ hestia_loyalty_app_image }}:{{ hestia_loyalty_app_staging_image_tag }}"
 {% else %}
-    image: "{{ hestia_loyalty_image }}:{{ hestia_production_loyalty_tag }}"
+    image: "{{ hestia_loyalty_app_image }}:{{ hestia_loyalty_app_production_image_tag }}"
 {% endif %}
     restart: unless-stopped
     depends_on:

@@ -1,7 +1,9 @@
 ---
 passbolt_stack_state: "present" # present | stopped | absent
-passbolt_image_tag: "5.10.0-1-ce-non-root"
-passbolt_mariadb_image_tag: "11.8"
+passbolt_app_image: ""
+passbolt_app_image_tag: ""
+passbolt_mariadb_image: ""
+passbolt_mariadb_image_tag: ""
 
 passbolt_db_name: "passbolt_db"
 passbolt_db_user: "{{ vault_passbolt_db_user }}"
