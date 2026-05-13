@@ -49,7 +49,7 @@ linkwarden_postgres_image_tag: "17-alpine"
 
 # renovate: datasource=docker
 linkwarden_meilisearch_image: "getmeili/meilisearch"
-linkwarden_meilisearch_image_tag: "v1.38.2"
+linkwarden_meilisearch_image_tag: "v1.43.0"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
@@ -137,7 +137,7 @@ wp_3lbshop_app_image_tag: "php8.4-apache"
 
 # renovate: datasource=docker
 wp_3lbshop_mysql_image: "mysql"
-wp_3lbshop_mysql_image_tag: "8.0"
+wp_3lbshop_mysql_image_tag: "8.3"
 
 # renovate: datasource=docker
 wp_3lbshop_redis_image: "redis"
@@ -149,7 +149,7 @@ wp_flageulcouverture_app_image_tag: "php8.4-apache"
 
 # renovate: datasource=docker
 wp_flageulcouverture_mysql_image: "mysql"
-wp_flageulcouverture_mysql_image_tag: "8.0"
+wp_flageulcouverture_mysql_image_tag: "8.3"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
