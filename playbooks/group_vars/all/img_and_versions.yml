@@ -29,7 +29,7 @@ invoiceninja_redis_image_tag: "8.6.2-alpine"
 
 # renovate: datasource=docker
 invoiceninja_mariadb_image: "mariadb"
-invoiceninja_mariadb_image_tag: "11.8"
+invoiceninja_mariadb_image_tag: "12.2"
 
 # renovate: datasource=docker
 ark_app_image: "hermsi/ark-server"
@@ -85,7 +85,7 @@ passbolt_app_image_tag: "5.10.0-1-ce-non-root"
 
 # renovate: datasource=docker
 passbolt_mariadb_image: "mariadb"
-passbolt_mariadb_image_tag: "11.8"
+passbolt_mariadb_image_tag: "12.2"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
@@ -161,7 +161,7 @@ invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"
 
 # renovate: datasource=docker
 invoiceninja_hestia_mariadb_image: "mariadb"
-invoiceninja_hestia_mariadb_image_tag: "11.8"
+invoiceninja_hestia_mariadb_image_tag: "12.2"
 
 # renovate: datasource=docker
 kopia_app_image: "kopia/kopia"
