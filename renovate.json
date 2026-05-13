@@ -33,15 +33,13 @@
         {
             "description": "Pin Python version for CI compatibility with Debian 12",
             "matchManagers": ["github-actions"],
-            "matchDatasources": ["python-version"],
             "matchPackageNames": ["python"],
             "allowedVersions": "<3.12.0"
         },
         {
-        "description": "Pin Python version for CI compatibility with Debian 12",
-        "matchManagers": ["github-actions"],
-        "matchPackageNames": ["python"],
-        "allowedVersions": "<3.12.0"
+            "description": "Exclure Meilisearch temporairement (problème d'upgrade)",
+            "matchPackageNames": ["getmeili/meilisearch"],
+            "enabled": false
         },
         {
             "description": "CRITICAL: Prevent accidental major DB upgrades",
