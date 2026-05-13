@@ -160,6 +160,10 @@ invoiceninja_hestia_redis_image: "redis"
 invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"
 
 # renovate: datasource=docker
+invoiceninja_hestia_mariadb_image: "mariadb"
+invoiceninja_hestia_mariadb_image_tag: "11.8"
+
+# renovate: datasource=docker
 kopia_app_image: "kopia/kopia"
 kopia_app_image_tag: "0.22.3"
 
