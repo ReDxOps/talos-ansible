@@ -21,7 +21,19 @@
         {
             "groupName": "Ansible Tooling",
             "matchManagers": ["pip_requirements"],
-            "matchPackageNames": ["ansible-core", "ansible-lint"]
+            "matchPackageNames": ["ansible-core"],
+            "allowedVersions": "< 2.20.0"
+        },
+        {
+            "groupName": "Ansible Tooling",
+            "matchManagers": ["pip_requirements"],
+            "matchPackageNames": ["ansible-lint"]
+        },
+        {
+            "groupName": "CI Tooling",
+            "matchManagers": ["github-actions"],
+            "matchPackageNames": ["python"],
+            "allowedVersions": "< 3.12.0"
         }
     ],
     "customManagers": [
