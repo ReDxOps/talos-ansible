@@ -51,7 +51,9 @@
     "customManagers": [
         {
             "customType": "regex",
-            "fileMatch": ["(^|/)img_and_versions\\.yml$"],
+            "managerFilePatterns": [
+                "/(^|/)img_and_versions\\.yml$/"
+            ],
             "matchStrings": ["# renovate: datasource=(?<datasource>.*?)\\s+.*?\\\"(?<depName>.*?)\\\"\\s+.*?\\\"(?<currentValue>.*?)\\\""]
         }
     ]
