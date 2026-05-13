@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "vikunja/vikunja:{{ vikunja_image_tag }}"
+    image: "{{ vikunja_app_image }}:{{ vikunja_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -36,7 +36,7 @@ services:
       VIKUNJA_SERVICE_TIMEZONE: Europe/Paris
 
   db:
-    image: "postgres:{{ vikunja_postgres_image_tag }}"
+    image: "{{ vikunja_postgres_image }}:{{ vikunja_postgres_image_tag }}"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -52,7 +52,7 @@ services:
       POSTGRES_PASSWORD: "{{ vikunja_db_password }}"
 
   redis:
-    image: "redis:{{ vikunja_redis_image_tag }}"
+    image: "{{ vikunja_redis_image }}:{{ vikunja_redis_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

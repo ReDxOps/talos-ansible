@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "ghcr.io/linkwarden/linkwarden:{{ linkwarden_image_tag }}"
+    image: "{{ linkwarden_app_image }}:{{ linkwarden_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -29,7 +29,7 @@ services:
       NEXT_PUBLIC_DISABLE_REGISTRATION: true
 
   db:
-    image: "postgres:{{ linkwarden_postgres_image_tag }}"
+    image: "{{ linkwarden_postgres_image }}:{{ linkwarden_postgres_image_tag }}"
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -45,7 +45,7 @@ services:
       POSTGRES_PASSWORD: "{{ linkwarden_db_password }}"
 
   meilisearch:
-    image: "getmeili/meilisearch:{{ linkwarden_meilisearch_image_tag }}"
+    image: "{{ linkwarden_meilisearch_image }}:{{ linkwarden_meilisearch_image_tag }}"
     security_opt:
       - no-new-privileges:true
     restart: unless-stopped

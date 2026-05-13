@@ -1,6 +1,7 @@
 ---
 satisfactory_stack_state: "present" # present | stopped | absent
-satisfactory_image_tag: "v1.9"
+satisfactory_app_image: ""
+satisfactory_app_image_tag: ""
 
 satisfactory_memory_limit: "8G"
 satisfactory_memory_reservation: "1G"

@@ -59,7 +59,7 @@
       -v "{{ kopia_root_dir }}/cache:/app/cache:rw"
       -e KOPIA_PASSWORD="{{ kopia_password }}"
       -e KOPIA_CONFIG_PATH="{{ kopia_config_path }}"
-      kopia/kopia:{{ kopia_image_tag }}
+      {{ kopia_app_image }}:{{ kopia_app_image_tag }}
       maintenance run --full
   register: maintenance_kopia_full
   no_log: true

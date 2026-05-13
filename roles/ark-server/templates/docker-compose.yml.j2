@@ -2,7 +2,7 @@
 
 services:
   "{{ ark_fjordur_name }}":
-    image: "hermsi/ark-server:{{ ark_image_tag }}"
+    image: "{{ ark_app_image }}:{{ ark_app_image_tag }}"
     restart: unless-stopped
     stop_grace_period: 5m
     volumes:

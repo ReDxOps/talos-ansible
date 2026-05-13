@@ -1,8 +1,11 @@
 ---
 sparky_fitness_stack_state: "present" # present | stopped | absent
-sparkyfitness_app_image_tag: "v0.16.5.8"
-sparkyfitness_nginx_image_tag: "v0.16.5.8"
-sparkyfitness_postgres_image_tag: "18.3-alpine"
+sparkyfitness_app_image: ""
+sparkyfitness_app_image_tag: ""
+sparkyfitness_nginx_image: ""
+sparkyfitness_nginx_image_tag: ""
+sparkyfitness_postgres_image: ""
+sparkyfitness_postgres_image_tag: ""
 sparkyfitness_role_name: "sparkyfitness"
 sparkyfitness_root_dir: "{{ project_root_dir }}/{{ sparkyfitness_role_name }}"
 sparkyfitness_reverse_proxy_network: "{{ traefik_network }}"

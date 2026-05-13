@@ -1,0 +1,181 @@
+---
+############################################
+## Docker images & version centralization ##
+############################################
+
+####################################
+# ---- Managed by RenovateBot ---- #
+####################################
+
+# renovate: datasource=docker
+affine_app_image: "ghcr.io/toeverything/affine"
+affine_app_image_tag: "0.26.4"
+
+# renovate: datasource=docker
+affine_postgres_image: "pgvector/pgvector"
+affine_postgres_image_tag: "pg16"
+
+# renovate: datasource=docker
+affine_redis_image: "redis"
+affine_redis_image_tag: "8.6.2-alpine"
+
+# renovate: datasource=docker
+invoiceninja_nginx_image: "nginx"
+invoiceninja_nginx_image_tag: "1.29.8"
+
+# renovate: datasource=docker
+invoiceninja_redis_image: "redis"
+invoiceninja_redis_image_tag: "8.6.2-alpine"
+
+# renovate: datasource=docker
+invoiceninja_mariadb_image: "mariadb"
+invoiceninja_mariadb_image_tag: "11.8"
+
+# renovate: datasource=docker
+ark_app_image: "hermsi/ark-server"
+ark_app_image_tag: "latest"
+
+# renovate: datasource=docker
+hestia_loyalty_db_image: "postgres"
+hestia_loyalty_db_tag: "18.3-alpine3.23"
+
+# renovate: datasource=docker
+linkwarden_app_image: "ghcr.io/linkwarden/linkwarden"
+linkwarden_app_image_tag: "v2.13.5"
+
+# renovate: datasource=docker
+linkwarden_postgres_image: "postgres"
+linkwarden_postgres_image_tag: "17-alpine"
+
+# renovate: datasource=docker
+linkwarden_meilisearch_image: "getmeili/meilisearch"
+linkwarden_meilisearch_image_tag: "v1.38.2"
+
+# renovate: datasource=docker
+observability_prometheus_image: "prom/prometheus"
+observability_prometheus_image_tag: "v3.9.1"
+
+# renovate: datasource=docker
+observability_alertmanager_image: "prom/alertmanager"
+observability_alertmanager_image_tag: "v0.27.0"
+
+# renovate: datasource=docker
+observability_grafana_image: "grafana/grafana"
+observability_grafana_image_tag: "13.0.0-22288738230"
+
+# renovate: datasource=docker
+observability_node_exporter_image: "prom/node-exporter"
+observability_node_exporter_image_tag: "v1.10.2"
+
+# renovate: datasource=docker
+observability_cadvisor_image: "ghcr.io/google/cadvisor"
+observability_cadvisor_image_tag: "0.56.2"
+
+# renovate: datasource=docker
+observability_loki_image: "grafana/loki"
+observability_loki_image_tag: "3.5.11"
+
+# renovate: datasource=docker
+observability_promtail_image: "grafana/promtail"
+observability_promtail_image_tag: "3.5.11"
+
+# renovate: datasource=docker
+passbolt_app_image: "passbolt/passbolt"
+passbolt_app_image_tag: "5.10.0-1-ce-non-root"
+
+# renovate: datasource=docker
+passbolt_mariadb_image: "mariadb"
+passbolt_mariadb_image_tag: "11.8"
+
+# renovate: datasource=docker
+portainer_app_image: "portainer/portainer-ee"
+portainer_app_image_tag: "2.41.0-alpine"
+
+# renovate: datasource=docker
+satisfactory_app_image: "wolveix/satisfactory-server"
+satisfactory_app_image_tag: "v1.9"
+
+# renovate: datasource=docker
+sparkyfitness_app_image: "codewithcj/sparkyfitness_server"
+sparkyfitness_app_image_tag: "v0.16.5.8"
+
+# renovate: datasource=docker
+sparkyfitness_nginx_image: "codewithcj/sparkyfitness"
+sparkyfitness_nginx_image_tag: "v0.16.5.8"
+
+# renovate: datasource=docker
+sparkyfitness_postgres_image: "postgres"
+sparkyfitness_postgres_image_tag: "18.3-alpine"
+
+# renovate: datasource=docker
+traefik_app_image: "traefik"
+traefik_app_image_tag: "v3.6"
+
+# renovate: datasource=docker
+vikunja_app_image: "vikunja/vikunja"
+vikunja_app_image_tag: "2.1"
+
+# renovate: datasource=docker
+vikunja_postgres_image: "postgres"
+vikunja_postgres_image_tag: "17-alpine"
+
+# renovate: datasource=docker
+vikunja_redis_image: "redis"
+vikunja_redis_image_tag: "8.6.2-alpine"
+
+# renovate: datasource=docker
+wikijs_app_image: "requarks/wiki"
+wikijs_app_image_tag: "2.5"
+
+# renovate: datasource=docker
+wikijs_postgres_image: "postgres"
+wikijs_postgres_image_tag: "17-alpine"
+
+# renovate: datasource=docker
+wp_3lbshop_app_image: "wordpress"
+wp_3lbshop_app_image_tag: "php8.4-apache"
+
+# renovate: datasource=docker
+wp_3lbshop_mysql_image: "mysql"
+wp_3lbshop_mysql_image_tag: "8.0"
+
+# renovate: datasource=docker
+wp_3lbshop_redis_image: "redis"
+wp_3lbshop_redis_image_tag: "8.6.2-alpine"
+
+# renovate: datasource=docker
+wp_flageulcouverture_app_image: "wordpress"
+wp_flageulcouverture_app_image_tag: "php8.4-apache"
+
+# renovate: datasource=docker
+wp_flageulcouverture_mysql_image: "mysql"
+wp_flageulcouverture_mysql_image_tag: "8.0"
+
+# renovate: datasource=docker
+invoiceninja_hestia_nginx_image: "nginx"
+invoiceninja_hestia_nginx_image_tag: "1.29.8"
+
+# renovate: datasource=docker
+invoiceninja_hestia_redis_image: "redis"
+invoiceninja_hestia_redis_image_tag: "8.6.2-alpine"
+
+# renovate: datasource=docker
+kopia_app_image: "kopia/kopia"
+kopia_app_image_tag: "0.22.3"
+
+####################################
+# -------- Manual update --------- #
+####################################
+
+invoiceninja_hestia_app_image: "invoiceninja/invoiceninja-debian"
+invoiceninja_hestia_app_image_tag: "5.13"
+
+invoiceninja_app_image: "invoiceninja/invoiceninja-debian"
+invoiceninja_app_image_tag: "5.13"
+
+hestia_studio_app_image: "ghcr.io/donmarax/hestia-studio-website"
+hestia_studio_app_image_tag: "latest"
+
+hestia_loyalty_app_image: "ghcr.io/donmarax/hestia-loyalty"
+hestia_loyalty_app_staging_image_tag: "staging"
+hestia_loyalty_app_production_image_tag: "production"

@@ -2,7 +2,7 @@
 
 services:
   traefik:
-    image: "traefik:{{ traefik_image_tag }}"
+    image: "{{ traefik_app_image }}:{{ traefik_app_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

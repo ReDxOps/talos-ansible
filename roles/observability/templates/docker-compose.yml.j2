@@ -2,7 +2,7 @@
 
 services:
   prometheus:
-    image: prom/prometheus:{{ observability_prometheus_image_tag }}
+    image: "{{ observability_prometheus_image }}:{{ observability_prometheus_image_tag }}"
     security_opt:
       - no-new-privileges:true
     restart: always
@@ -14,7 +14,7 @@ services:
       - "{{ observability_reverse_proxy_network }}"
 
   alertmanager:
-    image: prom/alertmanager:{{ observability_alertmanager_image_tag }}
+    image: "{{ observability_alertmanager_image }}:{{ observability_alertmanager_image_tag }}"
     restart: always
     security_opt:
       - no-new-privileges:true
@@ -25,7 +25,7 @@ services:
       - "{{ observability_reverse_proxy_network }}"
 
   grafana:
-    image: grafana/grafana:{{ observability_grafana_image_tag }}
+    image: "{{ observability_grafana_image }}:{{ observability_grafana_image_tag }}"
     restart: always
     security_opt:
       - no-new-privileges:true
@@ -50,7 +50,7 @@ services:
       - "{{ observability_reverse_proxy_network }}"
 
   node-exporter:
-    image: prom/node-exporter:{{ observability_node_exporter_image_tag }}
+    image: "{{ observability_node_exporter_image }}:{{ observability_node_exporter_image_tag }}"
     restart: always
     security_opt:
       - no-new-privileges:true
@@ -67,7 +67,7 @@ services:
       - "{{ observability_reverse_proxy_network }}"
 
   cadvisor:
-    image: ghcr.io/google/cadvisor:{{ observability_cadvisor_image_tag }}
+    image: "{{ observability_cadvisor_image }}:{{ observability_cadvisor_image_tag }}"
     restart: always
     privileged: true
     security_opt:
@@ -84,7 +84,7 @@ services:
       - "{{ observability_reverse_proxy_network }}"
 
   loki:
-    image: grafana/loki:{{ observability_loki_image_tag }}
+    image: "{{ observability_loki_image }}:{{ observability_loki_image_tag }}"
     restart: always
     security_opt:
       - no-new-privileges:true
@@ -100,7 +100,7 @@ services:
           memory: 768M
 
   promtail:
-    image: grafana/promtail:{{ observability_promtail_image_tag }}
+    image: "{{ observability_promtail_image }}:{{ observability_promtail_image_tag }}"
     user: root
     restart: always
     security_opt:

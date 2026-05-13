@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "wordpress:{{ wp_3lbshop_wordpress_image_tag }}"
+    image: "{{ wp_3lbshop_app_image }}:{{ wp_3lbshop_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -28,7 +28,7 @@ services:
       WORDPRESS_DB_USER: "{{ wp_3lbshop_db_user }}"
 
   db:
-    image: "mysql:{{ wp_3lbshop_mysql_image_tag }}"
+    image: "{{ wp_3lbshop_mysql_image }}:{{ wp_3lbshop_mysql_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
@@ -45,7 +45,7 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: true
 
   redis:
-    image: "redis:{{ wp_3lbshop_redis_image_tag }}"
+    image: "{{ wp_3lbshop_redis_image }}:{{ wp_3lbshop_redis_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

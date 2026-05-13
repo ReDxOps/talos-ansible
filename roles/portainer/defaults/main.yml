@@ -1,6 +1,7 @@
 ---
 portainer_stack_state: "present" # present | stopped | absent
-portainer_image_tag: "2.41.0-alpine"
+portainer_app_image: ""
+portainer_app_image_tag: ""
 portainer_admin_password_hash: "{{ vault_portainer_admin_password_hash }}"
 
 portainer_role_name: "portainer"

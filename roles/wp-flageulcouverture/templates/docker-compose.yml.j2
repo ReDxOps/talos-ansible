@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "wordpress:{{ wp_flageulcouverture_wordpress_image_tag }}"
+    image: "{{ wp_flageulcouverture_app_image }}:{{ wp_flageulcouverture_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -28,7 +28,7 @@ services:
       WORDPRESS_DB_USER: "{{ wp_flageulcouverture_db_user }}"
 
   db:
-    image: "mysql:{{ wp_flageulcouverture_mysql_image_tag }}"
+    image: "{{ wp_flageulcouverture_mysql_image }}:{{ wp_flageulcouverture_mysql_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

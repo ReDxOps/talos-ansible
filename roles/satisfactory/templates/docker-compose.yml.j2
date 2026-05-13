@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "wolveix/satisfactory-server:{{ satisfactory_image_tag }}"
+    image: "{{ satisfactory_app_image }}:{{ satisfactory_app_image_tag }}"
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true

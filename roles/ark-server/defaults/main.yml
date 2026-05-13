@@ -1,7 +1,8 @@
 ---
 ark_stack_state: "present" # present | stopped | absent
 
-ark_image_tag: "latest"
+ark_app_image: ""
+ark_app_image_tag: ""
 
 ark_role_name: "ark-server"
 ark_root_dir: "{{ project_root_dir }}/{{ ark_role_name }}"

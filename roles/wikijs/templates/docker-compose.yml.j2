@@ -2,7 +2,7 @@
 
 services:
   app:
-    image: "requarks/wiki:{{ wikijs_image_tag }}"
+    image: "{{ wikijs_app_image }}:{{ wikijs_app_image_tag }}"
     restart: unless-stopped
     depends_on:
       - db
@@ -31,7 +31,7 @@ services:
       DB_PORT: 5432
       DB_TYPE: postgres
   db:
-    image: postgres:{{ wikijs_postgres_image_tag }}
+    image: "{{ wikijs_postgres_image }}:{{ wikijs_postgres_image_tag }}"
     security_opt:
       - no-new-privileges:true
     volumes:
