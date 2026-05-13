@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ hestia_studio_app_image }}:{{ hestia_studio_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     cap_drop:
       - ALL
     security_opt:

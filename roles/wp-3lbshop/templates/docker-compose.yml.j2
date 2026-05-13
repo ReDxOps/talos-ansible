@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ wp_3lbshop_app_image }}:{{ wp_3lbshop_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
     security_opt:
@@ -29,7 +29,7 @@ services:
 
   db:
     image: "{{ wp_3lbshop_mysql_image }}:{{ wp_3lbshop_mysql_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -46,7 +46,7 @@ services:
 
   redis:
     image: "{{ wp_3lbshop_redis_image }}:{{ wp_3lbshop_redis_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     networks:

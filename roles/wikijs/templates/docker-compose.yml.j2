@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ wikijs_app_image }}:{{ wikijs_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
     security_opt:
@@ -36,7 +36,7 @@ services:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    restart: always
     networks:
       - "{{ wikijs_role_name }}_internal"
     labels:

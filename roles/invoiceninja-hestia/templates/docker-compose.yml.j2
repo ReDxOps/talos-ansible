@@ -2,7 +2,7 @@
 services:
   "{{ invoiceninja_hestia_role_name }}":
     image: "{{ invoiceninja_hestia_app_image }}:{{ invoiceninja_hestia_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     depends_on:
@@ -21,7 +21,7 @@ services:
       - "{{ invoiceninja_hestia_role_name }}_internal"
   nginx:
     image: "{{ invoiceninja_hestia_nginx_image }}:{{ invoiceninja_hestia_nginx_image_tag }}"
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
       - ./app_public:/var/www/html/public:ro
@@ -44,7 +44,7 @@ services:
 
   redis:
     image: "{{ invoiceninja_hestia_redis_image }}:{{ invoiceninja_hestia_redis_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     healthcheck:
@@ -57,7 +57,7 @@ services:
 
   db:
     image: "{{ invoiceninja_hestia_mariadb_image }}:{{ invoiceninja_hestia_mariadb_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     volumes:

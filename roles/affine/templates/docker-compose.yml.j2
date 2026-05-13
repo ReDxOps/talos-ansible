@@ -37,7 +37,7 @@ services:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    restart: always
     networks:
       - "{{ affine_role_name }}_internal"
     labels:

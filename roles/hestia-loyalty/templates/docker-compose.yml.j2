@@ -9,7 +9,7 @@ services:
 {% else %}
     image: "{{ hestia_loyalty_app_image }}:{{ hestia_loyalty_app_production_image_tag }}"
 {% endif %}
-    restart: unless-stopped
+    restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -76,7 +76,7 @@ services:
 
   db:
     image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"
-    restart: unless-stopped
+    restart: always
 
     cap_drop:
       - ALL
