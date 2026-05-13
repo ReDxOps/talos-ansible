@@ -137,7 +137,7 @@ wp_3lbshop_app_image_tag: "php8.4-apache"
 
 # renovate: datasource=docker
 wp_3lbshop_mysql_image: "mysql"
-wp_3lbshop_mysql_image_tag: "9.7"
+wp_3lbshop_mysql_image_tag: "8.0"
 
 # renovate: datasource=docker
 wp_3lbshop_redis_image: "redis"
@@ -149,7 +149,7 @@ wp_flageulcouverture_app_image_tag: "php8.4-apache"
 
 # renovate: datasource=docker
 wp_flageulcouverture_mysql_image: "mysql"
-wp_flageulcouverture_mysql_image_tag: "9.7"
+wp_flageulcouverture_mysql_image_tag: "8.0"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
