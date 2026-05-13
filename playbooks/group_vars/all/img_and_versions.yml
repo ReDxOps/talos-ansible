@@ -49,7 +49,7 @@ linkwarden_postgres_image_tag: "17-alpine"
 
 # renovate: datasource=docker
 linkwarden_meilisearch_image: "getmeili/meilisearch"
-linkwarden_meilisearch_image_tag: "v1.43.0"
+linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
