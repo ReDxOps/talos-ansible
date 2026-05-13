@@ -43,6 +43,11 @@
             "enabled": false
         },
         {
+            "description": "Exclure Meilisearch temporairement (problème d'upgrade)",
+            "matchPackageNames": ["getmeili/meilisearch"],
+            "enabled": false
+        },
+        {
             "description": "CRITICAL: Prevent accidental major DB upgrades",
             "groupName": "Database Major Updates (MANUAL MIGRATION REQUIRED)",
             "matchPackageNames": ["postgres", "mysql", "mariadb"],
