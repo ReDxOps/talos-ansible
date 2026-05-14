@@ -1,0 +1,45 @@
+name: Reboot Server
+run-name: Forced reboot of talos-srv executed by Ansible
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+env:
+  ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
+
+jobs:
+  reboot_talos_srv:
+    name: Reboot the server
+    runs-on: [self-hosted, prod]
+    environment: talos-srv
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Install Dependencies
+        run: $ANSIBLE_BIN_PATH/ansible-galaxy install -r requirements.yml --force
+
+      - name: Run Reboot
+        run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml --tags reboot -e "maintenance_force_reboot=true maintenance_with_cicd=true" -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod
+
+  verify_server_health:
+    name: Verify if server and Docker containers are healthy
+    runs-on: [self-hosted, prod]
+    needs: reboot_talos_srv
+
+    steps:
+      - name: Wait for Reboot to start
+        run: sleep 180
+
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Install Dependencies
+        run: $ANSIBLE_BIN_PATH/ansible-galaxy install -r requirements.yml --force
+
+      - name: Run Healthcheck
+        run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml --tags healthcheck -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod
