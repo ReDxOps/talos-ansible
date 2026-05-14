@@ -59,7 +59,10 @@
     body_format: json
     body: { "content": "Reboot on {{ inventory_hostname }} is required", "username": "SENTINEL" }
     status_code: 204
-  when: maintenance_reboot_required.stat.exists and not maintenance_auto_reboot and target_env != 'dev'
+  when:
+    - maintenance_reboot_required.stat.exists
+    - not maintenance_auto_reboot
+    - target_env != 'dev'
 
 - name: Determine if reboot is needed
   ansible.builtin.set_fact:
@@ -77,12 +80,22 @@
 
 - name: Reboot the server
   ansible.builtin.reboot:
-    msg: "Reboot by Ansible (maintenance role)"
+    msg: "Reboot by Ansible (maintenance role - not in cicd)"
     pre_reboot_delay: 10
     reboot_timeout: 600
     test_command: whoami
   tags: [reboot]
-  when: maintenance_should_reboot
+  when:
+    - maintenance_should_reboot
+    - not maintenance_with_cicd
+
+- name: Reboot the server (CI Mode - Self-Hosted Runner)
+  ansible.builtin.command: "shutdown -r +1 'Reboot orchestré par la CI'"
+  when:
+    - maintenance_should_reboot
+    - maintenance_with_cicd
+  changed_when: false
+  tags: [reboot]
 
 - name: Verify if docker containers are not unhealthy
   ansible.builtin.shell: |
@@ -95,8 +108,9 @@
   delay: 10
   retries: 12
   failed_when: maintenance_docker_containers_unhealthy_count.stdout != "0"
-  when: maintenance_should_reboot
+  when: maintenance_should_reboot or 'healthcheck' in ansible_run_tags
   changed_when: false
+  tags: [healthcheck]
 
 - name: Notify when reboot is success via webhook
   ansible.builtin.uri:
@@ -105,4 +119,8 @@
     body_format: json
     body: { "content": "✅ {{ inventory_hostname }} is up and all Docker containers are healthy", "username": "SENTINEL" }
     status_code: 204
-  when: maintenance_should_reboot and not ansible_check_mode and target_env != 'dev'
+  when:
+    - maintenance_should_reboot or 'healthcheck' in ansible_run_tags
+    - not ansible_check_mode
+    - target_env != 'dev'
+  tags: [healthcheck]
