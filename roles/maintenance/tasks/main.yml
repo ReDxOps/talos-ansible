@@ -51,6 +51,7 @@
   ansible.builtin.stat:
     path: /var/run/reboot-required
   register: maintenance_reboot_required
+  tags: [always]
 
 - name: Notify via webhook if reboot is required
   ansible.builtin.uri:
@@ -67,6 +68,7 @@
 - name: Determine if reboot is needed
   ansible.builtin.set_fact:
     maintenance_should_reboot: "{{ maintenance_reboot_required.stat.exists and maintenance_auto_reboot or maintenance_force_reboot | bool }}"
+  tags: [always]
 
 - name: Stop all docker containers properly
   ansible.builtin.shell: |
