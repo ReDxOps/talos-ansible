@@ -1,14 +1,8 @@
 ---
-
 - name: Install ufw package
   ansible.builtin.package:
     name: ufw
     state: present
-
-- name: Configure default policy
-  community.general.ufw:
-    default: deny
-    direction: incoming
 
 - name: Allow everything on Loopback
   community.general.ufw:
@@ -23,27 +17,18 @@
     port: 8080
     proto: tcp
 
-- name: Open SSH + WEB ports
+- name: UFW - Open application ports
   community.general.ufw:
     rule: allow
-    port: "{{ item.port }}"
-    proto: "{{ item.protocol | default('tcp') }}"
-  loop:
-    - { port: "{{ common_http_port }}" }
-    - { port: "{{ common_https_port }}" }
-    - { port: "{{ tailscale_p2p_port }}", protocol: "udp" }
-    - { port: "{{ satisfactory_game_port }}" }
-    - { port: "{{ satisfactory_game_port }}", protocol: "udp" }
-    - { port: "{{ satisfactory_messaging_port }}" }
-    - { port: "{{ ark_fjordur_game_client_port }}", protocol: "udp" }
-    - { port: "{{ ark_fjordur_udp_socket_port }}", protocol: "udp" }
-    - { port: "{{ ark_fjordur_rcon_port }}"}
-    - { port: "{{ ark_fjordur_server_list_port }}", protocol: "udp" }
+    port: "{{ item.port | string }}"
+    proto: "{{ item.proto | default('tcp') }}"
+    comment: "{{ item.comment | default('Managed by Talos') }}"
+  loop: "{{ common_ufw_rules_base + common_ufw_rules_extra }}"
 
 - name: Open SSH port globally (Safety first for bootstrap)
   community.general.ufw:
     rule: allow
-    port: "{{ common_target_ssh_port }}"
+    port: "{{ common_target_ssh_port | string }}"
     proto: tcp
   when: ansible_facts["tailscale0"] is not defined
 
@@ -51,10 +36,20 @@
   community.general.ufw:
     rule: allow
     src: 192.168.100.0/24
-    port: "{{ common_target_ssh_port }}"
-    proto: tcp
-  when: target_env | default('dev') == 'dev'
+    port: "{{ common_target_ssh_port | string }}"
+  when: target_env == 'dev'
 
-- name: Set enable UFW
+- name: Allow SSH from Tailscale interface
+  community.general.ufw:
+    rule: allow
+    interface: tailscale0
+    direction: in
+    port: "{{ common_target_ssh_port | string }}"
+    proto: tcp
+  when: ansible_facts["tailscale0"] is defined
+
+- name: UFW - Enforce default deny policy and enable
   community.general.ufw:
     state: enabled
+    policy: deny
+    direction: incoming

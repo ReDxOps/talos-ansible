@@ -74,3 +74,9 @@ common_journald_retention_days: "14day"
 common_journald_compression: "yes"
 common_journald_rate_limit_sec: "30s"
 common_journald_rate_limit_burst: "10000"
+
+common_ufw_rules_base:
+  - { port: "{{ common_http_port }}", comment: "Web HTTP" }
+  - { port: "{{ common_https_port }}", comment: "Web HTTPS" }
+
+common_ufw_rules_extra: []
