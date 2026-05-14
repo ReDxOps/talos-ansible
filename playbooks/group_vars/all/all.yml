@@ -30,6 +30,18 @@ ark_fjordur_game_client_port: 7790
 ark_fjordur_udp_socket_port: 7791
 ark_fjordur_rcon_port: 27020
 ark_fjordur_server_list_port: 27015
+minecraft_server_port: 25565
+
+common_ufw_rules_extra:
+  - { port: "{{ tailscale_p2p_port }}", proto: "udp", comment: "Tailscale P2P" }
+  - { port: "{{ satisfactory_game_port }}", comment: "Satisfactory Game" }
+  - { port: "{{ satisfactory_game_port }}", proto: "udp", comment: "Satisfactory Game UDP" }
+  - { port: "{{ satisfactory_messaging_port }}", comment: "Satisfactory Messaging" }
+  - { port: "{{ ark_fjordur_game_client_port }}", proto: "udp", comment: "ARK Game Client" }
+  - { port: "{{ ark_fjordur_udp_socket_port }}", proto: "udp", comment: "ARK UDP Socket" }
+  - { port: "{{ ark_fjordur_rcon_port }}", comment: "ARK RCON" }
+  - { port: "{{ ark_fjordur_server_list_port }}", proto: "udp", comment: "ARK Server List" }
+  - { port: "{{ minecraft_server_port }}", comment: "Minecraft Game" }
 
 smtp_host: "smtp.eu.mailgun.org"
 smtp_user: "{{ vault_smtp_user }}"
