@@ -3,4 +3,5 @@
 # defaults file for roles/maintenance
 
 maintenance_auto_reboot: false
+maintenance_force_reboot: false
 maintenance_discord_webhook_url: "{{ vault_maintenance_discord_webhook_url }}"

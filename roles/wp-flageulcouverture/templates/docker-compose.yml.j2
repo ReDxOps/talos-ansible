@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ wp_flageulcouverture_app_image }}:{{ wp_flageulcouverture_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
     security_opt:
@@ -29,7 +29,7 @@ services:
 
   db:
     image: "{{ wp_flageulcouverture_mysql_image }}:{{ wp_flageulcouverture_mysql_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     volumes:

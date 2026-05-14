@@ -3,7 +3,7 @@
 services:
   traefik:
     image: "{{ traefik_app_image }}:{{ traefik_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     environment:

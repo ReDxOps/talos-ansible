@@ -4,7 +4,7 @@ name: "{{ skeleton_app_name }}"
 services:
   app:
     image: "{{ skeleton_app_image }}:{{ skeleton_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     cap_drop:

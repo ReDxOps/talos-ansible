@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ linkwarden_app_image }}:{{ linkwarden_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
       - meilisearch
@@ -34,7 +34,7 @@ services:
       - no-new-privileges:true
     volumes:
       - ./db_data:/var/lib/postgresql/data
-    restart: unless-stopped
+    restart: always
     networks:
       - "{{ linkwarden_role_name }}_internal"
     labels:
@@ -48,7 +48,7 @@ services:
     image: "{{ linkwarden_meilisearch_image }}:{{ linkwarden_meilisearch_image_tag }}"
     security_opt:
       - no-new-privileges:true
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./meili_data:/meili_data
     networks:

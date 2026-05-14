@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ satisfactory_app_image }}:{{ satisfactory_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     security_opt:
       - no-new-privileges:true
     volumes:

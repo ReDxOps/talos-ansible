@@ -3,7 +3,7 @@
 services:
   "{{ ark_fjordur_name }}":
     image: "{{ ark_app_image }}:{{ ark_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     stop_grace_period: 5m
     volumes:
       - "./{{ ark_fjordur_name }}:/app"

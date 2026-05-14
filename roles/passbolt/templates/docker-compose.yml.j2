@@ -3,7 +3,7 @@
 services:
   app:
     image: "{{ passbolt_app_image }}:{{ passbolt_app_image_tag }}"
-    restart: unless-stopped
+    restart: always
     depends_on:
       - db
     security_opt:
@@ -46,7 +46,7 @@ services:
 
   db:
     image: "{{ passbolt_mariadb_image }}:{{ passbolt_mariadb_image_tag }}"
-    restart: unless-stopped
+    restart: always
     stop_grace_period: 1m
     security_opt:
       - no-new-privileges:true
