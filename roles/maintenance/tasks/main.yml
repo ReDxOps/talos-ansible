@@ -62,12 +62,12 @@
     status_code: 204
   when:
     - maintenance_reboot_required.stat.exists
-    - not maintenance_auto_reboot
+    - not maintenance_auto_reboot | bool
     - target_env != 'dev'
 
 - name: Determine if reboot is needed
   ansible.builtin.set_fact:
-    maintenance_should_reboot: "{{ maintenance_reboot_required.stat.exists and maintenance_auto_reboot or maintenance_force_reboot | bool }}"
+    maintenance_should_reboot: "{{ maintenance_reboot_required.stat.exists | bool and maintenance_auto_reboot | bool or maintenance_force_reboot | bool }}"
   tags: [always]
 
 - name: Stop all docker containers properly
@@ -88,14 +88,14 @@
     test_command: whoami
   tags: [reboot]
   when:
-    - maintenance_should_reboot
-    - not maintenance_with_cicd
+    - maintenance_should_reboot | bool
+    - not maintenance_with_cicd | bool
 
 - name: Reboot the server (CI Mode - Self-Hosted Runner)
   ansible.builtin.command: "shutdown -r +1 'Reboot orchestré par la CI'"
   when:
-    - maintenance_should_reboot
-    - maintenance_with_cicd
+    - maintenance_should_reboot | bool
+    - maintenance_with_cicd | bool
   changed_when: false
   tags: [reboot]
 
@@ -110,7 +110,7 @@
   delay: 10
   retries: 12
   failed_when: maintenance_docker_containers_unhealthy_count.stdout != "0"
-  when: maintenance_should_reboot or 'healthcheck' in ansible_run_tags
+  when: maintenance_should_reboot | bool or 'healthcheck' in ansible_run_tags
   changed_when: false
   tags: [healthcheck]
 
@@ -122,7 +122,7 @@
     body: { "content": "✅ {{ inventory_hostname }} is up and all Docker containers are healthy", "username": "SENTINEL" }
     status_code: 204
   when:
-    - maintenance_should_reboot or 'healthcheck' in ansible_run_tags
+    - maintenance_should_reboot | bool or 'healthcheck' in ansible_run_tags
     - not ansible_check_mode
     - target_env != 'dev'
   tags: [healthcheck]
