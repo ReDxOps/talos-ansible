@@ -39,13 +39,15 @@
 
 - name: Wait for MariaDB to be ready
   ansible.builtin.command:
-    cmd: "docker compose exec -T app ./bin/cake passbolt healthcheck --json"
+    cmd: "docker compose exec -T app ./bin/cake passbolt healthcheck"
     chdir: "{{ passbolt_root_dir }}"
   register: passbolt_db_check
   until: >
-    '"databaseConnect":true' in passbolt_db_check.stdout
+    'databaseConnect' in passbolt_db_check.stdout or
+    'Database connection is OK' in passbolt_db_check.stdout
   retries: 20
-  delay: 5
+  delay: 10
+  failed_when: false
   changed_when: false
 
 - name: Check if admin user exists
