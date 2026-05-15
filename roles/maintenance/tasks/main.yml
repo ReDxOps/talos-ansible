@@ -99,17 +99,17 @@
   changed_when: false
   tags: [reboot]
 
-- name: Verify if docker containers are not unhealthy
+- name: Verify if all containers are healthy (No unhealthy, no starting)
   ansible.builtin.shell: |
     set -o pipefail
-    docker ps --format '{{ '{{' }} .Status {{ '}}' }}' | (grep '(unhealthy)' || true) | wc -l
+    docker ps --format '{{ '{{' }} .Status {{ '}}' }}' | grep -E '\(unhealthy\)|\(starting\)' | wc -l
   args:
     executable: /bin/bash
-  register: maintenance_docker_containers_unhealthy_count
-  until: maintenance_docker_containers_unhealthy_count.stdout == "0"
-  delay: 10
-  retries: 12
-  failed_when: maintenance_docker_containers_unhealthy_count.stdout != "0"
+  register: maintenance_containers_not_ready_count
+  until: maintenance_containers_not_ready_count.stdout == "0"
+  delay: 30
+  retries: 10
+  failed_when: maintenance_containers_not_ready_count.stdout != "0"
   when: maintenance_should_reboot | bool or 'healthcheck' in ansible_run_tags
   changed_when: false
   tags: [healthcheck]

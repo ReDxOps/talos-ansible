@@ -80,6 +80,12 @@ services:
       - ./db_data:/var/lib/postgresql
     networks:
       - "{{ sparkyfitness_role_name }}_internal"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 networks:
   "{{ sparkyfitness_reverse_proxy_network }}":

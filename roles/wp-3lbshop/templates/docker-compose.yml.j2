@@ -26,6 +26,12 @@ services:
       WORDPRESS_DB_NAME: "{{ wp_3lbshop_db_name }}"
       WORDPRESS_DB_PASSWORD: "{{ wp_3lbshop_db_password }}"
       WORDPRESS_DB_USER: "{{ wp_3lbshop_db_user }}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/wp-login.php"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   db:
     image: "{{ wp_3lbshop_mysql_image }}:{{ wp_3lbshop_mysql_image_tag }}"
@@ -43,7 +49,12 @@ services:
       MYSQL_USER: "{{ wp_3lbshop_db_user }}"
       MYSQL_PASSWORD: "{{ wp_3lbshop_db_password }}"
       MYSQL_RANDOM_ROOT_PASSWORD: true
-
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u $$MYSQL_USER -p$$MYSQL_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
   redis:
     image: "{{ wp_3lbshop_redis_image }}:{{ wp_3lbshop_redis_image_tag }}"
     restart: always
@@ -51,6 +62,11 @@ services:
       - no-new-privileges:true
     networks:
       - "{{ wp_3lbshop_role_name }}_internal"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   "{{ wp_3lbshop_reverse_proxy_network }}":

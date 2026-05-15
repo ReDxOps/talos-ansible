@@ -22,6 +22,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - "{{ traefik_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 networks:
   "{{ traefik_reverse_proxy_network }}":

@@ -12,6 +12,11 @@ services:
       - ./data/prometheus:/prometheus
     networks:
       - "{{ observability_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9090"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   alertmanager:
     image: "{{ observability_alertmanager_image }}:{{ observability_alertmanager_image_tag }}"
@@ -23,6 +28,11 @@ services:
       - ./data/alertmanager:/alertmanager
     networks:
       - "{{ observability_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9093"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   grafana:
     image: "{{ observability_grafana_image }}:{{ observability_grafana_image_tag }}"
@@ -48,6 +58,11 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     networks:
       - "{{ observability_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   node-exporter:
     image: "{{ observability_node_exporter_image }}:{{ observability_node_exporter_image_tag }}"
@@ -65,6 +80,11 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     networks:
       - "{{ observability_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:9100"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   cadvisor:
     image: "{{ observability_cadvisor_image }}:{{ observability_cadvisor_image_tag }}"
@@ -82,6 +102,11 @@ services:
       - /dev/disk/:/dev/disk:ro
     networks:
       - "{{ observability_reverse_proxy_network }}"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   loki:
     image: "{{ observability_loki_image }}:{{ observability_loki_image_tag }}"
@@ -98,6 +123,12 @@ services:
       resources:
         limits:
           memory: 768M
+    healthcheck:
+      test: ["CMD", "/usr/bin/loki", "-health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
   promtail:
     image: "{{ observability_promtail_image }}:{{ observability_promtail_image_tag }}"
@@ -113,7 +144,12 @@ services:
     command: -config.file=/etc/promtail/config.yml
     networks:
       - "{{ observability_reverse_proxy_network }}"
-
+    healthcheck:
+      test: ["CMD", "/usr/bin/promtail", "-version"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
 
 networks:
   "{{ observability_reverse_proxy_network }}":

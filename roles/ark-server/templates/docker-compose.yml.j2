@@ -39,3 +39,9 @@ services:
         reservations:
           memory: "{{ ark_memory_reservation }}"
     memswap_limit: "{{ ark_memory_limit }}"
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/127.0.0.1/{{ ark_fjordur_rcon_port }}"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 5m

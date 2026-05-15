@@ -19,6 +19,11 @@ services:
       - "traefik.http.routers.{{ hestia_studio_app_name }}.tls=true"
       - "traefik.http.routers.{{ hestia_studio_app_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ hestia_studio_app_name }}.loadbalancer.server.port=8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   proxy:

@@ -30,6 +30,11 @@ services:
       DB_PASS: "{{ wikijs_db_password }}"
       DB_PORT: 5432
       DB_TYPE: postgres
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   db:
     image: "{{ wikijs_postgres_image }}:{{ wikijs_postgres_image_tag }}"
     security_opt:
@@ -45,6 +50,12 @@ services:
       POSTGRES_DB: "{{ wikijs_db_name }}"
       POSTGRES_USER: "{{ wikijs_db_user }}"
       POSTGRES_PASSWORD: "{{ wikijs_db_password }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 networks:
   "{{ wikijs_reverse_proxy_network }}":
     external: true

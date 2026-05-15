@@ -5,8 +5,10 @@ services:
     image: "{{ linkwarden_app_image }}:{{ linkwarden_app_image_tag }}"
     restart: always
     depends_on:
-      - db
-      - meilisearch
+      db:
+        condition: service_healthy
+      meilisearch:
+        condition: service_healthy
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -43,6 +45,12 @@ services:
       POSTGRES_DB: "{{ linkwarden_db_name }}"
       POSTGRES_USER: "{{ linkwarden_db_user }}"
       POSTGRES_PASSWORD: "{{ linkwarden_db_password }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   meilisearch:
     image: "{{ linkwarden_meilisearch_image }}:{{ linkwarden_meilisearch_image_tag }}"
@@ -55,6 +63,11 @@ services:
       - "{{ linkwarden_role_name }}_internal"
     environment:
       MEILI_MASTER_KEY: "{{ linkwarden_meilisearch_master_key }}"
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:7700/health"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
 networks:
   "{{ linkwarden_reverse_proxy_network }}":

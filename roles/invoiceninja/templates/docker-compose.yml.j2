@@ -41,6 +41,11 @@ services:
       - "traefik.http.routers.{{ invoiceninja_role_name }}.tls=true"
       - "traefik.http.routers.{{ invoiceninja_role_name }}.tls.certresolver=letsencrypt-dns"
       - "traefik.http.services.{{ invoiceninja_role_name }}.loadbalancer.server.port=80"
+    healthcheck:
+      test: ["CMD", "curl", "-fs" "http://127.0.0.1:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: "{{ invoiceninja_redis_image }}:{{ invoiceninja_redis_image_tag }}"
@@ -72,11 +77,11 @@ services:
       MYSQL_USER: "{{ invoiceninja_db_user }}"
       MYSQL_PASSWORD: "{{ invoiceninja_db_password }}"
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u\"$${MYSQL_USER}\" -p\"$${MYSQL_PASSWORD}\""]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 40s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ invoiceninja_reverse_proxy_network }}":
