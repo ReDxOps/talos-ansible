@@ -37,19 +37,16 @@
   failed_when: false
   changed_when: false
 
-- name: Wait for Passbolt to be fully initialized (DB migrations)
+- name: Wait for MariaDB to be ready
   ansible.builtin.command:
     cmd: "docker compose exec -T app ./bin/cake passbolt healthcheck --json"
     chdir: "{{ passbolt_root_dir }}"
-  register: passbolt_healthcheck_result
+  register: passbolt_db_check
   until: >
-    'true' in passbolt_healthcheck_result.stdout and 'databaseConnect' in passbolt_healthcheck_result.stdout and '"databaseConnect":true' in
-    passbolt_healthcheck_result.stdout
-  retries: 30
-  delay: 10
+    '"databaseConnect":true' in passbolt_db_check.stdout
+  retries: 20
+  delay: 5
   changed_when: false
-  failed_when: false
-  when: passbolt_init_file.rc != 0
 
 - name: Check if admin user exists
   ansible.builtin.command:
