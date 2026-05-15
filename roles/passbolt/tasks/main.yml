@@ -1,5 +1,4 @@
 ---
-
 - name: Create application directories
   ansible.builtin.file:
     path: "{{ item.path }}"
@@ -12,6 +11,11 @@
     - { path: "{{ passbolt_root_dir }}/db_data" }
     - { path: "{{ passbolt_root_dir }}/gpg_volume", owner: 33, group: 33 }
     - { path: "{{ passbolt_root_dir }}/jwt_volume", owner: 33, group: 33 }
+
+- name: Anti-lock - Remove corrupted MariaDB tc.log
+  ansible.builtin.file:
+    path: "{{ passbolt_root_dir }}/db_data/tc.log"
+    state: absent
 
 - name: Copy docker-compose template
   ansible.builtin.template:
