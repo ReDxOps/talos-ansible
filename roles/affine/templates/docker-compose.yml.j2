@@ -30,6 +30,11 @@ services:
       AFFINE_INDEXER_ENABLED: false
       AFFINE_SERVER_EXTERNAL_URL: "https://{{ affine_web_url }}"
       AFFINE_SERVER_HTTPS: true
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3010/',(r)=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: "{{ affine_postgres_image }}:{{ affine_postgres_image_tag }}"

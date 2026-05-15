@@ -32,6 +32,12 @@ services:
     networks:
       - "{{ invoiceninja_hestia_reverse_proxy_network }}"
       - "{{ invoiceninja_hestia_role_name }}_internal"
+    healthcheck:
+      test: ["CMD", "curl", "-fs" "http://127.0.0.1:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network={{ invoiceninja_hestia_reverse_proxy_network }}"
@@ -72,11 +78,11 @@ services:
       MYSQL_USER: "{{ invoiceninja_hestia_db_user }}"
       MYSQL_PASSWORD: "{{ invoiceninja_hestia_db_password }}"
     healthcheck:
-      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u\"$${MYSQL_USER}\" -p\"$${MYSQL_PASSWORD}\""]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 40s
+      retries: 3
+      start_period: 30s
 
 networks:
   "{{ invoiceninja_hestia_reverse_proxy_network }}":

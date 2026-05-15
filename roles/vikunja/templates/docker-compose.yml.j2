@@ -5,8 +5,11 @@ services:
     image: "{{ vikunja_app_image }}:{{ vikunja_app_image_tag }}"
     restart: always
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
     security_opt:
       - no-new-privileges:true
     volumes:
@@ -34,6 +37,11 @@ services:
       VIKUNJA_REDIS_ENABLED: "true"
       VIKUNJA_REDIS_HOST: "redis:6379"
       VIKUNJA_SERVICE_TIMEZONE: Europe/Paris
+    healthcheck:
+      test: ["CMD", "/app/vikunja/vikunja", "version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: "{{ vikunja_postgres_image }}:{{ vikunja_postgres_image_tag }}"
@@ -50,6 +58,12 @@ services:
       POSTGRES_DB: "{{ vikunja_db_name }}"
       POSTGRES_USER: "{{ vikunja_db_user }}"
       POSTGRES_PASSWORD: "{{ vikunja_db_password }}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   redis:
     image: "{{ vikunja_redis_image }}:{{ vikunja_redis_image_tag }}"
@@ -58,6 +72,11 @@ services:
       - no-new-privileges:true
     networks:
       - "{{ vikunja_role_name }}_internal"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   "{{ vikunja_reverse_proxy_network }}":

@@ -44,6 +44,12 @@ services:
 
     command: [ "/usr/bin/wait-for.sh", "-t", "0", "db:3306", "--", "/docker-entrypoint.sh" ]
 
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://127.0.0.1:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   db:
     image: "{{ passbolt_mariadb_image }}:{{ passbolt_mariadb_image_tag }}"
     restart: always
@@ -61,6 +67,13 @@ services:
       MYSQL_DATABASE: "{{ passbolt_db_name }}"
       MYSQL_USER: "{{ passbolt_db_user }}"
       MYSQL_PASSWORD: "{{ passbolt_db_password }}"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
 
 networks:
   "{{ passbolt_reverse_proxy_network }}":
