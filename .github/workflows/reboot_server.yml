@@ -28,7 +28,7 @@ jobs:
 
   wait_server_reboot:
     name: Wait for the server to reboot
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: reboot_talos_srv
 
     steps:
