@@ -21,7 +21,7 @@ affine_redis_image_tag: "8.6.3-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
-invoiceninja_nginx_image_tag: "1.30.0"
+invoiceninja_nginx_image_tag: "1.31.0"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
@@ -153,7 +153,7 @@ wp_flageulcouverture_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
-invoiceninja_hestia_nginx_image_tag: "1.30.0"
+invoiceninja_hestia_nginx_image_tag: "1.31.0"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
