@@ -73,6 +73,7 @@ services:
       - SUPERADMIN_EMAIL
       - SUPERADMIN_PASSWORD
       - LANG
+      - GEMINI_API_KEY
 
   db:
     image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"

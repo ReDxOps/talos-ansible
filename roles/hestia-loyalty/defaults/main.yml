@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: MIT-0
 ---
-
 app_name: "hestia-loyalty"
-app_env: "staging"
+app_env: "staging" # or prod
 
 hestia_loyalty_root_dir: "{{ project_root_dir }}/hestia-loyalty-{{ app_env }}"
 
@@ -46,3 +45,5 @@ hestia_loyalty_superadmin_password: "{{ vault_hestia_loyalty_superadmin_password
 
 hestia_loyalty_portainer_url: "{{ portainer_url }}"
 hestia_loyalty_portainer_access_token: "{{ portainer_access_token }}"
+
+hestia_loyalty_gemini_api_key: "{{ vault_hestia_loyalty_gemini_api_key }}"
