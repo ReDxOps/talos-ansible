@@ -36,8 +36,6 @@ hestia_loyalty_nextjs_auth_secret: "{{ vault_hestia_loyalty_nextjs_auth_secret }
 hestia_loyalty_email_provider: "resend"
 hestia_loyalty_email_provider_api_key: "{{ vault_hestia_loyalty_email_provider_api_key }}"
 
-hestia_loyalty_apple_wallet_pass_type_id: "{{ vault_hestia_loyalty_apple_wallet_pass_type_id }}"
-hestia_loyalty_apple_wallet_team_id: "{{ vault_hestia_loyalty_apple_wallet_team_id }}"
 hestia_loyalty_google_wallet_issuer_id: "{{ vault_hestia_loyalty_google_wallet_issuer_id }}"
 
 hestia_loyalty_superadmin_email: "{{ vault_hestia_loyalty_superadmin_email }}"
@@ -47,3 +45,11 @@ hestia_loyalty_portainer_url: "{{ portainer_url }}"
 hestia_loyalty_portainer_access_token: "{{ portainer_access_token }}"
 
 hestia_loyalty_gemini_api_key: "{{ vault_hestia_loyalty_gemini_api_key }}"
+
+
+hestia_loyalty_apple_wallet_pass_type_id: "{{ vault_hestia_loyalty_apple_wallet_pass_type_id }}"
+hestia_loyalty_apple_wallet_team_id: "{{ vault_hestia_loyalty_apple_wallet_team_id }}"
+hestia_loyalty_apple_wallet_cert_path: "./certs/signerCert.pem"
+hestia_loyalty_apple_wallet_key_path: "./certs/signerKey.pem"
+hestia_loyalty_apple_wallet_wwdr_path: "./certs/wwdr.pem"
+hestia_loyalty_apple_wallet_key_passphrase: "{{ vault_hestia_loyalty_apple_wallet_key_passphrase }}"

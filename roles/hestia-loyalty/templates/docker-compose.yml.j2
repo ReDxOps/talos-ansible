@@ -19,7 +19,8 @@ services:
     security_opt:
       - no-new-privileges:true
     volumes:
-      - ./{{ app_name }}_data:/app/public/uploads
+      - {{ hestia_loyalty_root_dir }}/{{ app_name }}_data:/app/public/uploads
+      - {{ hestia_loyalty_root_dir }}/{{ app_name }}_certs:/app/certs:ro
     networks:
       - internal
       - proxy
@@ -69,6 +70,10 @@ services:
       - RESEND_API_KEY
       - APPLE_WALLET_PASS_TYPE_ID
       - APPLE_WALLET_TEAM_ID
+      - APPLE_WALLET_CERT_PATH
+      - APPLE_WALLET_KEY_PATH
+      - APPLE_WALLET_WWDR_PATH
+      - APPLE_WALLET_KEY_PASSPHRASE
       - GOOGLE_WALLET_ISSUER_ID
       - SUPERADMIN_EMAIL
       - SUPERADMIN_PASSWORD

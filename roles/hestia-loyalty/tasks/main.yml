@@ -25,6 +25,7 @@
   loop:
     - "{{ hestia_loyalty_root_dir }}"
     - "{{ hestia_loyalty_root_dir }}/{{ app_name }}_data"
+    - "{{ hestia_loyalty_root_dir }}/{{ app_name }}_certs"
 
 - name: Copy application templates
   ansible.builtin.template:
@@ -36,6 +37,21 @@
   loop:
     - { src: ".env.j2", dest: "{{ hestia_loyalty_root_dir }}/.env", mode: "0600" }
     - { src: "docker-compose.yml.j2", dest: "{{ hestia_loyalty_root_dir }}/docker-compose.yml", mode: "0644" }
+
+
+- name: Copy Apple Wallet certificates
+  ansible.builtin.copy:
+    src: "{{ target_env }}/{{ item }}"
+    dest: "{{ hestia_loyalty_root_dir }}/{{ app_name }}_certs/{{ item }}"
+    owner: "{{ hestia_loyalty_user_name }}"
+    group: "{{ hestia_loyalty_group_name }}"
+    mode: "0600"
+    decrypt: true
+  loop:
+    - signerCert.pem
+    - signerKey.pem
+    - wwdr.pem
+
 
 - name: Read generated .env file
   ansible.builtin.slurp:
