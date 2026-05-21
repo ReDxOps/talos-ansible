@@ -46,7 +46,6 @@ hestia_loyalty_portainer_access_token: "{{ portainer_access_token }}"
 
 hestia_loyalty_gemini_api_key: "{{ vault_hestia_loyalty_gemini_api_key }}"
 
-
 hestia_loyalty_apple_wallet_pass_type_id: "{{ vault_hestia_loyalty_apple_wallet_pass_type_id }}"
 hestia_loyalty_apple_wallet_team_id: "{{ vault_hestia_loyalty_apple_wallet_team_id }}"
 hestia_loyalty_apple_wallet_cert_path: "./certs/signerCert.pem"
