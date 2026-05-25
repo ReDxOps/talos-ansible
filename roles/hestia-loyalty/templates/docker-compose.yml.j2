@@ -79,6 +79,12 @@ services:
       - SUPERADMIN_PASSWORD
       - LANG
       - GEMINI_API_KEY
+      - MAIL_MAILER
+      - MAILGUN_DOMAIN
+      - MAILGUN_SECRET
+      - MAILGUN_ENDPOINT
+      - MAIL_FROM_ADDRESS
+      - MAIL_FROM_NAME
 
   db:
     image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"
