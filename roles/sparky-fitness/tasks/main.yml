@@ -22,4 +22,4 @@
   community.docker.docker_compose_v2:
     project_src: "{{ sparkyfitness_root_dir }}"
     state: "{{ sparky_fitness_stack_state }}"
-    pull: "{{ 'always' if sparky_fitness_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if sparky_fitness_stack_state == 'present' else 'missing' }}"

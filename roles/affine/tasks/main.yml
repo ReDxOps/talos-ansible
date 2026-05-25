@@ -20,7 +20,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ affine_root_dir }}"
     state: "{{ affine_stack_state }}"
-    pull: "{{ 'always' if affine_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if affine_stack_state == 'present' else 'missing' }}"
 
 - name: Database initialisation
   ansible.builtin.command:
