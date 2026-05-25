@@ -9,7 +9,7 @@
 
 # renovate: datasource=docker
 affine_app_image: "ghcr.io/toeverything/affine"
-affine_app_image_tag: "0.26.4"
+affine_app_image_tag: "0.26.6"
 
 # renovate: datasource=docker
 affine_postgres_image: "pgvector/pgvector"
@@ -21,7 +21,7 @@ affine_redis_image_tag: "8.6.3-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
-invoiceninja_nginx_image_tag: "1.31.0"
+invoiceninja_nginx_image_tag: "1.31.1"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
@@ -41,7 +41,7 @@ hestia_loyalty_db_tag: "18.4-alpine3.23"
 
 # renovate: datasource=docker
 linkwarden_app_image: "ghcr.io/linkwarden/linkwarden"
-linkwarden_app_image_tag: "v2.13.5"
+linkwarden_app_image_tag: "v2.14.1"
 
 # renovate: datasource=docker
 linkwarden_postgres_image: "postgres"
@@ -69,7 +69,7 @@ observability_node_exporter_image_tag: "v1.11.1"
 
 # renovate: datasource=docker
 observability_cadvisor_image: "ghcr.io/google/cadvisor"
-observability_cadvisor_image_tag: "0.56.2"
+observability_cadvisor_image_tag: "v0.57.0"
 
 # renovate: datasource=docker
 observability_loki_image: "grafana/loki"
@@ -97,11 +97,11 @@ satisfactory_app_image_tag: "v1.9"
 
 # renovate: datasource=docker
 sparkyfitness_app_image: "codewithcj/sparkyfitness_server"
-sparkyfitness_app_image_tag: "v0.16.6.2"
+sparkyfitness_app_image_tag: "v0.16.6.3"
 
 # renovate: datasource=docker
 sparkyfitness_nginx_image: "codewithcj/sparkyfitness"
-sparkyfitness_nginx_image_tag: "v0.16.6.2"
+sparkyfitness_nginx_image_tag: "v0.16.6.3"
 
 # renovate: datasource=docker
 sparkyfitness_postgres_image: "postgres"
@@ -153,7 +153,7 @@ wp_flageulcouverture_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
-invoiceninja_hestia_nginx_image_tag: "1.31.0"
+invoiceninja_hestia_nginx_image_tag: "1.31.1"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
