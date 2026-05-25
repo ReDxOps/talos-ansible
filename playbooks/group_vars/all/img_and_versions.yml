@@ -37,7 +37,7 @@ ark_app_image_tag: "latest"
 
 # renovate: datasource=docker
 hestia_loyalty_db_image: "postgres"
-hestia_loyalty_db_tag: "18.3-alpine3.23"
+hestia_loyalty_db_tag: "18.4-alpine3.23"
 
 # renovate: datasource=docker
 linkwarden_app_image: "ghcr.io/linkwarden/linkwarden"
@@ -89,7 +89,7 @@ passbolt_mariadb_image_tag: "11.8"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
-portainer_app_image_tag: "2.41.1-alpine"
+portainer_app_image_tag: "2.42.0-alpine"
 
 # renovate: datasource=docker
 satisfactory_app_image: "wolveix/satisfactory-server"
@@ -97,15 +97,15 @@ satisfactory_app_image_tag: "v1.9"
 
 # renovate: datasource=docker
 sparkyfitness_app_image: "codewithcj/sparkyfitness_server"
-sparkyfitness_app_image_tag: "v0.16.6.1"
+sparkyfitness_app_image_tag: "v0.16.6.2"
 
 # renovate: datasource=docker
 sparkyfitness_nginx_image: "codewithcj/sparkyfitness"
-sparkyfitness_nginx_image_tag: "v0.16.6.1"
+sparkyfitness_nginx_image_tag: "v0.16.6.2"
 
 # renovate: datasource=docker
 sparkyfitness_postgres_image: "postgres"
-sparkyfitness_postgres_image_tag: "18.3-alpine"
+sparkyfitness_postgres_image_tag: "18.4-alpine"
 
 # renovate: datasource=docker
 traefik_app_image: "traefik"
