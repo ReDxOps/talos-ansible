@@ -19,6 +19,7 @@
     images_filters:
       dangling: false
     networks: true
+    timeout: 300
 
 - name: Crowdsec hub packages update
   ansible.builtin.command:
