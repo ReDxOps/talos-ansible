@@ -40,5 +40,5 @@
   community.docker.docker_compose_v2:
     project_src: "{{ skeleton_root_dir }}"
     state: "{{ skeleton_stack_state }}"
-    pull: "{{ 'always' if skeleton_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if skeleton_stack_state == 'present' else 'missing' }}"
     remove_orphans: true

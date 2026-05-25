@@ -20,4 +20,4 @@
   community.docker.docker_compose_v2:
     project_src: "{{ wp_flageulcouverture_root_dir }}"
     state: "{{ wp_flageulcouverture_stack_state }}"
-    pull: "{{ 'always' if wp_flageulcouverture_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if wp_flageulcouverture_stack_state == 'present' else 'missing' }}"

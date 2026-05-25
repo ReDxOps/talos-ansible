@@ -24,4 +24,4 @@
   community.docker.docker_compose_v2:
     project_src: "{{ wp_3lbshop_root_dir }}"
     state: "{{ wp_3lbshop_stack_state }}"
-    pull: "{{ 'always' if wp_3lbshop_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if wp_3lbshop_stack_state == 'present' else 'missing' }}"
