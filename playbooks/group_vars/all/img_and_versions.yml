@@ -17,7 +17,7 @@ affine_postgres_image_tag: "pg16"
 
 # renovate: datasource=docker
 affine_redis_image: "redis"
-affine_redis_image_tag: "8.6.3-alpine"
+affine_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
@@ -25,7 +25,7 @@ invoiceninja_nginx_image_tag: "1.31.1"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
-invoiceninja_redis_image_tag: "8.6.3-alpine"
+invoiceninja_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 invoiceninja_mariadb_image: "mariadb"
@@ -53,7 +53,7 @@ linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
-observability_prometheus_image_tag: "v3.11.3"
+observability_prometheus_image_tag: "v3.12.0"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
@@ -121,7 +121,7 @@ vikunja_postgres_image_tag: "17-alpine"
 
 # renovate: datasource=docker
 vikunja_redis_image: "redis"
-vikunja_redis_image_tag: "8.6.3-alpine"
+vikunja_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 wikijs_app_image: "requarks/wiki"
@@ -141,7 +141,7 @@ wp_3lbshop_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 wp_3lbshop_redis_image: "redis"
-wp_3lbshop_redis_image_tag: "8.6.3-alpine"
+wp_3lbshop_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 wp_flageulcouverture_app_image: "wordpress"
@@ -157,7 +157,7 @@ invoiceninja_hestia_nginx_image_tag: "1.31.1"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
-invoiceninja_hestia_redis_image_tag: "8.6.3-alpine"
+invoiceninja_hestia_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 invoiceninja_hestia_mariadb_image: "mariadb"
