@@ -19,4 +19,4 @@
   community.docker.docker_compose_v2:
     project_src: "{{ satisfactory_root_dir }}"
     state: "{{ satisfactory_stack_state }}"
-    pull: "{{ 'always' if satisfactory_stack_state == 'present' else 'never' }}"
+    pull: "{{ 'always' if satisfactory_stack_state == 'present' else 'missing' }}"

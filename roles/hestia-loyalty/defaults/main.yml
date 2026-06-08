@@ -33,7 +33,8 @@ hestia_loyalty_db_ram_limit: "512M"
 
 hestia_loyalty_nextjs_auth_secret: "{{ vault_hestia_loyalty_nextjs_auth_secret }}"
 
-hestia_loyalty_email_provider: "resend"
+hestia_loyalty_email_provider: "mailgun"
+hestia_loyalty_email_provider_domain: "hestialoyalty.fr"
 hestia_loyalty_email_provider_api_key: "{{ vault_hestia_loyalty_email_provider_api_key }}"
 
 hestia_loyalty_superadmin_email: "{{ vault_hestia_loyalty_superadmin_email }}"
