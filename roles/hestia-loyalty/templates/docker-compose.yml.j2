@@ -74,17 +74,12 @@ services:
       - APPLE_WALLET_KEY_PATH
       - APPLE_WALLET_WWDR_PATH
       - APPLE_WALLET_KEY_PASSPHRASE
-      - GOOGLE_WALLET_ISSUER_ID
       - SUPERADMIN_EMAIL
       - SUPERADMIN_PASSWORD
       - LANG
       - GEMINI_API_KEY
-      - MAIL_MAILER
-      - MAILGUN_DOMAIN
-      - MAILGUN_SECRET
-      - MAILGUN_ENDPOINT
-      - MAIL_FROM_ADDRESS
-      - MAIL_FROM_NAME
+      - GOOGLE_WALLET_ISSUER_ID
+      - GOOGLE_WALLET_SERVICE_ACCOUNT_PATH
 
   db:
     image: "{{ hestia_loyalty_db_image }}:{{ hestia_loyalty_db_tag }}"

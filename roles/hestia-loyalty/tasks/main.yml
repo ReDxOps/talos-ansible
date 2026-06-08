@@ -1,6 +1,5 @@
 # SPDX-License-Identifier: MIT-0
 ---
-
 - name: Create application user group
   ansible.builtin.group:
     name: "{{ hestia_loyalty_group_name }}"
@@ -38,8 +37,7 @@
     - { src: ".env.j2", dest: "{{ hestia_loyalty_root_dir }}/.env", mode: "0600" }
     - { src: "docker-compose.yml.j2", dest: "{{ hestia_loyalty_root_dir }}/docker-compose.yml", mode: "0644" }
 
-
-- name: Copy Apple Wallet certificates
+- name: Copy Apple and Google Wallet certificates
   ansible.builtin.copy:
     src: "{{ target_env }}/{{ item }}"
     dest: "{{ hestia_loyalty_root_dir }}/{{ app_name }}_certs/{{ item }}"
@@ -51,7 +49,7 @@
     - signerCert.pem
     - signerKey.pem
     - wwdr.pem
-
+    - google-service-account.json
 
 - name: Read generated .env file
   ansible.builtin.slurp:
