@@ -1,5 +1,5 @@
 name: CI
-run-name: Lint & Syntax Check for ${{ github.ref_name }}
+run-name: CI & Security Checks for ${{ github.ref_name }}
 
 permissions:
   contents: read
