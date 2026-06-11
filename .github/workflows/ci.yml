@@ -79,13 +79,29 @@ jobs:
           ansible-playbook playbooks/00_bootstrap.yml --syntax-check --vault-id dev@${{ github.workspace }}/.vault_pass_dev.sh --vault-id prod@${{
           github.workspace}}/.vault_pass_prod.sh -e "@inventories/dev/group_vars/all/vars.yml" -e "@inventories/dev/group_vars/all/secrets.yml"
 
-  secrets-leak-check:
+  secret-leaks-check:
     runs-on: ubuntu-latest
+    name: Secret leaks scan with GitLeaks
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  checkov-scan:
+    runs-on: ubuntu-latest
+    name: Run IaC Misconfiguration
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Run Checkov Scan
+        uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf
+        with:
+          framework: ansible,dockercompose,github_actions
+          quiet: true
+          soft_fail: true
