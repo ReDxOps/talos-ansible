@@ -1,5 +1,8 @@
 name: ARK Selective Deploy
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: ["ark-live"]

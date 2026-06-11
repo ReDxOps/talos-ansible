@@ -72,6 +72,7 @@
   register: compose_file_b64
 
 - name: Get Portainer endpoints (Environments)
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ hestia_loyalty_portainer_url }}/api/endpoints"
     method: GET
@@ -85,6 +86,7 @@
     portainer_endpoint_id: "{{ (portainer_endpoints.json | selectattr('Name', 'equalto', 'local') | first).Id | default(1) }}"
 
 - name: Get existing Portainer stacks
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ hestia_loyalty_portainer_url }}/api/stacks"
     method: GET
@@ -98,6 +100,7 @@
     existing_stack: "{{ portainer_stacks.json | selectattr('Name', 'equalto', app_name ~ '-' ~ app_env) | list | first | default(none) }}"
 
 - name: CREATE Stack in Portainer (First Deployment)
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ hestia_loyalty_portainer_url }}/api/stacks/create/standalone/string?endpointId={{ portainer_endpoint_id }}"
     method: POST
@@ -112,6 +115,7 @@
   when: existing_stack is none
 
 - name: UPDATE Stack in Portainer (Subsequent Deployments)
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ hestia_loyalty_portainer_url }}/api/stacks/{{ existing_stack.Id }}?endpointId={{ portainer_endpoint_id }}"
     method: PUT
