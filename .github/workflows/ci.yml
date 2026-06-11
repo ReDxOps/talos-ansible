@@ -102,6 +102,6 @@ jobs:
       - name: Run Checkov Scan
         uses: bridgecrewio/checkov-action@fa9edf8f0a491c59a924ea6accd5bdcf07752cff
         with:
-          framework: ansible,dockercompose,github_actions
+          framework: ansible,yaml,github_actions
           quiet: true
           soft_fail: true
