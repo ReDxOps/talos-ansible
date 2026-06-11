@@ -104,4 +104,3 @@ jobs:
         with:
           framework: ansible,yaml,github_actions
           quiet: true
-          soft_fail: true
