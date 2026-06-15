@@ -112,6 +112,14 @@
     - name: Re-enable UFW
       community.general.ufw:
         state: enabled
+  rescue:
+    - name: Re-enable UFW on failure
+      community.general.ufw:
+        state: enabled
+
+    - name: Fail task execution after cleanup
+      ansible.builtin.fail:
+        msg: "Crowdsec enrollment failed. UFW firewall has been re-enabled for security reasons."
 
 - name: Configure Crowdsec acquisition
   ansible.builtin.copy:

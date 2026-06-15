@@ -1,0 +1,15 @@
+[extend]
+useDefault = true
+
+[[allowlists]]
+    description = "Ignore Ansible Vault files and external folders"
+    regexes = [
+        '''^\$ANSIBLE_VAULT;'''
+    ]
+    paths = [
+        '''^\.ansible/''',
+        '''^\.vagrant/''',
+        '''^\.vscode/''',
+        '''^collections/''',
+        '''^roles_external/'''
+    ]

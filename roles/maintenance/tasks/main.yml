@@ -55,6 +55,7 @@
   tags: [always]
 
 - name: Notify via webhook if reboot is required
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ maintenance_discord_webhook_url }}"
     method: "POST"
@@ -116,6 +117,7 @@
   tags: [healthcheck]
 
 - name: Notify when reboot is success via webhook
+  # checkov:skip=CKV2_ANSIBLE_1: HTTPS protocol is enforced by the variable definition
   ansible.builtin.uri:
     url: "{{ maintenance_discord_webhook_url }}"
     method: "POST"
