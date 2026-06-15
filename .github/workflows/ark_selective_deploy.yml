@@ -13,6 +13,7 @@ jobs:
     runs-on: [self-hosted, prod]
     env:
       ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
+      ANSIBLE_FORCE_COLOR: "True"
 
     steps:
       - name: Checkout Repository
@@ -28,3 +29,22 @@ jobs:
           --connection=local \
           --tags ark \
           --vault-id prod@/home/github-runner/.vault_pass_prod
+
+  summary:
+    name: Generate ARK Deploy Summary
+    needs: deploy_ark
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write Summary
+        run: |
+          echo "### Rapport de Déploiement Sélectif ARK" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Étape | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.deploy_ark.result }}" = "success" ]; then
+            echo "| Déploiement Sélectif ARK | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Déploiement Sélectif ARK | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi

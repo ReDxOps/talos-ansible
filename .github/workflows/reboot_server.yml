@@ -9,6 +9,7 @@ on:
 
 env:
   ANSIBLE_BIN_PATH: /opt/talos/ansible-venv/bin
+  ANSIBLE_FORCE_COLOR: "True"
 
 jobs:
   reboot_talos_srv:
@@ -25,7 +26,6 @@ jobs:
 
       - name: Run Reboot
         run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml --tags reboot -e "maintenance_force_reboot=true maintenance_with_cicd=true" -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod
-
   wait_server_reboot:
     name: Wait for the server to reboot
     runs-on: ubuntu-24.04
@@ -49,3 +49,34 @@ jobs:
 
       - name: Run Healthcheck
         run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml --tags healthcheck -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod
+
+  summary:
+    name: Generate Reboot Summary
+    needs: [reboot_talos_srv, wait_server_reboot, verify_server_health]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write Summary
+        run: |
+          echo "### Rapport de Redémarrage Serveur" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Étape | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.reboot_talos_srv.result }}" = "success" ]; then
+            echo "| Redémarrage Serveur | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Redémarrage Serveur | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.wait_server_reboot.result }}" = "success" ]; then
+            echo "| Attente Redémarrage | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Attente Redémarrage | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.verify_server_health.result }}" = "success" ]; then
+            echo "| Healthcheck | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Healthcheck | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
