@@ -14,6 +14,7 @@ env:
   VAULT_PASS_DEV: ${{ secrets.VAULT_PASS_DEV }}
   VAULT_PASS_PROD: ${{ secrets.VAULT_PASS_PROD }}
   ANSIBLE_VAULT_IDENTITY_LIST: dev@${{ github.workspace }}/.vault_pass_dev.sh,prod@${{ github.workspace }}/.vault_pass_prod.sh
+  ANSIBLE_FORCE_COLOR: "True"
 
 jobs:
   quality-check:
@@ -104,3 +105,34 @@ jobs:
         with:
           framework: ansible,yaml,github_actions
           quiet: true
+
+  summary:
+    name: Generate Pipeline Summary
+    needs: [quality-check, secret-leaks-check, checkov-scan]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Write Summary
+        run: |
+          echo "### 📊 Rapport de CI/CD" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.quality-check.result }}" = "success" ]; then
+            echo "| Quality & Syntax | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Quality & Syntax | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.secret-leaks-check.result }}" = "success" ]; then
+            echo "| Secret Leaks Scan | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Secret Leaks Scan | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.checkov-scan.result }}" = "success" ]; then
+            echo "| IaC Misconfiguration | ✅ Success |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| IaC Misconfiguration | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
