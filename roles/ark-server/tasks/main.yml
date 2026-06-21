@@ -13,6 +13,13 @@
     - "{{ ark_root_dir }}/{{ ark_fjordur_backup_directory_name }}"
     - "{{ ark_root_dir }}/{{ ark_cluster_directory }}"
 
+- name: Pull latest ARK Docker image
+  community.docker.docker_image:
+    name: "{{ ark_app_image }}:{{ ark_app_image_tag }}"
+    source: pull
+  register: ark_image_pull
+  when: ark_stack_state == 'present'
+
 - name: Copy docker-compose template
   ansible.builtin.template:
     src: docker-compose.yml.j2
@@ -33,11 +40,16 @@
     - Modify Game.ini
     - Modify Custom Loots in Game.ini (blockinfile)
 
-- name: Stop application stack
+- name: Determine if server shutdown is required
+  ansible.builtin.set_fact:
+    ark_shutdown_required: "{{ compose_file_status.changed or ark_config_state.changed or (ark_image_pull.changed | default(false)) }}"
+
+- name: Stop application stack cleanly
   community.docker.docker_compose_v2:
     project_src: "{{ ark_root_dir }}"
     state: stopped
-  when: compose_file_status.changed or ark_config_state.changed
+    timeout: 300
+  when: ark_shutdown_required
 
 - name: Flush handlers to apply config while server is stopped
   ansible.builtin.meta: flush_handlers
@@ -46,7 +58,8 @@
   community.docker.docker_compose_v2:
     project_src: "{{ ark_root_dir }}"
     state: "{{ ark_stack_state }}"
-    pull: "{{ 'always' if ark_stack_state == 'present' else 'missing' }}"
+    pull: missing
+    timeout: 300
 
 - name: Planified restart every 4 hours
   ansible.builtin.cron:
