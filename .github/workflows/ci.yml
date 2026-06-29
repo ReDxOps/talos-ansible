@@ -36,7 +36,7 @@ jobs:
           ssh-keygen -t ed25519 -C "ci@talos" -f ~/.ssh/id_ed25519 -N ""
 
       - name: Setup Python
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -47,14 +47,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: Cache Ansible Collections
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: ./collections/ansible_collections
           key: ansible-collections-${{ hashFiles('requirements.yml') }}
           restore-keys: ansible-collections-
 
       - name: Cache Ansible Roles
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
         with:
           path: ./roles_external
           key: ansible-roles-${{ hashFiles('requirements.yml') }}
