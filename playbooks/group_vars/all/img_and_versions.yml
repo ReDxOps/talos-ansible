@@ -21,7 +21,7 @@ affine_redis_image_tag: "8.8.0-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
-invoiceninja_nginx_image_tag: "1.31.1"
+invoiceninja_nginx_image_tag: "1.31.2"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
@@ -73,7 +73,7 @@ observability_cadvisor_image_tag: "v0.57.0"
 
 # renovate: datasource=docker
 observability_loki_image: "grafana/loki"
-observability_loki_image_tag: "3.7.2"
+observability_loki_image_tag: "3.7.3"
 
 # renovate: datasource=docker
 observability_promtail_image: "grafana/promtail"
@@ -89,7 +89,7 @@ passbolt_mariadb_image_tag: "11.8"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
-portainer_app_image_tag: "2.42.0-alpine"
+portainer_app_image_tag: "2.43.0-alpine"
 
 # renovate: datasource=docker
 satisfactory_app_image: "wolveix/satisfactory-server"
@@ -153,7 +153,7 @@ wp_flageulcouverture_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
-invoiceninja_hestia_nginx_image_tag: "1.31.1"
+invoiceninja_hestia_nginx_image_tag: "1.31.2"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
