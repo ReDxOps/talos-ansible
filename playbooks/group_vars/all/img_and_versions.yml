@@ -88,6 +88,10 @@ passbolt_mariadb_image: "mariadb"
 passbolt_mariadb_image_tag: "11.8"
 
 # renovate: datasource=docker
+palworld_server_app_image: "thijsvanloef/palworld-server-docker"
+palworld_server_app_image_tag: "v2.7.1"
+
+# renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
 portainer_app_image_tag: "2.44.0-alpine"
 

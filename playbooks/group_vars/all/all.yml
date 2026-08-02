@@ -31,6 +31,9 @@ ark_fjordur_udp_socket_port: 7791
 ark_fjordur_rcon_port: 27020
 ark_fjordur_server_list_port: 27015
 minecraft_server_port: 25565
+palworld_server_port: 8211
+palworld_server_rcon_port: 25575
+
 
 common_ufw_rules_extra:
   - { port: "{{ tailscale_p2p_port }}", proto: "udp", comment: "Tailscale P2P" }
@@ -42,6 +45,8 @@ common_ufw_rules_extra:
   - { port: "{{ ark_fjordur_rcon_port }}", comment: "ARK RCON" }
   - { port: "{{ ark_fjordur_server_list_port }}", proto: "udp", comment: "ARK Server List" }
   - { port: "{{ minecraft_server_port }}", comment: "Minecraft Game" }
+  - { port: "{{ palworld_server_port }}", proto: "udp", comment: "Palworld Game" }
+  - { port: "{{ palworld_server_rcon_port }}", proto: "udp", comment: "Palworld RCON Port" }
 
 smtp_host: "smtp.eu.mailgun.org"
 smtp_user: "{{ vault_smtp_user }}"
