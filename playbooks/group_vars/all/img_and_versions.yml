@@ -17,15 +17,15 @@ affine_postgres_image_tag: "pg16"
 
 # renovate: datasource=docker
 affine_redis_image: "redis"
-affine_redis_image_tag: "8.8.0-alpine"
+affine_redis_image_tag: "8.8.1-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
-invoiceninja_nginx_image_tag: "1.31.2"
+invoiceninja_nginx_image_tag: "1.31.3"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
-invoiceninja_redis_image_tag: "8.8.0-alpine"
+invoiceninja_redis_image_tag: "8.8.1-alpine"
 
 # renovate: datasource=docker
 invoiceninja_mariadb_image: "mariadb"
@@ -53,11 +53,11 @@ linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
-observability_prometheus_image_tag: "v3.13.0"
+observability_prometheus_image_tag: "v3.13.1"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
-observability_alertmanager_image_tag: "v0.33.0"
+observability_alertmanager_image_tag: "v0.33.1"
 
 # renovate: datasource=docker
 observability_grafana_image: "grafana/grafana"
@@ -65,7 +65,7 @@ observability_grafana_image_tag: "13.0.0-22288738230"
 
 # renovate: datasource=docker
 observability_node_exporter_image: "prom/node-exporter"
-observability_node_exporter_image_tag: "v1.11.1"
+observability_node_exporter_image_tag: "v1.12.1"
 
 # renovate: datasource=docker
 observability_cadvisor_image: "ghcr.io/google/cadvisor"
@@ -73,7 +73,7 @@ observability_cadvisor_image_tag: "v0.57.0"
 
 # renovate: datasource=docker
 observability_loki_image: "grafana/loki"
-observability_loki_image_tag: "3.7.3"
+observability_loki_image_tag: "3.7.4"
 
 # renovate: datasource=docker
 observability_promtail_image: "grafana/promtail"
@@ -81,7 +81,7 @@ observability_promtail_image_tag: "3.6.11"
 
 # renovate: datasource=docker
 passbolt_app_image: "passbolt/passbolt"
-passbolt_app_image_tag: "5.13.0-1-ce-non-root"
+passbolt_app_image_tag: "5.14.0-1-ce-non-root"
 
 # renovate: datasource=docker
 passbolt_mariadb_image: "mariadb"
@@ -89,7 +89,7 @@ passbolt_mariadb_image_tag: "11.8"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
-portainer_app_image_tag: "2.43.0-alpine"
+portainer_app_image_tag: "2.44.0-alpine"
 
 # renovate: datasource=docker
 satisfactory_app_image: "wolveix/satisfactory-server"
@@ -113,7 +113,7 @@ traefik_app_image_tag: "v3.7"
 
 # renovate: datasource=docker
 vikunja_app_image: "vikunja/vikunja"
-vikunja_app_image_tag: "2.3"
+vikunja_app_image_tag: "2.4"
 
 # renovate: datasource=docker
 vikunja_postgres_image: "postgres"
@@ -121,7 +121,7 @@ vikunja_postgres_image_tag: "17-alpine"
 
 # renovate: datasource=docker
 vikunja_redis_image: "redis"
-vikunja_redis_image_tag: "8.8.0-alpine"
+vikunja_redis_image_tag: "8.8.1-alpine"
 
 # renovate: datasource=docker
 wikijs_app_image: "requarks/wiki"
@@ -141,7 +141,7 @@ wp_3lbshop_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 wp_3lbshop_redis_image: "redis"
-wp_3lbshop_redis_image_tag: "8.8.0-alpine"
+wp_3lbshop_redis_image_tag: "8.8.1-alpine"
 
 # renovate: datasource=docker
 wp_flageulcouverture_app_image: "wordpress"
@@ -153,11 +153,11 @@ wp_flageulcouverture_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
-invoiceninja_hestia_nginx_image_tag: "1.31.2"
+invoiceninja_hestia_nginx_image_tag: "1.31.3"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
-invoiceninja_hestia_redis_image_tag: "8.8.0-alpine"
+invoiceninja_hestia_redis_image_tag: "8.8.1-alpine"
 
 # renovate: datasource=docker
 invoiceninja_hestia_mariadb_image: "mariadb"
