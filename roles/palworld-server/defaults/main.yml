@@ -1,0 +1,46 @@
+---
+palworld_server_stack_state: "present" # present | stopped | absent
+
+palworld_server_role_name: "palworld-server"
+palworld_server_root_dir: "{{ project_root_dir }}/{{ palworld_server_role_name }}"
+
+palworld_server_app_image: ""
+palworld_server_app_image_tag: ""
+
+palworld_server_name: "Palworld 420"
+palworld_server_description: "Palworld Dedicated Server for 420 Crew"
+
+palworld_server_port: 8211
+palworld_server_rcon_port: 25575
+
+palworld_server_puid: 1000
+palworld_server_pgid: 1000
+
+palworld_server_players: 32
+palworld_server_password: "{{ vault_palworld_server_password | default('') }}"
+palworld_server_admin_password: "{{ vault_palworld_server_admin_password | default('') }}"
+
+palworld_server_multithreading_enabled: true
+palworld_server_rcon_enabled: true
+palworld_server_community_enabled: false
+
+palworld_server_tz: "Europe/Paris"
+
+palworld_server_memory_limit: "16G"
+palworld_server_memory_reservation: "4G"
+
+palworld_server_healthcheck_enabled: true
+palworld_server_healthcheck_interval: "60s"
+palworld_server_healthcheck_timeout: "10s"
+palworld_server_healthcheck_retries: 5
+palworld_server_healthcheck_start_period: "5m"
+
+# Gameplay settings (env vars automatically converted to PalWorldSettings.ini by container)
+palworld_server_difficulty: "None"
+palworld_server_daytime_speed_rate: "1.000000"
+palworld_server_nighttime_speed_rate: "1.000000"
+palworld_server_exp_rate: "1.000000"
+palworld_server_pal_capture_rate: "1.000000"
+palworld_server_pal_spawn_num_rate: "1.000000"
+palworld_server_egg_hatching_time: "0.200000" # 0.000000 = éclosion instantanée
+palworld_server_death_penalty: "Item" # None | Item | ItemAndEquipment | All

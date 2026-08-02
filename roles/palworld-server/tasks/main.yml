@@ -1,0 +1,22 @@
+---
+- name: Create application directories
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "0755"
+    owner: "{{ item.owner | default(omit) }}"
+  loop:
+    - { path: "{{ palworld_server_root_dir }}" }
+    - { path: "{{ palworld_server_root_dir }}/data", owner: "{{ palworld_server_puid }}" }
+
+- name: Copy docker-compose template
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ palworld_server_root_dir }}/docker-compose.yml"
+    mode: "0644"
+
+- name: Manage docker-compose stack state
+  community.docker.docker_compose_v2:
+    project_src: "{{ palworld_server_root_dir }}"
+    state: "{{ palworld_server_stack_state }}"
+    pull: "{{ 'always' if palworld_server_stack_state == 'present' else 'missing' }}"

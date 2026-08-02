@@ -1,5 +1,5 @@
 ---
-ark_stack_state: "present" # present | stopped | absent
+ark_stack_state: "stopped" # present | stopped | absent
 
 ark_app_image: ""
 ark_app_image_tag: ""

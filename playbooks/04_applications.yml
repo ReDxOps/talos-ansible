@@ -45,3 +45,6 @@
 
     - role: hestia-studio
       tags: hestia-studio
+
+    - role: palworld-server
+      tags: palworld-server, palworld

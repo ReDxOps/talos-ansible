@@ -1,0 +1,49 @@
+---
+services:
+  palworld-server:
+    image: "{{ palworld_server_app_image }}:{{ palworld_server_app_image_tag }}"
+    restart: unless-stopped
+    stop_grace_period: 30s
+    ports:
+      - "{{ palworld_server_port }}:{{ palworld_server_port }}/udp"
+      - "{{ palworld_server_rcon_port }}:{{ palworld_server_rcon_port }}/udp"
+    environment:
+      PUID: "{{ palworld_server_puid }}"
+      PGID: "{{ palworld_server_pgid }}"
+      PORT: "{{ palworld_server_port }}"
+      PLAYERS: "{{ palworld_server_players }}"
+      SERVER_PASSWORD: "{{ palworld_server_password }}"
+      MULTITHREADING: "{{ palworld_server_multithreading_enabled | lower }}"
+      RCON_ENABLED: "{{ palworld_server_rcon_enabled | lower }}"
+      RCON_PORT: "{{ palworld_server_rcon_port }}"
+      TZ: "{{ palworld_server_tz }}"
+      ADMIN_PASSWORD: "{{ palworld_server_admin_password }}"
+      COMMUNITY: "{{ palworld_server_community_enabled | lower }}"
+      SERVER_NAME: "{{ palworld_server_name }}"
+      SERVER_DESCRIPTION: "{{ palworld_server_description }}"
+
+      # Gameplay settings (Environment Variables converted to PalWorldSettings.ini)
+      DIFFICULTY: "{{ palworld_server_difficulty }}"
+      DAYTIME_SPEED_RATE: "{{ palworld_server_daytime_speed_rate }}"
+      NIGHTTIME_SPEED_RATE: "{{ palworld_server_nighttime_speed_rate }}"
+      EXP_RATE: "{{ palworld_server_exp_rate }}"
+      PAL_CAPTURE_RATE: "{{ palworld_server_pal_capture_rate }}"
+      PAL_SPAWN_NUM_RATE: "{{ palworld_server_pal_spawn_num_rate }}"
+      PAL_EGG_DEFAULT_HATCHING_TIME: "{{ palworld_server_egg_hatching_time }}"
+      DEATH_PENALTY: "{{ palworld_server_death_penalty }}"
+    volumes:
+      - "{{ palworld_server_root_dir }}/data:/palworld/"
+    deploy:
+      resources:
+        limits:
+          memory: "{{ palworld_server_memory_limit }}"
+        reservations:
+          memory: "{{ palworld_server_memory_reservation }}"
+{% if palworld_server_healthcheck_enabled %}
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/udp/127.0.0.1/{{ palworld_server_rcon_port }}"]
+      interval: "{{ palworld_server_healthcheck_interval }}"
+      timeout: "{{ palworld_server_healthcheck_timeout }}"
+      retries: {{ palworld_server_healthcheck_retries }}
+      start_period: "{{ palworld_server_healthcheck_start_period }}"
+{% endif %}
