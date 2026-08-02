@@ -129,6 +129,8 @@ kopia_ignore_custom:
   - "**/ark-server-fjordur/server/ShooterGame/Binaries/"
   - "**/ark-server-fjordur/staging/"
 
+  - "**/palworld-server/data/Pal/Content/"
+
 runner_dir: "/opt/talos/github-runner"
 runner_user: "github-runner"
 github_account: "ReDxOps"
