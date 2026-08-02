@@ -53,7 +53,7 @@ linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
-observability_prometheus_image_tag: "v3.13.1"
+observability_prometheus_image_tag: "v3.13.2"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
