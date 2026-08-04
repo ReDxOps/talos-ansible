@@ -68,4 +68,3 @@
     hour: "*/4"
     job: "cd {{ ark_root_dir }} && docker compose ps --services --filter status=running | grep -q '{{ ark_fjordur_name }}' && docker compose restart {{ ark_fjordur_name }} > /dev/null 2>&1"
     state: "{{ 'present' if ark_stack_state == 'present' else 'absent' }}"
-
