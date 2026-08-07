@@ -1,0 +1,56 @@
+---
+name: "{{ vaultwarden_app_name }}"
+
+services:
+  app:
+    image: "{{ vaultwarden_app_image }}:{{ vaultwarden_app_image_tag }}"
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data/
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network={{ vaultwarden_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ vaultwarden_app_name }}.rule=Host(`{{ vaultwarden_web_url }}`)"
+      - "traefik.http.routers.{{ vaultwarden_app_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ vaultwarden_app_name }}.middlewares=secHeaders@file"
+      - "traefik.http.routers.{{ vaultwarden_app_name }}.tls=true"
+      - "traefik.http.routers.{{ vaultwarden_app_name }}.tls.certresolver=letsencrypt-dns"
+      - "traefik.http.services.{{ vaultwarden_app_name }}.loadbalancer.server.port={{ vaultwarden_server_port }}"
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      resources:
+        reservations:
+          memory: "{{ vaultwarden_ram_reservation }}"
+        limits:
+          memory: "{{ vaultwarden_ram_limit }}"
+    cpu_shares: 512
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+{% if vaultwarden_healthcheck_enabled %}
+    healthcheck:
+      test: {{ vaultwarden_healthcheck_test }}
+      interval: {{ vaultwarden_healthcheck_interval }}
+      timeout: {{ vaultwarden_healthcheck_timeout }}
+      retries: {{ vaultwarden_healthcheck_retries }}
+      start_period: {{ vaultwarden_healthcheck_start_period }}
+{% endif %}
+
+networks:
+  proxy:
+    name: "{{ vaultwarden_reverse_proxy_network }}"
+    external: true
