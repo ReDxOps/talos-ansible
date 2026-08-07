@@ -48,6 +48,6 @@
 
     - role: palworld-server
       tags: palworld-server, palworld
-    
+
     - role: vaultwarden
       tags: vaultwarden
