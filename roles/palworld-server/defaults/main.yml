@@ -44,3 +44,5 @@ palworld_server_pal_capture_rate: "1.000000"
 palworld_server_pal_spawn_num_rate: "1.000000"
 palworld_server_egg_hatching_time: "0.200000" # 0.000000 = éclosion instantanée
 palworld_server_death_penalty: "Item" # None | Item | ItemAndEquipment | All
+palworld_server_base_camp_max_num_in_guild: "10"
+palworld_server_base_camp_worker_max_num: "20"

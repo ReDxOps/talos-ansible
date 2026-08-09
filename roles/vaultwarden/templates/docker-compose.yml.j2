@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data:/data/
+      - data:/data/
     networks:
       - proxy
     labels:
@@ -54,3 +54,6 @@ networks:
   proxy:
     name: "{{ vaultwarden_reverse_proxy_network }}"
     external: true
+
+volumes:
+  data:
