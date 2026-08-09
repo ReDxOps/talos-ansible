@@ -4,9 +4,9 @@ vaultwarden_stack_state: "present" # present | stopped | absent
 vaultwarden_app_name: "vaultwarden"
 vaultwarden_app_image: "vaultwarden/server"
 vaultwarden_app_image_tag: "1.37.1-alpine"
-vaultwarden_traefik_domain: "services.codeterm.fr"
+vaultwarden_traefik_domain: "codeterm.fr"
 vaultwarden_root_dir: "{{ project_root_dir }}/{{ vaultwarden_app_name }}"
-vaultwarden_web_url: "{{ vaultwarden_app_name }}.{{ vaultwarden_traefik_domain }}"
+vaultwarden_web_url: "pass.{{ vaultwarden_traefik_domain }}"
 vaultwarden_reverse_proxy_network: "{{ traefik_network }}"
 vaultwarden_server_port: "80"
 
@@ -17,7 +17,7 @@ vaultwarden_signups_verify: true
 vaultwarden_invitations_allowed: true
 vaultwarden_admin_token: "{{ vault_vaultwarden_admin_token }}"
 
-vaultwarden_db_url: "data/db.sqlite3"
+vaultwarden_db_url: "sqlite://data/db.sqlite3"
 vaultwarden_websocket_enabled: true
 
 vaultwarden_push_enabled: true
@@ -28,7 +28,7 @@ vaultwarden_push_installation_key: "{{ vault_vaultwarden_push_installation_key |
 vaultwarden_smtp_enabled: true
 vaultwarden_smtp_host: "mail.infomaniak.com"
 vaultwarden_smtp_from: "{{ vault_vaultwarden_smtp_username | default('') }}"
-vaultwarden_smtp_from_name: "Vaultwarden"
+vaultwarden_smtp_from_name: "Vaultwarden CodeTerm Solutions"
 vaultwarden_smtp_security: "starttls"
 vaultwarden_smtp_port: 587
 vaultwarden_smtp_username: "{{ vault_vaultwarden_smtp_username | default('') }}"

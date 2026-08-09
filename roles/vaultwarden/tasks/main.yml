@@ -14,16 +14,13 @@
     uid: "{{ vaultwarden_user_id | default(omit, boolean=True) }}"
     group: "{{ vaultwarden_group_name }}"
 
-- name: Create application directory
+- name: Create application root directory
   ansible.builtin.file:
     state: directory
     group: "{{ vaultwarden_group_name }}"
     owner: "{{ vaultwarden_user_name }}"
     mode: "0755"
-    path: "{{ item }}"
-  loop:
-    - "{{ vaultwarden_root_dir }}"
-    - "{{ vaultwarden_root_dir }}/data"
+    path: "{{ vaultwarden_root_dir }}"
 
 - name: Copy application templates
   ansible.builtin.template:

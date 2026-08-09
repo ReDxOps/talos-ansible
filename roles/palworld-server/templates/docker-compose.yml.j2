@@ -31,6 +31,8 @@ services:
       PAL_SPAWN_NUM_RATE: "{{ palworld_server_pal_spawn_num_rate }}"
       PAL_EGG_DEFAULT_HATCHING_TIME: "{{ palworld_server_egg_hatching_time }}"
       DEATH_PENALTY: "{{ palworld_server_death_penalty }}"
+      BASE_CAMP_MAX_NUM_IN_GUILD:  "{{ palworld_server_base_camp_max_num_in_guild }}"
+      BASE_CAMP_WORKER_MAX_NUM: "{{ palworld_server_base_camp_worker_max_num }}"
     volumes:
       - "{{ palworld_server_root_dir }}/data:/palworld/"
     deploy:
