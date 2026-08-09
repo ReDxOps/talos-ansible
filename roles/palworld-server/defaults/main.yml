@@ -40,7 +40,7 @@ palworld_server_difficulty: "None"
 palworld_server_daytime_speed_rate: "1.000000"
 palworld_server_nighttime_speed_rate: "1.000000"
 palworld_server_exp_rate: "1.000000"
-palworld_server_pal_capture_rate: "1.000000"
+palworld_server_pal_capture_rate: "2.000000"
 palworld_server_pal_spawn_num_rate: "1.000000"
 palworld_server_egg_hatching_time: "0.200000" # 0.000000 = éclosion instantanée
 palworld_server_death_penalty: "Item" # None | Item | ItemAndEquipment | All
