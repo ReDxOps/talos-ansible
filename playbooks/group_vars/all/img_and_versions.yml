@@ -37,7 +37,7 @@ ark_app_image_tag: "latest"
 
 # renovate: datasource=docker
 hestia_loyalty_db_image: "postgres"
-hestia_loyalty_db_tag: "18.4-alpine3.23"
+hestia_loyalty_db_tag: "18.6-alpine3.23"
 
 # renovate: datasource=docker
 linkwarden_app_image: "ghcr.io/linkwarden/linkwarden"
@@ -53,11 +53,11 @@ linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
-observability_prometheus_image_tag: "v3.13.2"
+observability_prometheus_image_tag: "v3.14.0"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
-observability_alertmanager_image_tag: "v0.33.1"
+observability_alertmanager_image_tag: "v0.34.0"
 
 # renovate: datasource=docker
 observability_grafana_image: "grafana/grafana"
@@ -89,7 +89,7 @@ passbolt_mariadb_image_tag: "11.8"
 
 # renovate: datasource=docker
 palworld_server_app_image: "thijsvanloef/palworld-server-docker"
-palworld_server_app_image_tag: "v2.7.1"
+palworld_server_app_image_tag: "v2.7.2"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
@@ -109,7 +109,7 @@ sparkyfitness_nginx_image_tag: "v0.16.6.3"
 
 # renovate: datasource=docker
 sparkyfitness_postgres_image: "postgres"
-sparkyfitness_postgres_image_tag: "18.4-alpine"
+sparkyfitness_postgres_image_tag: "18.6-alpine"
 
 # renovate: datasource=docker
 traefik_app_image: "traefik"
