@@ -28,6 +28,7 @@ linkwarden_stack_state: "present"
 vikunja_stack_state: "present"
 affine_stack_state: "present"
 sparky_fitness_stack_state: "present"
+vaultwarden_stack_state: "stopped"
 
 # --- Websites ---
 wp_3lbshop_stack_state: "present"
