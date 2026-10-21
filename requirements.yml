@@ -9,7 +9,7 @@ roles:
     name: redxops.kopia
 
   - name: monolithprojects.github_actions_runner
-    version: "1.28.0"
+    version: "1.28.1"
 
 collections:
   - name: community.general
