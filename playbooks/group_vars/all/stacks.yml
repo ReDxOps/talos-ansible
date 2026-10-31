@@ -13,7 +13,7 @@
 
 # --- Gaming Stacks ---
 ark_stack_state: "stopped"
-satisfactory_stack_state: "stopped"
+satisfactory_stack_state: "present"
 
 # --- Core Infrastructure ---
 traefik_stack_state: "present"
