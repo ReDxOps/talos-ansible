@@ -129,7 +129,7 @@ vikunja_redis_image_tag: "8.10.2-alpine"
 
 # renovate: datasource=docker
 wikijs_app_image: "requarks/wiki"
-wikijs_app_image_tag: "2.5"
+wikijs_app_image_tag: "3.0"
 
 # renovate: datasource=docker
 wikijs_postgres_image: "postgres"
