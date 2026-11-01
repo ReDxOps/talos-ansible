@@ -93,7 +93,7 @@ palworld_server_app_image_tag: "v2.8.1"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
-portainer_app_image_tag: "2.45.3-alpine"
+portainer_app_image_tag: "3.0.0-alpine"
 
 # renovate: datasource=docker
 satisfactory_app_image: "wolveix/satisfactory-server"
