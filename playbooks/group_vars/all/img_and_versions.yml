@@ -21,7 +21,7 @@ affine_redis_image_tag: "8.10.3-alpine"
 
 # renovate: datasource=docker
 invoiceninja_nginx_image: "nginx"
-invoiceninja_nginx_image_tag: "1.31.7"
+invoiceninja_nginx_image_tag: "1.31.8"
 
 # renovate: datasource=docker
 invoiceninja_redis_image: "redis"
@@ -53,7 +53,7 @@ linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
-observability_prometheus_image_tag: "v3.15.1"
+observability_prometheus_image_tag: "v3.16.0"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
@@ -93,7 +93,7 @@ palworld_server_app_image_tag: "v2.8.1"
 
 # renovate: datasource=docker
 portainer_app_image: "portainer/portainer-ee"
-portainer_app_image_tag: "3.0.0-alpine"
+portainer_app_image_tag: "3.0.1-alpine"
 
 # renovate: datasource=docker
 satisfactory_app_image: "wolveix/satisfactory-server"
@@ -117,7 +117,7 @@ traefik_app_image_tag: "v3.7"
 
 # renovate: datasource=docker
 vikunja_app_image: "vikunja/vikunja"
-vikunja_app_image_tag: "2.7"
+vikunja_app_image_tag: "2.8"
 
 # renovate: datasource=docker
 vikunja_postgres_image: "postgres"
@@ -157,7 +157,7 @@ wp_flageulcouverture_mysql_image_tag: "8.4"
 
 # renovate: datasource=docker
 invoiceninja_hestia_nginx_image: "nginx"
-invoiceninja_hestia_nginx_image_tag: "1.31.7"
+invoiceninja_hestia_nginx_image_tag: "1.31.8"
 
 # renovate: datasource=docker
 invoiceninja_hestia_redis_image: "redis"
