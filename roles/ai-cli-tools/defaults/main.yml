@@ -1,0 +1,26 @@
+---
+# =============================================================================
+# Defaults pour le Rôle AI CLI Tools (Claude Code, AGY, Codex)
+# =============================================================================
+
+# --- Bascules d'installation (Feature Flags) --------------------------------
+ai_cli_tools_install_claude: false
+ai_cli_tools_install_agy: false
+ai_cli_tools_install_codex: false
+
+# --- Utilisateur et Groupe Système Cibles -----------------------------------
+# Définit l'utilisateur hôte bénéficiaire (ex: runner multica)
+ai_cli_tools_target_user: "{{ multica_system_user | default('multica-runner') }}"
+ai_cli_tools_target_group: "{{ multica_system_group | default('multica-runner') }}"
+
+# --- Runtime Node.js & npm (Requis pour Claude Code CLI et Codex CLI) --------
+ai_cli_tools_install_nodejs: true
+ai_cli_tools_nodejs_version: "20" # Version majeure NodeSource (ex: 20 ou 22)
+
+# --- Configuration des Paquets npm -------------------------------------------
+ai_cli_tools_claude_package: "@anthropic-ai/claude-code"
+ai_cli_tools_codex_package: "@openai/codex"
+
+# --- Configuration d'Antigravity (AGY CLI) ----------------------------------
+ai_cli_tools_agy_install_url: "https://antigravity.google/cli/install.sh"
+ai_cli_tools_bin_dir: "/usr/local/bin"
