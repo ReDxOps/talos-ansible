@@ -52,6 +52,18 @@ linkwarden_meilisearch_image: "getmeili/meilisearch"
 linkwarden_meilisearch_image_tag: "v1.38.2"
 
 # renovate: datasource=docker
+multica_backend_image: "ghcr.io/multica-ai/multica-backend"
+multica_backend_image_tag: "v0.6.2"
+
+# renovate: datasource=docker
+multica_web_image: "ghcr.io/multica-ai/multica-web"
+multica_web_image_tag: "v0.6.2"
+
+# renovate: datasource=docker
+multica_postgres_image: "pgvector/pgvector"
+multica_postgres_image_tag: "pg17"
+
+# renovate: datasource=docker
 observability_prometheus_image: "prom/prometheus"
 observability_prometheus_image_tag: "v3.14.0"
 

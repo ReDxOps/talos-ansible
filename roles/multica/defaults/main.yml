@@ -1,0 +1,88 @@
+---
+# =============================================================================
+# Defaults pour le Rôle Multica Docker Stack & Daemon (Talos Infrastructure)
+# =============================================================================
+
+# --- État du Déploiement ----------------------------------------------------
+multica_stack_state: "present" # present | stopped | absent
+multica_daemon_enabled: true
+
+# --- Identité & Répertoires --------------------------------------------------
+multica_role_name: "multica"
+multica_root_dir: "{{ project_root_dir }}/{{ multica_role_name }}"
+multica_subdirs:
+  - "uploads"
+  - "db_data"
+
+# --- Utilisateur & Sécurité Système (Execution Plane Runner) ----------------
+multica_system_user: "multica-runner"
+multica_system_group: "multica-runner"
+multica_system_groups:
+  - "docker"
+multica_system_uid: ""
+multica_system_gid: ""
+multica_home_dir: "{{ multica_root_dir }}/daemon/home"
+multica_workspaces_dir: "{{ multica_root_dir }}/daemon/workspaces"
+
+# --- Ingress Traefik v3 & Sécurité Réseau ------------------------------------
+multica_traefik_enabled: true
+multica_reverse_proxy_network: "{{ traefik_network }}"
+multica_web_url: "multica-dev.{{ traefik_domain }}"
+multica_traefik_public_access: false # false = protégé par tailscaleOnly | true = public
+multica_traefik_middlewares: "{{ 'secHeaders@file' if multica_traefik_public_access else 'secHeaders@file,tailscaleOnly@file' }}"
+
+# --- Images & Versions (Centralisées dans img_and_versions.yml) --------------
+multica_backend_image: ""
+multica_backend_image_tag: ""
+
+multica_web_image: ""
+multica_web_image_tag: ""
+
+multica_postgres_image: ""
+multica_postgres_image_tag: ""
+
+# --- Version du CLI / Daemon Multica -----------------------------------------
+multica_cli_version: "0.6.2"
+multica_cli_download_base: "https://github.com/multica-ai/multica/releases/download"
+multica_cli_download_url: >-
+  {{ multica_cli_download_base }}/v{{ multica_cli_version }}/multica-cli-{{ multica_cli_version }}-linux-amd64.tar.gz
+
+# --- Limites & Partage de Ressources -----------------------------------------
+multica_backend_cpu_limit: "1.0"
+multica_backend_mem_limit: "512M"
+multica_backend_cpu_shares: 512
+multica_backend_local_port: "8088"
+
+multica_web_cpu_limit: "1.0"
+multica_web_mem_limit: "512M"
+multica_web_cpu_shares: 512
+
+multica_postgres_cpu_limit: "1.0"
+multica_postgres_mem_limit: "512M"
+multica_postgres_cpu_shares: 512
+
+# --- Base de Données PostgreSQL + pgvector ----------------------------------
+multica_postgres_db: "multica"
+multica_postgres_user: "{{ vault_multica_db_user | default(vault_multica_postgres_user | default('multica')) }}"
+multica_postgres_password: "{{ vault_multica_db_password | default(vault_multica_postgres_password | default('multica_db_password')) }}"
+
+# --- Configuration Métier Multica -------------------------------------------
+multica_jwt_secret: "{{ vault_multica_jwt_secret | default('multica_jwt_secret_changeme') }}"
+multica_app_env: "production"
+multica_do_not_track: true
+multica_allow_signup: true
+multica_disable_workspace_creation: false
+multica_log_level: "info"
+
+# Configuration SMTP (hérite du global talos)
+multica_smtp_host: "{{ smtp_host | default('') }}"
+multica_smtp_port: "{{ smtp_port | default(587) }}"
+multica_smtp_username: "{{ smtp_user | default('') }}"
+multica_smtp_password: "{{ smtp_password | default('') }}"
+multica_smtp_from: "multica@{{ traefik_domain }}"
+
+# Configuration Canaux de Communication
+multica_telegram_secret_key: "{{ vault_multica_telegram_secret_key | default('') }}"
+
+# Variables d'environnement pour le Daemon
+multica_daemon_extra_env: {}

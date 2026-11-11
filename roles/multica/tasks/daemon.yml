@@ -1,0 +1,53 @@
+---
+- name: Check if multica binary is installed
+  ansible.builtin.command: multica --version
+  register: multica_version_check
+  changed_when: false
+  failed_when: false
+
+- name: Create temporary directory for multica extraction
+  ansible.builtin.tempfile:
+    state: directory
+    prefix: multica_install_
+  register: multica_tmp_dir
+  when: multica_version_check.rc != 0 or multica_cli_version not in multica_version_check.stdout
+
+- name: Download and unarchive multica CLI binary
+  ansible.builtin.unarchive:
+    src: "{{ multica_cli_download_url }}"
+    dest: "{{ multica_tmp_dir.path }}"
+    remote_src: true
+  when: multica_version_check.rc != 0 or multica_cli_version not in multica_version_check.stdout
+
+- name: Install multica binary to /usr/local/bin
+  ansible.builtin.copy:
+    src: "{{ multica_tmp_dir.path }}/multica"
+    dest: /usr/local/bin/multica
+    owner: root
+    group: root
+    mode: "0755"
+    remote_src: true
+  when: multica_tmp_dir.path is defined and multica_tmp_dir.path | length > 0
+  notify: Restart multica-daemon service
+
+- name: Clean up temporary extraction directory
+  ansible.builtin.file:
+    path: "{{ multica_tmp_dir.path }}"
+    state: absent
+  when: multica_tmp_dir.path is defined and multica_tmp_dir.path | length > 0
+
+- name: Template multica-daemon systemd service unit
+  ansible.builtin.template:
+    src: multica-daemon.service.j2
+    dest: /etc/systemd/system/multica-daemon.service
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Restart multica-daemon service
+
+- name: Manage multica-daemon service state
+  ansible.builtin.systemd_service:
+    name: multica-daemon
+    enabled: "{{ multica_stack_state == 'present' }}"
+    state: "{{ 'started' if multica_stack_state == 'present' else 'stopped' }}"
+    daemon_reload: true

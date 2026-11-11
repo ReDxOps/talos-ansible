@@ -1,0 +1,32 @@
+# {{ ansible_managed }}
+
+[Unit]
+Description=Multica Agent Execution Daemon (Talos Infrastructure)
+Documentation=https://multica.ai/docs/daemon-runtimes
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User={{ multica_system_user }}
+Group={{ multica_system_group }}
+WorkingDirectory={{ multica_workspaces_dir }}
+
+Environment=HOME={{ multica_home_dir }}
+Environment=PATH=/usr/local/bin:/usr/bin:/bin:{{ multica_home_dir }}/.local/bin
+Environment=MULTICA_SERVER_URL=http://127.0.0.1:{{ multica_backend_local_port }}
+Environment=MULTICA_APP_URL=https://{{ multica_web_url }}
+{% for key, value in multica_daemon_extra_env.items() %}
+Environment={{ key }}={{ value }}
+{% endfor %}
+
+ExecStart=/usr/local/bin/multica daemon start --foreground
+Restart=always
+RestartSec=5s
+
+# Security Hardening
+NoNewPrivileges=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,49 @@
+---
+- name: Ensure dedicated system group exists for {{ multica_role_name }}
+  ansible.builtin.group:
+    name: "{{ multica_system_group }}"
+    gid: "{{ multica_system_gid | default(omit, boolean=True) }}"
+    system: true
+    state: present
+
+- name: Ensure dedicated system user exists for {{ multica_role_name }}
+  ansible.builtin.user:
+    name: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    groups: "{{ multica_system_groups }}"
+    append: true
+    uid: "{{ multica_system_uid | default(omit, boolean=True) }}"
+    system: true
+    shell: /bin/bash
+    home: "{{ multica_home_dir }}"
+    create_home: true
+    state: present
+
+- name: Create base directory for {{ multica_role_name }}
+  ansible.builtin.file:
+    path: "{{ multica_root_dir }}"
+    state: directory
+    owner: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    mode: "0755"
+
+- name: Create data and configuration subdirectories
+  ansible.builtin.file:
+    path: "{{ multica_root_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    mode: "0755"
+  loop: "{{ multica_subdirs }}"
+
+- name: Ensure daemon home and workspaces directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    mode: "0750"
+  loop:
+    - "{{ multica_home_dir }}"
+    - "{{ multica_workspaces_dir }}"
+  when: multica_daemon_enabled | bool

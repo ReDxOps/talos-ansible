@@ -1,0 +1,13 @@
+---
+- name: Restart compose stack for multica
+  community.docker.docker_compose_v2:
+    project_src: "{{ multica_root_dir }}"
+    state: restarted
+  when: multica_stack_state == 'present'
+
+- name: Restart multica-daemon service
+  ansible.builtin.systemd_service:
+    name: multica-daemon
+    state: restarted
+    daemon_reload: true
+  when: multica_daemon_enabled | default(true) | bool and multica_stack_state == 'present'
