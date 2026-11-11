@@ -1,0 +1,13 @@
+---
+- name: Execute preflight tasks (users, groups, and directories)
+  ansible.builtin.import_tasks: preflight.yml
+  tags: [multica, multica-preflight]
+
+- name: Execute server deployment tasks (Docker Compose stack)
+  ansible.builtin.import_tasks: server.yml
+  tags: [multica, multica-server]
+
+- name: Execute daemon deployment tasks (CLI binary and systemd service)
+  ansible.builtin.import_tasks: daemon.yml
+  when: multica_daemon_enabled | bool
+  tags: [multica, multica-daemon]

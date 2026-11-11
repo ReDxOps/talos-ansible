@@ -51,3 +51,6 @@
 
     - role: vaultwarden
       tags: vaultwarden
+
+    - role: multica
+      tags: multica

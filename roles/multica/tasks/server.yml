@@ -1,0 +1,25 @@
+---
+- name: Template secured .env file for {{ multica_role_name }}
+  ansible.builtin.template:
+    src: .env.j2
+    dest: "{{ multica_root_dir }}/.env"
+    owner: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    mode: "0600"
+  notify: Restart compose stack for multica
+
+- name: Template Docker Compose file for {{ multica_role_name }}
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ multica_root_dir }}/docker-compose.yml"
+    owner: "{{ multica_system_user }}"
+    group: "{{ multica_system_group }}"
+    mode: "0644"
+  notify: Restart compose stack for multica
+
+- name: Manage compose stack state for {{ multica_role_name }}
+  community.docker.docker_compose_v2:
+    project_src: "{{ multica_root_dir }}"
+    state: "{{ multica_stack_state }}"
+    pull: "{{ 'always' if multica_stack_state == 'present' else 'missing' }}"
+    remove_orphans: true
