@@ -9,14 +9,14 @@ roles:
     name: redxops.kopia
 
   - name: monolithprojects.github_actions_runner
-    version: "1.28.0"
+    version: "1.28.1"
 
 collections:
   - name: community.general
-    version: "13.3.0"
+    version: "13.5.0"
 
   - name: community.docker
-    version: "5.2.2"
+    version: "5.4.0"
 
   - name: ansible.posix
     version: "2.2.2"
