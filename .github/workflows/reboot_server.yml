@@ -28,7 +28,7 @@ jobs:
         run: $ANSIBLE_BIN_PATH/ansible-playbook playbooks/05_maintenance.yml --tags reboot -e "maintenance_force_reboot=true maintenance_with_cicd=true" -i inventories/prod/hosts.yml --connection=local --vault-id prod@/home/github-runner/.vault_pass_prod
   wait_server_reboot:
     name: Wait for the server to reboot
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs: reboot_talos_srv
 
     steps:
