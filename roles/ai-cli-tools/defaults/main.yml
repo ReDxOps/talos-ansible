@@ -4,9 +4,9 @@
 # =============================================================================
 
 # --- Bascules d'installation (Feature Flags) --------------------------------
-ai_cli_tools_install_claude: true
-ai_cli_tools_install_agy: true
-ai_cli_tools_install_codex: true
+ai_cli_tools_install_claude: false
+ai_cli_tools_install_agy: false
+ai_cli_tools_install_codex: false
 
 # --- Utilisateur et Groupe Système Cibles -----------------------------------
 # Définit l'utilisateur hôte bénéficiaire (ex: runner multica)
