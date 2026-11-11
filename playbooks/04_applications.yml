@@ -52,5 +52,8 @@
     - role: vaultwarden
       tags: vaultwarden
 
+    - role: ai-cli-tools
+      tags: ai-cli-tools, ai-tools
+
     - role: multica
       tags: multica

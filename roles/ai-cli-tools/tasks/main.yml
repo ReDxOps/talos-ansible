@@ -1,0 +1,22 @@
+---
+- name: Setup Node.js runtime environment
+  ansible.builtin.import_tasks: nodejs.yml
+  when:
+    - ai_cli_tools_install_nodejs | bool
+    - (ai_cli_tools_install_claude | bool) or (ai_cli_tools_install_codex | bool)
+  tags: [ai_cli, ai_cli_nodejs]
+
+- name: Install Claude Code CLI
+  ansible.builtin.import_tasks: claude.yml
+  when: ai_cli_tools_install_claude | bool
+  tags: [ai_cli, ai_cli_claude]
+
+- name: Install Codex CLI
+  ansible.builtin.import_tasks: codex.yml
+  when: ai_cli_tools_install_codex | bool
+  tags: [ai_cli, ai_cli_codex]
+
+- name: Install Antigravity AGY CLI
+  ansible.builtin.import_tasks: agy.yml
+  when: ai_cli_tools_install_agy | bool
+  tags: [ai_cli, ai_cli_agy]

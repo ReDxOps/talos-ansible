@@ -1,0 +1,12 @@
+---
+- name: Install Claude Code CLI via npm
+  community.general.npm:
+    name: "{{ ai_cli_tools_claude_package }}"
+    global: true
+    state: present
+
+- name: Verify Claude Code CLI installation
+  ansible.builtin.command: claude --version
+  register: claude_cli_check
+  changed_when: false
+  failed_when: false

@@ -28,7 +28,7 @@ multica_workspaces_dir: "{{ multica_root_dir }}/daemon/workspaces"
 multica_traefik_enabled: true
 multica_reverse_proxy_network: "{{ traefik_network }}"
 multica_web_url: "multica-dev.{{ traefik_domain }}"
-multica_traefik_public_access: false # false = protégé par tailscaleOnly | true = public
+multica_traefik_public_access: true # false = protégé par tailscaleOnly | true = public
 multica_traefik_middlewares: "{{ 'secHeaders@file' if multica_traefik_public_access else 'secHeaders@file,tailscaleOnly@file' }}"
 
 # --- Images & Versions (Centralisées dans img_and_versions.yml) --------------

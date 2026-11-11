@@ -1,0 +1,37 @@
+---
+- name: Check if Antigravity AGY CLI is installed
+  ansible.builtin.stat:
+    path: "{{ ai_cli_tools_bin_dir }}/agy"
+  register: agy_bin_stat
+
+- name: Install Antigravity AGY CLI
+  when: not agy_bin_stat.stat.exists
+  block:
+    - name: Download Antigravity installation script
+      ansible.builtin.get_url:
+        url: "{{ ai_cli_tools_agy_install_url }}"
+        dest: /tmp/agy_install.sh
+        mode: "0750"
+
+    - name: Execute Antigravity installer to target bin directory
+      ansible.builtin.command:
+        cmd: "/tmp/agy_install.sh -d {{ ai_cli_tools_bin_dir }}"
+      changed_when: true
+
+    - name: Ensure proper executable permissions on agy binary
+      ansible.builtin.file:
+        path: "{{ ai_cli_tools_bin_dir }}/agy"
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Clean up temporary installer script
+      ansible.builtin.file:
+        path: /tmp/agy_install.sh
+        state: absent
+
+- name: Verify Antigravity AGY CLI installation
+  ansible.builtin.command: "{{ ai_cli_tools_bin_dir }}/agy --version"
+  register: agy_cli_check
+  changed_when: false
+  failed_when: false

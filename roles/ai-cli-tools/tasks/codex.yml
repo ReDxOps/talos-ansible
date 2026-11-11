@@ -1,0 +1,12 @@
+---
+- name: Install Codex CLI via npm
+  community.general.npm:
+    name: "{{ ai_cli_tools_codex_package }}"
+    global: true
+    state: present
+
+- name: Verify Codex CLI installation
+  ansible.builtin.command: codex --version
+  register: codex_cli_check
+  changed_when: false
+  failed_when: false
