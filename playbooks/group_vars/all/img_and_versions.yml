@@ -69,7 +69,7 @@ observability_prometheus_image_tag: "v3.16.0"
 
 # renovate: datasource=docker
 observability_alertmanager_image: "prom/alertmanager"
-observability_alertmanager_image_tag: "v0.34.2"
+observability_alertmanager_image_tag: "v0.35.0"
 
 # renovate: datasource=docker
 observability_grafana_image: "grafana/grafana"
@@ -141,7 +141,7 @@ vikunja_redis_image_tag: "8.10.3-alpine"
 
 # renovate: datasource=docker
 wikijs_app_image: "requarks/wiki"
-wikijs_app_image_tag: "3.0"
+wikijs_app_image_tag: "3.3"
 
 # renovate: datasource=docker
 wikijs_postgres_image: "postgres"
