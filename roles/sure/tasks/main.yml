@@ -1,0 +1,55 @@
+---
+# Création du groupe système dédié à la stack sur l'hôte
+- name: Create application user group
+  ansible.builtin.group:
+    name: "{{ sure_group_name }}"
+    state: present
+    system: true
+    gid: "{{ sure_group_id | default(omit, boolean=True) }}"
+
+# Création de l'utilisateur système sans shell ni mot de passe (principe du moindre privilège)
+- name: Create application user
+  ansible.builtin.user:
+    name: "{{ sure_user_name }}"
+    password: "!"
+    shell: "/usr/sbin/nologin"
+    system: true
+    create_home: false
+    state: present
+    uid: "{{ sure_user_id | default(omit, boolean=True) }}"
+    group: "{{ sure_group_name }}"
+
+# Préparation de l'arborescence racine et des volumes persistants
+- name: Create application directories
+  ansible.builtin.file:
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    path: "{{ item.path }}"
+  loop:
+    - { path: "{{ sure_root_dir }}", owner: "{{ sure_user_name }}", group: "{{ sure_group_name }}", mode: "0755" }
+    # Le conteneur Sure exécute Rails sous l'UID/GID 1000:1000 et écrit storage/.sure-runtime au boot
+    - { path: "{{ sure_root_dir }}/storage", owner: "{{ sure_container_uid }}", group: "{{ sure_container_gid }}", mode: "0750" }
+    - { path: "{{ sure_root_dir }}/db_data", owner: "root", group: "root", mode: "0755" }
+    - { path: "{{ sure_root_dir }}/redis_data", owner: "root", group: "root", mode: "0755" }
+
+# Déploiement des fichiers de configuration (.env strictement en 0600)
+- name: Copy application templates
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ sure_user_name }}"
+    group: "{{ sure_group_name }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { src: ".env.j2", dest: "{{ sure_root_dir }}/.env", mode: "0600" }
+    - { src: "docker-compose.yml.j2", dest: "{{ sure_root_dir }}/docker-compose.yml", mode: "0644" }
+
+# Déploiement ou changement d'état déclaratif via Docker Compose v2
+- name: Manage docker-compose stack state
+  community.docker.docker_compose_v2:
+    project_src: "{{ sure_root_dir }}"
+    state: "{{ sure_stack_state }}"
+    pull: "{{ 'always' if sure_stack_state == 'present' else 'missing' }}"
+    remove_orphans: true
