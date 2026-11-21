@@ -29,7 +29,7 @@ sure_container_uid: "1000"
 sure_container_gid: "1000"
 
 # Configuration applicative Rails / Sure
-sure_onboarding_state: "open" # open | invite_only | closed (passer à closed après création du compte admin)
+sure_onboarding_state: "closed" # open | invite_only | closed (inscriptions désactivées après création du compte admin)
 sure_secret_key_base: "{{ vault_sure_secret_key_base }}"
 sure_log_level: "info"
 
