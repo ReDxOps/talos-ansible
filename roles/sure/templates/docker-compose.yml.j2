@@ -1,0 +1,195 @@
+---
+name: "{{ sure_app_name }}"
+
+services:
+  "{{ sure_app_name }}-web":
+    image: "{{ sure_app_image }}:{{ sure_app_image_tag }}"
+    container_name: "{{ sure_app_name }}-web"
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    depends_on:
+      "{{ sure_app_name }}-db":
+        condition: service_healthy
+      "{{ sure_app_name }}-redis":
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/rails/storage
+    networks:
+      - proxy
+      - internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network={{ sure_reverse_proxy_network }}"
+      - "traefik.http.routers.{{ sure_app_name }}.rule=Host(`{{ sure_web_url }}`)"
+      - "traefik.http.routers.{{ sure_app_name }}.entrypoints=websecure"
+      - "traefik.http.routers.{{ sure_app_name }}.middlewares={{ sure_traefik_middlewares }}"
+      - "traefik.http.routers.{{ sure_app_name }}.tls=true"
+      - "traefik.http.routers.{{ sure_app_name }}.tls.certresolver=letsencrypt-dns"
+      - "traefik.http.services.{{ sure_app_name }}.loadbalancer.server.port={{ sure_server_port }}"
+    deploy:
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      resources:
+        reservations:
+          memory: "{{ sure_web_ram_reservation }}"
+        limits:
+          memory: "{{ sure_web_ram_limit }}"
+    cpu_shares: 512
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:{{ sure_server_port }}/up"]
+      interval: "{{ sure_web_healthcheck_interval }}"
+      timeout: "{{ sure_web_healthcheck_timeout }}"
+      retries: {{ sure_web_healthcheck_retries }}
+      start_period: "{{ sure_web_healthcheck_start_period }}"
+
+  "{{ sure_app_name }}-worker":
+    image: "{{ sure_app_image }}:{{ sure_app_image_tag }}"
+    container_name: "{{ sure_app_name }}-worker"
+    command: bundle exec sidekiq
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    depends_on:
+      "{{ sure_app_name }}-db":
+        condition: service_healthy
+      "{{ sure_app_name }}-redis":
+        condition: service_healthy
+      # Attend que sure-web termine les migrations (rails db:prepare) avant de démarrer Sidekiq
+      "{{ sure_app_name }}-web":
+        condition: service_healthy
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/rails/storage
+    networks:
+      - internal
+      # Réseau egress dédié pour les synchros bancaires, cours boursiers et SMTP sans exposer sur Traefik
+      - egress
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: "{{ sure_worker_ram_reservation }}"
+        limits:
+          memory: "{{ sure_worker_ram_limit }}"
+    cpu_shares: 512
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f '[s]idekiq' || exit 1"]
+      interval: "{{ sure_worker_healthcheck_interval }}"
+      timeout: "{{ sure_worker_healthcheck_timeout }}"
+      retries: {{ sure_worker_healthcheck_retries }}
+      start_period: "{{ sure_worker_healthcheck_start_period }}"
+
+  "{{ sure_app_name }}-db":
+    image: "{{ sure_postgres_image }}:{{ sure_postgres_image_tag }}"
+    container_name: "{{ sure_app_name }}-db"
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+      - FOWNER
+    env_file:
+      - .env
+    volumes:
+      # Depuis PostgreSQL 18+, PGDATA est sous /var/lib/postgresql/<version>/docker
+      - ./db_data:/var/lib/postgresql
+    networks:
+      - internal
+    labels:
+      - "kopia.backup.target=true"
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: "{{ sure_db_ram_reservation }}"
+        limits:
+          memory: "{{ sure_db_ram_limit }}"
+    cpu_shares: 512
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: "{{ sure_db_healthcheck_interval }}"
+      timeout: "{{ sure_db_healthcheck_timeout }}"
+      retries: {{ sure_db_healthcheck_retries }}
+      start_period: "{{ sure_db_healthcheck_start_period }}"
+
+  "{{ sure_app_name }}-redis":
+    image: "{{ sure_redis_image }}:{{ sure_redis_image_tag }}"
+    container_name: "{{ sure_app_name }}-redis"
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    env_file:
+      - .env
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - internal
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          memory: "{{ sure_redis_ram_reservation }}"
+        limits:
+          memory: "{{ sure_redis_ram_limit }}"
+    cpu_shares: 256
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+      interval: "{{ sure_redis_healthcheck_interval }}"
+      timeout: "{{ sure_redis_healthcheck_timeout }}"
+      retries: {{ sure_redis_healthcheck_retries }}
+      start_period: "{{ sure_redis_healthcheck_start_period }}"
+
+networks:
+  proxy:
+    name: "{{ sure_reverse_proxy_network }}"
+    external: true
+  internal:
+    name: "{{ sure_app_name }}_internal"
+    internal: true
+  egress:
+    name: "{{ sure_app_name }}_egress"
+    driver: bridge

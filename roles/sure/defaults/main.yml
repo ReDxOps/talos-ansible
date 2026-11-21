@@ -1,0 +1,85 @@
+---
+# État souhaité de la stack (surchargé par playbooks/group_vars/all/stacks.yml)
+sure_stack_state: "present" # present | stopped | absent
+
+# Identité du rôle et images Docker (surchargées par img_and_versions.yml)
+sure_app_name: "sure"
+sure_app_image: "ghcr.io/we-promise/sure"
+sure_app_image_tag: "0.7.6-hotfix.1"
+sure_postgres_image: "postgres"
+sure_postgres_image_tag: "19.0-alpine3.24"
+sure_redis_image: "redis"
+sure_redis_image_tag: "8.10.3-alpine3.23"
+
+# Chemins et exposition réseau (Traefik)
+sure_root_dir: "{{ project_root_dir }}/{{ sure_app_name }}"
+sure_web_url: "finance.{{ traefik_domain }}"
+sure_reverse_proxy_network: "{{ traefik_network }}"
+sure_traefik_middlewares: "secHeaders@file,tailscaleOnly@file"
+sure_server_port: "3000"
+
+# Utilisateur et groupe système sur l'hôte (isolation des fichiers de configuration)
+sure_group_name: "sure"
+sure_user_name: "sure"
+sure_group_id: ""
+sure_user_id: ""
+
+# UID/GID interne de l'utilisateur 'rails' dans l'image officielle we-promise/sure
+sure_container_uid: "1000"
+sure_container_gid: "1000"
+
+# Configuration applicative Rails / Sure
+sure_onboarding_state: "open" # open | invite_only | closed (passer à closed après création du compte admin)
+sure_secret_key_base: "{{ vault_sure_secret_key_base }}"
+sure_log_level: "info"
+
+# Base de données PostgreSQL et cache Redis
+sure_db_name: "sure_production"
+sure_db_user: "{{ vault_sure_db_user | default('sure') }}"
+sure_db_password: "{{ vault_sure_db_password }}"
+sure_redis_password: "{{ vault_sure_redis_password }}"
+
+# Fournisseurs de taux de change et cours boursiers / ETF
+sure_exchange_rate_provider: "yahoo_finance" # yahoo_finance | twelve_data
+sure_securities_provider: "yahoo_finance" # yahoo_finance | twelve_data
+sure_twelve_data_api_key: "{{ vault_sure_twelve_data_api_key | default('') }}"
+
+# Configuration SMTP (par défaut sur le relais Mailgun global de Talos)
+sure_smtp_enabled: true
+sure_smtp_host: "{{ smtp_host }}"
+sure_smtp_port: "{{ smtp_port }}"
+sure_smtp_username: "{{ smtp_user }}"
+sure_smtp_password: "{{ smtp_password }}"
+sure_smtp_tls_enabled: false # false = STARTTLS sur le port 587 | true = SMTPS sur le port 465
+sure_email_sender: "sure@{{ traefik_domain }}"
+
+# Ressources conteneurs (limites et réservations mémoire)
+sure_web_ram_reservation: "512M"
+sure_web_ram_limit: "1536M"
+sure_worker_ram_reservation: "512M"
+sure_worker_ram_limit: "1536M"
+sure_db_ram_reservation: "256M"
+sure_db_ram_limit: "512M"
+sure_redis_ram_reservation: "64M"
+sure_redis_ram_limit: "256M"
+
+# Healthchecks obligatoires sur chaque microservice
+sure_web_healthcheck_interval: "30s"
+sure_web_healthcheck_timeout: "10s"
+sure_web_healthcheck_retries: 3
+sure_web_healthcheck_start_period: "45s"
+
+sure_worker_healthcheck_interval: "30s"
+sure_worker_healthcheck_timeout: "10s"
+sure_worker_healthcheck_retries: 3
+sure_worker_healthcheck_start_period: "30s"
+
+sure_db_healthcheck_interval: "10s"
+sure_db_healthcheck_timeout: "5s"
+sure_db_healthcheck_retries: 5
+sure_db_healthcheck_start_period: "15s"
+
+sure_redis_healthcheck_interval: "10s"
+sure_redis_healthcheck_timeout: "5s"
+sure_redis_healthcheck_retries: 5
+sure_redis_healthcheck_start_period: "10s"
