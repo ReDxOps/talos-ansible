@@ -53,3 +53,45 @@
     state: "{{ sure_stack_state }}"
     pull: "{{ 'always' if sure_stack_state == 'present' else 'missing' }}"
     remove_orphans: true
+    wait: "{{ sure_stack_state == 'present' }}"
+    wait_timeout: 180
+
+# Vérification du marqueur d'idempotence pour le backfill du chiffrement Active Record
+- name: Check Active Record encryption backfill marker
+  ansible.builtin.stat:
+    path: "{{ sure_root_dir }}/storage/.ar_encryption_backfilled"
+  register: sure_ar_backfill_marker
+  when:
+    - sure_stack_state == "present"
+    - sure_ar_primary_key | length > 0
+    - sure_ar_deterministic_key | length > 0
+    - sure_ar_key_derivation_salt | length > 0
+
+# Chiffrement automatique des données existantes encore en clair lors de l'activation des clés
+- name: Backfill Active Record encryption for existing records
+  ansible.builtin.command:
+    cmd: 'docker exec {{ sure_app_name }}-web bin/rails "security:backfill_encryption[100,0]"'
+  register: sure_ar_backfill_result
+  changed_when: true
+  failed_when: >
+    sure_ar_backfill_result.rc != 0 or
+    ('"ok":true' not in (sure_ar_backfill_result.stdout | replace(' ', '')))
+  when:
+    - sure_stack_state == "present"
+    - sure_ar_primary_key | length > 0
+    - sure_ar_deterministic_key | length > 0
+    - sure_ar_key_derivation_salt | length > 0
+    - not sure_ar_backfill_marker.stat.exists
+
+# Création du marqueur pour éviter de rechiffrer inutilement aux prochains runs Ansible
+- name: Mark Active Record encryption backfill as completed
+  ansible.builtin.file:
+    path: "{{ sure_root_dir }}/storage/.ar_encryption_backfilled"
+    state: touch
+    owner: "{{ sure_container_uid }}"
+    group: "{{ sure_container_gid }}"
+    mode: "0640"
+  when:
+    - sure_ar_backfill_result is defined
+    - sure_ar_backfill_result is not skipped
+    - sure_ar_backfill_result.rc == 0
