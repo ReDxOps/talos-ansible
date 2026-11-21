@@ -31,6 +31,9 @@ sure_container_gid: "1000"
 # Configuration applicative Rails / Sure
 sure_onboarding_state: "closed" # open | invite_only | closed (inscriptions désactivées après création du compte admin)
 sure_secret_key_base: "{{ vault_sure_secret_key_base }}"
+sure_ar_primary_key: "{{ vault_sure_ar_primary_key | default('') }}"
+sure_ar_deterministic_key: "{{ vault_sure_ar_deterministic_key | default('') }}"
+sure_ar_key_derivation_salt: "{{ vault_sure_ar_key_derivation_salt | default('') }}"
 sure_log_level: "info"
 
 # Base de données PostgreSQL et cache Redis
