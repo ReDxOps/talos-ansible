@@ -33,6 +33,12 @@
         state: present
         update_cache: true
 
+  rescue:
+    - name: Fail explicitly when Node.js installation fails
+      ansible.builtin.fail:
+        msg: "Échec de l'installation de Node.js : {{ ansible_failed_result.msg | default('erreur inconnue') }}"
+
+  always:
     - name: Remove temporary NodeSource script
       ansible.builtin.file:
         path: /tmp/nodesource_setup.sh

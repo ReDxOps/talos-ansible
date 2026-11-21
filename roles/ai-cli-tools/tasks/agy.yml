@@ -25,6 +25,12 @@
         group: root
         mode: "0755"
 
+  rescue:
+    - name: Fail explicitly when Antigravity AGY CLI installation fails
+      ansible.builtin.fail:
+        msg: "Échec de l'installation d'Antigravity AGY CLI : {{ ansible_failed_result.msg | default('erreur inconnue') }}"
+
+  always:
     - name: Clean up temporary installer script
       ansible.builtin.file:
         path: /tmp/agy_install.sh
